@@ -48,7 +48,7 @@ export class SmartArray<T>{
         return this.arr.join(separator);
     }
 
-    public forEach(f: (value: T) => void) {
+    public forEach(f: (value: T, index: number) => void) {
         this.arr.forEach(f);
     }
 

@@ -115,17 +115,36 @@ export class Note {
         return new Note(this.value - note.value, this.alteration - note.alteration);
     }
 
+
+    // TODO test
     /**
-     * 
-     * @param note the transposition expressed as a Note. The values will be added, brought back to the zero octave
+     * add alterations to note to reach the desired target value
+     * @param value the target chromatic value
+     * @returns the altered note whose chromatic value equals the input
+     */
+    public alterToChromaticValue(value: number) {
+        const correction = value - this.getChromaticValue();
+        return this.add(new Note(0, correction));
+    }
+
+    /**
+     * Note(6, 0) => Note(-6, 1)
+     * @param note 
+     * @returns the note that has the opposite chromatic value
+     */
+    public mirrorInterval() {
+        return new Note(-this.getValue(), -this.getAlteration()).alterToChromaticValue(- this.getChromaticValue());
+    }
+
+    /**
+     * NB: Note(6,0) is a major 7th up, but Note(-6, 0) is NOTE a major 7th down because it's the
+     * difference between C and D(-1), which is minor 7th down
+     * @param note interval expressed as Note. The values will be added, brought back to the zero octave
      * @returns 
      */
-    public transpose(note: Note): Note {
-        const out = this.add(note);
-        const diatonicShift = out.getChromaticValue() - this.getChromaticValue();
-        const intervalShift = note.getChromaticValue();
-        const correction = intervalShift - diatonicShift;
-        return out.add(new Note(0, correction));
+    public addInterval(note: Note): Note {
+        const targetChromaticValue = this.getChromaticValue() + note.getChromaticValue();
+        return this.add(note).alterToChromaticValue(targetChromaticValue);
     }
 
     /**

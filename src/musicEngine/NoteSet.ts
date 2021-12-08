@@ -32,8 +32,9 @@ export class NoteSet {
     private readonly nextNotes: SmartArray<Note> = new SmartArray<Note>(12);
     private readonly prevNotes: SmartArray<Note> = new SmartArray<Note>(12);
 
-    private constructor(notes: Note[], name: string) {
-        this.notes = SmartArray.fromArray(notes);
+    constructor(notes: Array<Note>, name: string) {
+        const baseNotes: Array<Note> = notes.map<Note>((note) => { return note.getNoteInChromaticBase() });
+        this.notes = SmartArray.fromArray(baseNotes);
         this.name = name;
         this.steps = new SmartArray<number>(notes.length);
         this.computeValuesToNotes()
@@ -42,7 +43,7 @@ export class NoteSet {
     }
 
     private computeValuesToNotes() {
-        const arr: Note[] = new Array<Note>(12);
+        const arr: Array<Note> = new Array<Note>(12);
         this.notes.forEach((note) => {
             const arrIndex = note.getChromaticValueZeroOctave();
             const currentNote = arr[arrIndex];
@@ -140,7 +141,7 @@ export class NoteSet {
      * @param note new NoteSet translated
      */
     public transpose(note: Note): NoteSet {
-        const newNotes = this.notes.map(nsNote => nsNote.transpose(note).getNoteInChromaticBase())
+        const newNotes = this.notes.map(nsNote => nsNote.addInterval(note).getNoteInChromaticBase())
 
         return new NoteSet(newNotes, this.name);
     }
@@ -180,6 +181,21 @@ export class NoteSet {
     }
 
     /**
+     * @param modeNumber 1-based mode number. mode 1 is the same scale
+     * @returns the nth mode. 
+     */
+    public getMode(modeNumber: number): NoteSet {
+        let newNotes = new Array<Note>()
+        const modeIndex = modeNumber - 1;
+        // get the same notes, but starting from the new mode root
+        this.notes.forEach((note, index) => { newNotes.push(this.notes.get(index + modeIndex)) });
+        // the amount of translation needed
+        const interval = this.notes.get(modeIndex).subtract(this.notes.get(0));
+        newNotes = newNotes.map(note => note.addInterval(interval.mirrorInterval()));
+        return new NoteSet(newNotes, `${this.name} mode ${modeNumber}`);
+    }
+
+    /**
      * 
      * @returns then name, e.g. "Major"
      */
@@ -194,6 +210,7 @@ export class NoteSet {
         return `${rootName}${this.name}`;
     }
 
+    // ################ STATIC ################ //
     public static parse(str: string, name: string = ''): NoteSet {
         const notes: Note[] = [];
 

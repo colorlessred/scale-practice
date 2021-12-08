@@ -82,11 +82,20 @@ describe(Note.name, function () {
         it('B#', () => { expect(new Note(6, 1).getChromaticValueZeroOctave()).eq(0); });
     })
 
-    describe('transpose', () => {
-        it('C + maj 2nd', () => { expect(Note.parse('C').transpose(new Note(1, 0)).toString()).eq('D'); })
-        it('E + maj 2nd', () => { expect(Note.parse('E').transpose(new Note(1, 0)).toString()).eq('F#'); })
-        it('Bb + octave', () => { expect(Note.parse('Bb').transpose(new Note(7, 0)).toString()).eq('Bb(1)'); })
-        it('F - perfect 5th', () => { expect(Note.parse('F').transpose(new Note(-4, 0)).toString()).eq('Bb(-1)'); })
+    describe('addInterval', () => {
+        it('C + maj 2nd', () => { expect(Note.parse('C').addInterval(new Note(1, 0)).toString()).eq('D'); })
+        it('E + maj 2nd', () => { expect(Note.parse('E').addInterval(new Note(1, 0)).toString()).eq('F#'); })
+        it('Bb + octave', () => { expect(Note.parse('Bb').addInterval(new Note(7, 0)).toString()).eq('Bb(1)'); })
+        it('F - perfect 5th', () => { expect(Note.parse('F').addInterval(new Note(-4, 0)).toString()).eq('Bb(-1)'); })
+        it('C + maj 7th down', () => { expect(Note.parse('C').addInterval(new Note(-6, 0)).toString()).eq('D(-1)'); });
+
+        // this not intuitive. Note(6, 0) is a major 7th up. Note(-6, 0) is a minor 7th down 
+        it('C + Note(6,0) + Note(-6,0)', () => {
+            expect(Note.parse('C')
+                .addInterval(new Note(6, 0))
+                .addInterval(new Note(-6, 0))
+                .toString()).eq('C#');
+        });
     });
 
     describe('getOctave', () => {
@@ -124,6 +133,26 @@ describe(Note.name, function () {
         test(new Note(7, 0));
         test(new Note(-7, 0));
         test(new Note(7 + 4, 1));
+    });
+
+    describe('mirrorInterval', () => {
+        function testMirror(note: Note) {
+            it(`mirror ${note}`, () => { expect(note.getChromaticValue() + note.mirrorInterval().getChromaticValue()).eq(0) });
+        }
+
+        testMirror(Note.parse('C'));
+        testMirror(Note.parse('B'));
+        testMirror(Note.parse('F'));
+        testMirror(Note.parse('Gb'));
+        testMirror(Note.parse('A#'));
+        testMirror(new Note(7, 1));
+        testMirror(new Note(-1, 3));
+    })
+
+    describe('alterToChromaticValue', () => {
+        it('C to 3', () => { expect(Note.parse('C').alterToChromaticValue(3).toString()).eq('C###') });
+        it('B to 12', () => { expect(Note.parse('B').alterToChromaticValue(12).toString()).eq('B#') });
+        it('D(1) to 12', () => { expect(new Note(1 + 7, 0).alterToChromaticValue(12).toString()).eq('Dbb(1)') });
     });
 
 });

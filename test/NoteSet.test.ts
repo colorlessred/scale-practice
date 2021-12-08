@@ -3,6 +3,11 @@ import { Note } from "../src/musicEngine/Note";
 import { NoteSet } from "../src/musicEngine/NoteSet";
 
 describe(NoteSet.name, () => {
+    describe('constructor', () => {
+        it('C G', () => { expect(new NoteSet([new Note(0, 0), new Note(4, 0)], 'ns').toString()).eq('C G'); })
+        it('C G(-1)', () => { expect(new NoteSet([new Note(0, 0), new Note(4 - 7, 0)], 'ns').toString()).eq('C G'); })
+    });
+
     describe('parse and toString', () => {
         it('one note', () => { expect(NoteSet.parse("C").toString()).eq("C") });
         it('two notes', () => { expect(NoteSet.parse("C# Eb").toString()).eq("C# Eb") });
@@ -45,7 +50,7 @@ describe(NoteSet.name, () => {
                 .parse('Cb E')
                 .getNextNotes()
                 .join('-')
-            ).to.eq('E-E-E-E-Cb-Cb-Cb-Cb-Cb-Cb-Cb-E(1)');
+            ).to.eq('E-E-E-E-Cb(1)-Cb(1)-Cb(1)-Cb(1)-Cb(1)-Cb(1)-Cb(1)-E(1)');
         });
     });
 
@@ -55,7 +60,7 @@ describe(NoteSet.name, () => {
                 .parse('Cb E')
                 .getPrevNotes()
                 .join('-')
-            ).to.eq('Cb(-1)-Cb(-1)-Cb(-1)-Cb(-1)-Cb(-1)-E-E-E-E-E-E-E');
+            ).to.eq('Cb-Cb-Cb-Cb-Cb-E-E-E-E-E-E-E');
         });
     });
 
@@ -107,5 +112,14 @@ describe(NoteSet.name, () => {
         test('C->G(-1)', ns, 'C', 'G(-1)');
         test('E->C', ns, 'E', 'C');
         test('G->E', ns, 'G', 'E');
+    });
+
+    describe('getMode', () => {
+        const ns = NoteSet.parse('C D E F G A B');
+        it('mode 1', () => { expect(ns.getMode(1).toString()).eq('C D E F G A B') });
+        it('mode 8', () => { expect(ns.getMode(8).toString()).eq('C D E F G A B') });
+        it('mode 4', () => { expect(ns.getMode(4).toString()).eq('C D E F# G A B') });
+        it('mode 5', () => { expect(ns.getMode(5).toString()).eq('C D E F G A Bb') });
+        it('mode 7', () => { expect(ns.getMode(7).toString()).eq('C Db Eb F Gb Ab Bb') });
     });
 });
