@@ -1,7 +1,7 @@
 // import React from "react";
 import { useEffect, useState } from "react";
-import { Note } from "./musicEngine/Note";
-import { NoteRange } from "./musicEngine/NoteRange";
+import { Note } from "../musicEngine/Note";
+import { NoteRange } from "../musicEngine/NoteRange";
 
 type Props = {
     range: NoteRange;

@@ -11,7 +11,7 @@ export function SpeedControls({ getNpm, setNpm }: Props) {
 
     return (
         <div id="SpeedControls" className="row">
-            <div className="col-md-6">
+            <div className="col-md-5">
                 <input className="form-check-input" type="checkbox" id="auto-speed-up" />
                 <label className="form-check-label" htmlFor="coding">Auto Speed-Up</label>
             </div>

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Note } from "./musicEngine/Note";
+import { Note } from "../musicEngine/Note";
 import { Synth, Transport, start } from 'tone';
 
 type Props = {

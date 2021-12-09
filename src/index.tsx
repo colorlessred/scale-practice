@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import {ScalePlayer} from './ScalePlayer'
+import {ScalePlayer} from './UI/ScalePlayer'
 
 ReactDOM.render(
   <React.StrictMode>

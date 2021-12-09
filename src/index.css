@@ -43,3 +43,7 @@ button.btn-selected {
 button.speedControlManual {
     width: 3em;
 }
+
+.form-group {
+    padding: 0px 10px;
+}

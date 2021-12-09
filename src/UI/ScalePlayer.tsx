@@ -1,11 +1,11 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import React, { useState } from 'react';
-import { Clock } from './Clock';
-import { Note } from './musicEngine/Note';
-import { NoteRange } from './musicEngine/NoteRange';
-import { NoteSet } from './musicEngine/NoteSet';
-import { INoteSetProvider, NoteSetProviderFixed } from './musicEngine/NoteSetProviders';
-import { NoteSetsQueue } from './musicEngine/NoteSetsQueue';
+import { Clock } from '../UI/Clock';
+import { Note } from '../musicEngine/Note';
+import { NoteRange } from '../musicEngine/NoteRange';
+import { NoteSet } from '../musicEngine/NoteSet';
+import { INoteSetProvider, NoteSetProviderFixed } from '../musicEngine/NoteSetProviders';
+import { NoteSetsQueue } from '../musicEngine/NoteSetsQueue';
 import { NoteSetUI } from './NoteSetUI';
 import { NoteProviderUI } from './NoteProducerUI';
 import { NoteSetChangerUI } from './NoteSetChangerUI';

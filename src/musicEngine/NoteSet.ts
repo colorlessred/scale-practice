@@ -228,5 +228,7 @@ export namespace NoteSet {
     export class Types {
         static readonly MAJOR: NoteSet = NoteSet.parse("C D E F G A B", 'Major');
         static readonly MELODIC_MINOR: NoteSet = NoteSet.parse("C D Eb F G A B", 'Melodic Minor');
+        static readonly ALL: Map<string, NoteSet> = [this.MAJOR, this.MELODIC_MINOR]
+            .reduce((map, noteSet) => { map.set(noteSet.getName(), noteSet); return map; }, new Map<string, NoteSet>());
     }
 }

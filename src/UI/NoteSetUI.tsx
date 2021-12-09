@@ -1,5 +1,5 @@
 import React from "react";
-import { NoteSet } from "./musicEngine/NoteSet";
+import { NoteSet } from "../musicEngine/NoteSet";
 
 type Props = {
     title: string;

@@ -1,5 +1,5 @@
 import React from "react";
-import { NoteSet } from "./musicEngine/NoteSet";
+import { NoteSet } from "../musicEngine/NoteSet";
 
 const ALL_SCALES = [NoteSet.Types.MAJOR, NoteSet.Types.MELODIC_MINOR];
 

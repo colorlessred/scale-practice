@@ -1,8 +1,8 @@
 import React, { useEffect, useRef } from "react";
-import { NoteSet } from "./musicEngine/NoteSet";
-import { NoteSetChanger } from "./musicEngine/NoteSetChanger";
-import { NoteSetsQueue } from "./musicEngine/NoteSetsQueue";
-import { IProvider } from "./musicEngine/utilities/Provider";
+import { NoteSet } from "../musicEngine/NoteSet";
+import { NoteSetChanger } from "../musicEngine/NoteSetChanger";
+import { NoteSetsQueue } from "../musicEngine/NoteSetsQueue";
+import { IProvider } from "../musicEngine/utilities/Provider";
 
 type Props = {
     noteCounter: number;

@@ -1,4 +1,4 @@
-import { Note } from "./musicEngine/Note";
+import { Note } from "../musicEngine/Note";
 
 type Props<T> = {
     item: T;
