@@ -11,6 +11,10 @@ export class ChordMappingGlobal {
         this.mappings = mappings.slice();
     }
 
+    toString(): string {
+        return this.mappings.map(chordMapping => chordMapping.toString()).join('\n');
+    }
+
     static parse(text: string): ChordMappingGlobal {
         const mappings: Array<ChordMapping> = text
             .split(ChordMappingGlobal.regex)
@@ -39,6 +43,10 @@ export class ChordMapping {
         this.mode = modeNumber;
         this.baseNoteSet = baseNoteSet;
         this.noteSetMode = noteSetMode;
+    }
+
+    toString(): string {
+        return `${this.name}: mode ${this.mode} of ${this.baseNoteSet.getName()}`;
     }
 
     static parse(line: string): ChordMapping {
