@@ -14,6 +14,7 @@ import { PlayButton } from './PlayButton';
 import { Player } from './Player';
 import { RangeUI } from './RangeUI';
 import { SpeedControls } from './SpeedControls';
+import { ChordMappingGlobalUI } from './ChordMappingUI';
 
 export function ScalePlayer() {
     /** notes per minute */
@@ -60,6 +61,7 @@ export function ScalePlayer() {
             <div className="row">
                 <RangeUI range={range} setRange={setRange} />
             </div>
+            <ChordMappingGlobalUI />
             <Clock
                 isPlaying={isPlaying}
                 getNpm={() => { return npm }}

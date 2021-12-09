@@ -22,12 +22,21 @@ describe(ChordMapping.name, () => {
 
     testError('7+ mode 1 of Major', /cannot parse line/);
     testError('7+: mode 1 of abcd', /NoteSet not found/);
+
+    it('toString', () => { expect(ChordMapping.parse(' 7+:  mode 1  of  Major ').toString()).eq('7+: mode 1 of Major'); });
 });
 
 describe(ChordMappingGlobal.name, () => {
     it('two lines', () => {
         expect(ChordMappingGlobal.parse(`7+: mode 1 of Major
 7: mode 4 of Melodic Minor`).mappings[1].noteSetMode.toString()).eq('C D E F# G A Bb')
+    });
+
+    it('toString(), two lines', () => {
+        expect(ChordMappingGlobal.parse(`7+:  mode 1 of Major   
+  7: mode 4 of Melodic Minor`).toString())
+            .eq(`7+: mode 1 of Major
+7: mode 4 of Melodic Minor`)
     });
 
 });

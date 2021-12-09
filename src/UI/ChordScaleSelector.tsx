@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import { useRef } from "react";
 import { NoteSet } from "../musicEngine/NoteSet";
 import { ScalePlayer } from "./ScalePlayer";
 // import Types from "./musicEngine/NoteSet"
