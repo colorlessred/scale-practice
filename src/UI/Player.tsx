@@ -1,24 +1,26 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Note } from "../musicEngine/Note";
-import { Synth, Transport, start } from 'tone';
+import * as Tone from 'tone';
 
 type Props = {
     note: Note;
     isPlaying: boolean;
 }
 
-
+// TODO: understand and fix this
 async function startTone() {
-    await start();
+    await Tone.start();
 }
 
 export function Player({ note, isPlaying }: Props) {
-    const synth = useRef<Synth>(new Synth().toDestination());
     const [isSetup, setIsSetup] = useState<boolean>(false);
 
-    function stop() {
-        Transport.stop();
-    }
+    const synth = useRef<Tone.AMSynth>(new Tone.AMSynth({
+        envelope: { attack: 0.1, decay: 0.01, sustain: 1, release: 0.5 }
+    }).toDestination());
+
+
+    const stop = useCallback(() => { Tone.Transport.stop(); }, []);
 
     useEffect(() => {
         if (isPlaying) {
@@ -26,19 +28,17 @@ export function Player({ note, isPlaying }: Props) {
                 startTone();
                 setIsSetup(true);
             }
-            Transport.start();
-        } else {
-            stop();
-        }
+            Tone.Transport.start();
+        } else { stop(); }
 
         return stop;
     }, [isPlaying, isSetup]);
 
     useEffect(() => {
         if (isPlaying) {
-            synth.current.triggerAttackRelease(note.getFrequency(), 0.2);
+            synth.current.triggerAttackRelease(note.getFrequency(), 0.1, undefined, 2);
         }
-    }, [isPlaying, note]);
+    }, [isPlaying, note, synth]);
 
     return (<span>{isSetup ? 'setup' : 'not setup'}</span>)
 }

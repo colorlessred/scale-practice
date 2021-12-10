@@ -1,4 +1,3 @@
-import { Note } from "./Note";
 import { NoteSet } from "./NoteSet";
 
 /**
@@ -6,9 +5,11 @@ import { NoteSet } from "./NoteSet";
  */
 export class ChordMappingGlobal {
     readonly mappings: Array<ChordMapping>;
+    readonly allNoteSets: Array<NoteSet>;
 
     constructor(mappings: Array<ChordMapping>) {
         this.mappings = mappings.slice();
+        this.allNoteSets = mappings.map(a => a.noteSetMode);
     }
 
     toString(): string {
@@ -23,7 +24,9 @@ export class ChordMappingGlobal {
         return new ChordMappingGlobal(mappings);
     }
 
-    static readonly regex = /\n/
+    static readonly regex = /\n/;
+
+    public static readonly EMPTY_MAPPING: ChordMappingGlobal = new ChordMappingGlobal(new Array<ChordMapping>());
 }
 
 /**
@@ -55,7 +58,7 @@ export class ChordMapping {
             throw new Error(`cannot parse line "${line}"`);
         }
 
-        const [_, name, mode, baseNoteSetName] = res;
+        const [name, mode, baseNoteSetName] = res.slice(1);
         const baseNoteSet = NoteSet.Types.ALL.get(baseNoteSetName.trim());
 
         if (!baseNoteSet) {
@@ -65,7 +68,7 @@ export class ChordMapping {
         // is number, guaranteed by the regex
         const modeNumber = parseInt(mode);
 
-        const noteSetMode = baseNoteSet.getMode(modeNumber);
+        const noteSetMode = baseNoteSet.getMode(modeNumber, name);
 
         return new ChordMapping(name, modeNumber, baseNoteSet, noteSetMode);
     }

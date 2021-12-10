@@ -1,15 +1,15 @@
-import React, { useEffect, useRef } from "react";
-import { Note } from "../musicEngine/Note"
+import { useEffect, useRef } from "react";
+import { Note } from "../musicEngine/Note";
 import { NoteProvider } from "../musicEngine/NoteProvider";
 import { NoteRange } from "../musicEngine/NoteRange";
 import { NoteSet } from "../musicEngine/NoteSet";
 
 type Props = {
-    noteCounter: number;
-    currentNote: Note;
-    setCurrentNote: (note: Note) => void;
-    noteSet: NoteSet;
-    range: NoteRange;
+    readonly noteCounter: number;
+    readonly currentNote: Note;
+    readonly setCurrentNote: (note: Note) => void;
+    readonly noteSet: NoteSet;
+    readonly range: NoteRange;
 }
 
 export function NoteProviderUI({ noteCounter, currentNote: note, setCurrentNote: setNote, noteSet, range: noteRange }: Props) {

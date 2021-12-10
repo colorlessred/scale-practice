@@ -1,5 +1,5 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Clock } from '../UI/Clock';
 import { Note } from '../musicEngine/Note';
 import { NoteRange } from '../musicEngine/NoteRange';
@@ -15,6 +15,7 @@ import { Player } from './Player';
 import { RangeUI } from './RangeUI';
 import { SpeedControls } from './SpeedControls';
 import { ChordMappingGlobalUI } from './ChordMappingUI';
+import { ChordMappingGlobal } from '../musicEngine/ChordMappingParser';
 
 export function ScalePlayer() {
     /** notes per minute */
@@ -25,6 +26,7 @@ export function ScalePlayer() {
     const [currentNote, setCurrentNote] = useState<Note>(range.getMin());
     const [noteSetProvider, setNoteSetProvider] = useState<INoteSetProvider>(new NoteSetProviderFixed([NoteSet.Types.MAJOR]));
     const [noteSetsQueue, setNoteSetsQueue] = useState<NoteSetsQueue>(new NoteSetsQueue(2, noteSetProvider));
+    const [chordMappingGlobal, setChordMappingGlobal] = useState<ChordMappingGlobal>(ChordMappingGlobal.EMPTY_MAPPING);
 
     function tick() {
         let ms = new Date().getTime();
@@ -51,8 +53,11 @@ export function ScalePlayer() {
                         notesPerSet={4}
                         setNoteSetsQueue={setNoteSetsQueue}
                     />
-                    <NoteSetProviderUI noteSetProvider={noteSetProvider} setNoteSetProvider={setNoteSetProvider} />
-                    {/* TODO: new UI component to display the NoteSetList */}
+                    <NoteSetProviderUI
+                        noteSetProvider={noteSetProvider}
+                        setNoteSetProvider={setNoteSetProvider}
+                        chordMappingGlobal={chordMappingGlobal}
+                    />
                 </div>
             </div>
             <div className="row">
@@ -61,7 +66,9 @@ export function ScalePlayer() {
             <div className="row">
                 <RangeUI range={range} setRange={setRange} />
             </div>
-            <ChordMappingGlobalUI />
+            <ChordMappingGlobalUI
+                chordMappingGlobal={chordMappingGlobal}
+                setChordMappingGlobal={setChordMappingGlobal} />
             <Clock
                 isPlaying={isPlaying}
                 getNpm={() => { return npm }}
@@ -73,7 +80,8 @@ export function ScalePlayer() {
                 currentNote={currentNote}
                 setCurrentNote={setCurrentNote}
                 noteSet={noteSetsQueue.peek(0)}
-                range={range} />
+                range={range}
+            />
 
             <Player isPlaying={isPlaying} note={currentNote} />
             <div>

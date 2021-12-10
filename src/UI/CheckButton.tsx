@@ -1,10 +1,9 @@
-import { Note } from "../musicEngine/Note";
 
 type Props<T> = {
-    item: T;
-    selected: boolean;
-    setSelected: (selected: boolean) => void;
-    getName: (v: T) => string;
+    readonly item: T;
+    readonly selected: boolean;
+    readonly setSelected: (selected: boolean) => void;
+    readonly getName: (v: T) => string;
 }
 
 /** check selector for Notes */

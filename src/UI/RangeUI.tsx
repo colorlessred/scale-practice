@@ -1,11 +1,10 @@
-// import React from "react";
 import { useEffect, useState } from "react";
 import { Note } from "../musicEngine/Note";
 import { NoteRange } from "../musicEngine/NoteRange";
 
 type Props = {
-    range: NoteRange;
-    setRange: (range: NoteRange) => void
+    readonly range: NoteRange;
+    readonly setRange: React.Dispatch<NoteRange>
 }
 
 // select the range of notes that can be played

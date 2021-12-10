@@ -1,12 +1,11 @@
 import { useRef } from "react";
 import { NoteSet } from "../musicEngine/NoteSet";
-import { ScalePlayer } from "./ScalePlayer";
 // import Types from "./musicEngine/NoteSet"
 
 class ChordScale {
-    baseScale: NoteSet;
-    modeNumber: number;
-    name: string;
+    readonly baseScale: NoteSet;
+    readonly modeNumber: number;
+    readonly name: string;
 
     constructor(baseScale: NoteSet, modeNumber: number, name: string) {
         this.baseScale = baseScale;
@@ -35,9 +34,9 @@ export function ChordScaleSelectorUI() {
 // ########### ChordScale ###########
 
 type csProps = {
-    name: string;
-    baseScale: NoteSet;
-    modeNumber: number;
+    readonly name: string;
+    readonly baseScale: NoteSet;
+    readonly modeNumber: number;
 }
 
 function ChordScaleUI({ baseScale, modeNumber, name }: csProps) {

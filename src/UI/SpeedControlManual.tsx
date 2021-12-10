@@ -2,9 +2,9 @@ import { useRef } from "react";
 import Button from 'react-bootstrap/Button';
 
 type Props = {
-    step: number,
-    getSpeed: () => number,
-    setSpeed: (newValue: number) => void,
+    readonly step: number
+    readonly getSpeed: () => number
+    readonly setSpeed: React.Dispatch<number>
 }
 
 export function SpeedControlManual({ step, getSpeed, setSpeed }: Props) {

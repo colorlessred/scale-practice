@@ -52,7 +52,12 @@ export class AutoQueue<T> {
             throw new Error(`invalid index ${index}. Must be between 0 and ${this.values.length} `);
         }
 
-        return this.values[index];
+        const out = this.values[index];
+        if (out === undefined) {
+            throw new Error(`Undefined value in queue. Position ${index}`);
+        }
+
+        return out;
     }
 
     public toString(): string {

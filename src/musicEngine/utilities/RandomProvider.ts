@@ -8,7 +8,7 @@ export class RandomProvider<T> implements IProvider<T> {
     private readonly maxRecycleZoneSize: number;
 
     constructor(values: Array<T>) {
-        if (!values || values.length === 0) {
+        if (!values) {
             throw new Error('values array must contain some values');
         }
         this.values = RandomProvider.shuffle<T>(values);

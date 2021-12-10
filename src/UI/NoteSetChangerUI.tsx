@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { NoteSet } from "../musicEngine/NoteSet";
 import { NoteSetChanger } from "../musicEngine/NoteSetChanger";
 import { NoteSetsQueue } from "../musicEngine/NoteSetsQueue";

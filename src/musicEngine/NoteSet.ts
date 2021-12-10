@@ -184,7 +184,7 @@ export class NoteSet {
      * @param modeNumber 1-based mode number. mode 1 is the same scale
      * @returns the nth mode. 
      */
-    public getMode(modeNumber: number): NoteSet {
+    public getMode(modeNumber: number, newName?: string): NoteSet {
         let newNotes = new Array<Note>()
         const modeIndex = modeNumber - 1;
         // get the same notes, but starting from the new mode root
@@ -192,7 +192,8 @@ export class NoteSet {
         // the amount of translation needed
         const interval = this.notes.get(modeIndex).subtract(this.notes.get(0));
         newNotes = newNotes.map(note => note.addInterval(interval.mirrorInterval()));
-        return new NoteSet(newNotes, `${this.name} mode ${modeNumber}`);
+        const modeName = newName ? newName : `${this.name} mode ${modeNumber}`;
+        return new NoteSet(newNotes, modeName);
     }
 
     /**

@@ -1,28 +1,28 @@
 import { useEffect, useState } from "react";
+import { ChordMappingGlobal } from "../musicEngine/ChordMappingParser";
 import { ALL_NOTES_FLAT_AND_SHARP, Note } from "../musicEngine/Note";
 import { NoteSet } from "../musicEngine/NoteSet";
 import { INoteSetProvider, NoteSetProviderRandom } from "../musicEngine/NoteSetProviders";
 import { SelectorUI } from "./SelectorUI";
-import { ScaleTypesUI } from "./ScaleTypesUI";
 
 type Props = {
-    noteSetProvider: INoteSetProvider;
+    readonly noteSetProvider: INoteSetProvider;
     // TODO: modify other props to use React.Dispatch
-    setNoteSetProvider: React.Dispatch<INoteSetProvider>;
+    readonly setNoteSetProvider: React.Dispatch<INoteSetProvider>;
+    readonly chordMappingGlobal: ChordMappingGlobal;
 }
 
 /**
  * init to all true
  */
 const ALL_ROOTS: Array<Note> = ALL_NOTES_FLAT_AND_SHARP.slice();
-const ALL_SCALES: Array<NoteSet> = [NoteSet.Types.MAJOR, NoteSet.Types.MELODIC_MINOR];
 
 /**
  * managed the Provider for the NoteSet and return it to the main UI
  */
-export function NoteSetProviderRandomUI({ noteSetProvider, setNoteSetProvider }: Props) {
-    const [roots, setValidNotes] = useState<Set<Note>>(new Set(ALL_ROOTS));
-    const [scales, setValidScales] = useState<Set<NoteSet>>(new Set(ALL_SCALES));
+export function NoteSetProviderRandomUI({ setNoteSetProvider, chordMappingGlobal }: Props) {
+    const [roots, setRoots] = useState<Set<Note>>(new Set(ALL_ROOTS));
+    const [scales, setScales] = useState<Set<NoteSet>>(new Set<NoteSet>(chordMappingGlobal.allNoteSets));
 
     useEffect(() => {
         const rootsArray: Array<Note> = [...roots.values()];
@@ -33,13 +33,17 @@ export function NoteSetProviderRandomUI({ noteSetProvider, setNoteSetProvider }:
         setNoteSetProvider(nsp);
     }, [roots, scales, setNoteSetProvider]);
 
+    // re-select all scales when the chord mapping changes
+    useEffect(() => { setScales(new Set<NoteSet>(chordMappingGlobal.allNoteSets)) }, [chordMappingGlobal]);
+
     return (<>
         <label htmlFor="NoteSetProviderRandomUI" className="col-form-label">Random</label>
         <div className="form-group" id="NoteSetProviderRandomUI">
             <SelectorUI name="Roots" allValues={ALL_ROOTS} selectedValues={roots}
-                setSelectedValues={setValidNotes} getName={note => note.toString()} />
-            <SelectorUI name="Scale Types" allValues={ALL_SCALES} selectedValues={scales}
-                setSelectedValues={setValidScales} getName={noteSet => noteSet.getName()} />
+                setSelectedValues={setRoots} getName={note => note.toString()} />
+            <SelectorUI name="Scale Types"
+                allValues={chordMappingGlobal.allNoteSets}
+                selectedValues={scales} setSelectedValues={setScales} getName={noteSet => noteSet.getName()} />
         </div>
     </>
     )

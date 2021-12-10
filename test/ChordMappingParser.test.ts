@@ -12,6 +12,7 @@ describe(ChordMapping.name, () => {
     test('7: mode 5 of Major', 'C D E F G A Bb');
     test('m7b5: mode 7 of Major', 'C Db Eb F Gb Ab Bb');
     test(' 7+:  mode 1  of  Major ', 'C D E F G A B');
+    test(' 7+:  mode 1  of  Major ', 'C D E F G A B');
 
 
     function testError(line: string, message: RegExp) {

@@ -1,24 +1,34 @@
+import { useEffect, useState } from "react";
 import { CheckButton } from "./CheckButton";
 
 type Props<T> = {
-    name: string;
-    allValues: Array<T>;
-    selectedValues: Set<T>;
-    setSelectedValues: React.Dispatch<Set<T>>;
-    getName: (v: T) => string;
+    readonly name: string
+    readonly allValues: Array<T>
+    readonly selectedValues: Set<T>
+    readonly setSelectedValues: React.Dispatch<Set<T>>
+    readonly getName: (v: T) => string
 }
 
 /**
  * select multiple values
  */
 export function SelectorUI<T>({ name, allValues, selectedValues, setSelectedValues, getName }: Props<T>) {
+    const [error, setError] = useState<string>('');
+
+    useEffect(() => {
+        if (!selectedValues || selectedValues.size === 0) {
+            setError(`No item selected`);
+        } else {
+            setError('');
+        }
+    }, [error, setError, selectedValues]);
+
     return (<>
         <label htmlFor="roots" className="col-form-label">{name}</label>
         <div className="form-group" id="roots">
             {
-                // TODO find best practices to test logic inside jsx/tsx pages
                 allValues.map((value) => {
-                    const noteSelected = () => {
+                    const handler = () => {
                         const newSelectedValues = new Set(selectedValues);
                         if (newSelectedValues.has(value)) {
                             newSelectedValues.delete(value);
@@ -29,10 +39,15 @@ export function SelectorUI<T>({ name, allValues, selectedValues, setSelectedValu
                     }
 
                     return (
-                        <CheckButton key={`${value}`} item={value} selected={selectedValues.has(value)} setSelected={noteSelected} getName={getName} />
+                        <CheckButton
+                            key={`${value}`} item={value}
+                            selected={selectedValues.has(value)}
+                            setSelected={handler}
+                            getName={getName} />
                     )
                 })
             }
         </div>
+        <div>{error}</div>
     </>)
 }
