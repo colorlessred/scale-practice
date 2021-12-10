@@ -12,15 +12,15 @@ type Props = {
     readonly range: NoteRange;
 }
 
-export function NoteProviderUI({ noteCounter, currentNote: note, setCurrentNote: setNote, noteSet, range: noteRange }: Props) {
-    const noteProducerRef = useRef<NoteProvider>(new NoteProvider(note, noteSet, noteRange, true));
+export function NoteProviderUI({ noteCounter, currentNote, setCurrentNote, noteSet, range }: Props) {
+    const noteProducerRef = useRef<NoteProvider>(new NoteProvider(currentNote, noteSet, range, true));
 
     useEffect(() => { noteProducerRef.current.setNoteSet(noteSet) }, [noteSet])
-    useEffect(() => { noteProducerRef.current.setNoteRange(noteRange) }, [noteRange])
+    useEffect(() => { noteProducerRef.current.setNoteRange(range) }, [range])
 
     useEffect(() => {
-        setNote(noteProducerRef.current.moveToNextNote());
-    }, [noteCounter, setNote]);
+        setCurrentNote(noteProducerRef.current.moveToNextNote());
+    }, [noteCounter, setCurrentNote]);
 
     return (<></>)
 }

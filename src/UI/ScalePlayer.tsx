@@ -1,5 +1,5 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Clock } from '../UI/Clock';
 import { Note } from '../musicEngine/Note';
 import { NoteRange } from '../musicEngine/NoteRange';
@@ -28,12 +28,11 @@ export function ScalePlayer() {
     const [noteSetsQueue, setNoteSetsQueue] = useState<NoteSetsQueue>(new NoteSetsQueue(2, noteSetProvider));
     const [chordMappingGlobal, setChordMappingGlobal] = useState<ChordMappingGlobal>(ChordMappingGlobal.EMPTY_MAPPING);
 
-    function tick() {
+    const tick = useCallback(() => {
         let ms = new Date().getTime();
         ms = ms - Math.floor(ms / 1000) * 1000
-        console.log("#############  TICK ############# " + ms);
         setNoteCounter(noteCounter + 1);
-    }
+    }, []);
 
     return (
         <div id="scalePlayer" className="container-fluid">
@@ -69,6 +68,7 @@ export function ScalePlayer() {
             <ChordMappingGlobalUI
                 chordMappingGlobal={chordMappingGlobal}
                 setChordMappingGlobal={setChordMappingGlobal} />
+
             <Clock
                 isPlaying={isPlaying}
                 getNpm={() => { return npm }}

@@ -16,3 +16,4 @@ TODO backlog
 * transform empty components into custom hooks?
 * add possibility to define custom scale (using steps? note?)
 * fix textarea for mapping, cursor should remain where it is when refreshed
+* use Tone.Loop instead of Clock
