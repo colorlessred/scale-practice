@@ -1,38 +1,41 @@
 import { INoteSetProvider } from "./NoteSetProviders";
 import { NoteSetsQueue } from "./NoteSetsQueue";
 
+const NOTE_SETS_IN_QUEUE = 2;
+
 /**
  * moves to the next NoteSet when needed
  */
 export class NoteSetChanger {
     private notesPerNoteSet: number;
     private numNotePlayed: number;
-    private noteSetsList: NoteSetsQueue;
+    private noteSetsQueue: NoteSetsQueue;
 
     constructor(notesPerNoteSet: number, noteSetProvider: INoteSetProvider) {
         this.notesPerNoteSet = notesPerNoteSet;
-        this.noteSetsList = new NoteSetsQueue(2, noteSetProvider);
+        this.noteSetsQueue = new NoteSetsQueue(NOTE_SETS_IN_QUEUE, noteSetProvider);
         this.numNotePlayed = 0;
     }
 
     /**
      * call when a new note is played and the NoteSetChanger will move forward when needed
+     * returning the appropriate NoteSets in the output queue
      * @returns new note set
      */
     public nextNotePlayed(): NoteSetsQueue {
         this.numNotePlayed++;
         if (this.numNotePlayed >= this.notesPerNoteSet) {
             this.numNotePlayed = 0;
-            this.noteSetsList.dequeue();
+            this.noteSetsQueue.dequeue();
         }
-        return this.getNoteSetsList();
+        return this.getNoteSetsQueue();
     }
 
     /**
-     * return the currently valid 
+     * return queue with NoteSets 
      */
-    public getNoteSetsList(): NoteSetsQueue {
-        return this.noteSetsList;
+    public getNoteSetsQueue(): NoteSetsQueue {
+        return this.noteSetsQueue;
     }
 
     /**
@@ -40,7 +43,7 @@ export class NoteSetChanger {
      * @param noteSetProvider the current NoteSetProvider
      */
     public setNoteSetProvider(noteSetProvider: INoteSetProvider) {
-        this.noteSetsList.setProvider(noteSetProvider);
+        this.noteSetsQueue.setProvider(noteSetProvider);
     }
 
     /**

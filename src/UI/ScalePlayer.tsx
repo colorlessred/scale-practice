@@ -1,38 +1,33 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { useCallback, useEffect, useState } from 'react';
-import { Clock } from '../UI/Clock';
+import { useEffect, useRef, useState } from 'react';
+import { ChordMappingGlobal } from '../musicEngine/ChordMappingParser';
 import { Note } from '../musicEngine/Note';
 import { NoteRange } from '../musicEngine/NoteRange';
 import { NoteSet } from '../musicEngine/NoteSet';
+import { NoteSetChanger } from '../musicEngine/NoteSetChanger';
 import { INoteSetProvider, NoteSetProviderFixed } from '../musicEngine/NoteSetProviders';
 import { NoteSetsQueue } from '../musicEngine/NoteSetsQueue';
-import { NoteSetUI } from './NoteSetUI';
-import { NoteProviderUI } from './NoteProducerUI';
-import { NoteSetChangerUI } from './NoteSetChangerUI';
+import { ChordMappingGlobalUI } from './ChordMappingUI';
 import { NoteSetProviderUI } from './NoteSetProviderUI';
+import { NoteSetUI } from './NoteSetUI';
 import { PlayButton } from './PlayButton';
 import { Player } from './Player';
 import { RangeUI } from './RangeUI';
 import { SpeedControls } from './SpeedControls';
-import { ChordMappingGlobalUI } from './ChordMappingUI';
-import { ChordMappingGlobal } from '../musicEngine/ChordMappingParser';
 
 export function ScalePlayer() {
     /** notes per minute */
     const [npm, setNpm] = useState<number>(60);
     const [isPlaying, setPlaying] = useState<boolean>(false);
-    const [noteCounter, setNoteCounter] = useState<number>(0);
     const [range, setRange] = useState<NoteRange>(new NoteRange(new Note(0, 0), new Note(7 * 2, 0)));
-    const [currentNote, setCurrentNote] = useState<Note>(range.getMin());
     const [noteSetProvider, setNoteSetProvider] = useState<INoteSetProvider>(new NoteSetProviderFixed([NoteSet.Types.MAJOR]));
     const [noteSetsQueue, setNoteSetsQueue] = useState<NoteSetsQueue>(new NoteSetsQueue(2, noteSetProvider));
     const [chordMappingGlobal, setChordMappingGlobal] = useState<ChordMappingGlobal>(ChordMappingGlobal.EMPTY_MAPPING);
+    const [notesPerSet, setNotesPerSet] = useState<number>(4);
 
-    const tick = useCallback(() => {
-        let ms = new Date().getTime();
-        ms = ms - Math.floor(ms / 1000) * 1000
-        setNoteCounter(noteCounter + 1);
-    }, []);
+    const noteSetChanger = useRef<NoteSetChanger>(new NoteSetChanger(notesPerSet, noteSetProvider));
+    useEffect(() => { noteSetChanger.current.setNotesPerNoteSet(notesPerSet); }, [notesPerSet]);
+    useEffect(() => { noteSetChanger.current.setNoteSetProvider(noteSetProvider); }, [noteSetProvider]);
 
     return (
         <div id="scalePlayer" className="container-fluid">
@@ -46,12 +41,6 @@ export function ScalePlayer() {
             </div>
             <div className="row">
                 <div className="col-md-12">
-                    <NoteSetChangerUI
-                        noteCounter={noteCounter}
-                        noteSetProvider={noteSetProvider}
-                        notesPerSet={4}
-                        setNoteSetsQueue={setNoteSetsQueue}
-                    />
                     <NoteSetProviderUI
                         noteSetProvider={noteSetProvider}
                         setNoteSetProvider={setNoteSetProvider}
@@ -65,28 +54,19 @@ export function ScalePlayer() {
             <div className="row">
                 <RangeUI range={range} setRange={setRange} />
             </div>
+
             <ChordMappingGlobalUI
                 chordMappingGlobal={chordMappingGlobal}
                 setChordMappingGlobal={setChordMappingGlobal} />
 
-            <Clock
+            <Player
                 isPlaying={isPlaying}
-                getNpm={() => { return npm }}
-                callback={tick}
-            />
-
-            <NoteProviderUI
-                noteCounter={noteCounter}
-                currentNote={currentNote}
-                setCurrentNote={setCurrentNote}
                 noteSet={noteSetsQueue.peek(0)}
                 range={range}
+                noteSetChanger={noteSetChanger.current}
+                setNoteSetsQueue={setNoteSetsQueue}
             />
 
-            <Player isPlaying={isPlaying} note={currentNote} />
-            <div>
-                {currentNote.toString()}, {currentNote.getChromaticValue()}
-            </div>
         </div>
     )
 }

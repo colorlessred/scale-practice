@@ -1,47 +1,63 @@
-import { useCallback, useEffect, useRef, useState } from "react";
-import { Note } from "../musicEngine/Note";
+import { useCallback, useEffect, useRef } from "react";
 import * as Tone from 'tone';
+import { NoteProvider } from "../musicEngine/NoteProvider";
+import { NoteRange } from "../musicEngine/NoteRange";
+import { NoteSet } from "../musicEngine/NoteSet";
+import { NoteSetChanger } from "../musicEngine/NoteSetChanger";
+import { NoteSetsQueue } from "../musicEngine/NoteSetsQueue";
 
 type Props = {
-    note: Note;
-    isPlaying: boolean;
+    // readonly note: Note
+    readonly isPlaying: boolean
+    readonly noteSet: NoteSet
+    readonly range: NoteRange
+    readonly noteSetChanger: NoteSetChanger
+    readonly setNoteSetsQueue: React.Dispatch<NoteSetsQueue>
 }
 
-// TODO: understand and fix this
+// TODO: maybe move the start to the main class when it gets some user input? also start/stop transport there.
 async function startTone() {
     await Tone.start();
     console.log('Tone.start');
 }
 
-export function Player({ note, isPlaying }: Props) {
-    const [isSetup, setIsSetup] = useState<boolean>(false);
+export function Player({ isPlaying, noteSet, range, noteSetChanger, setNoteSetsQueue }: Props) {
+    const isFirstNote = useRef<boolean>(false);
+
+    const noteProvider = useRef<NoteProvider>(new NoteProvider(range.getMin(), noteSet, range, true));
+    useEffect(() => { noteProvider.current.setNoteSet(noteSet) }, [noteSet])
+    useEffect(() => { noteProvider.current.setNoteRange(range) }, [range])
+
+    const loop = useRef<Tone.Loop>();
 
     const synth = useRef<Tone.Synth>(new Tone.Synth({
-        envelope: { attack: 0.1, decay: 0.2, sustain: 1, release: 0.1}
+        envelope: { attack: 0.01, decay: 0.01, sustain: 0.5, release: 0.1 }
     }).toDestination());
 
-    const stop = useCallback(() => {
-        console.log('stop');
-        Tone.Transport.stop();
+    const playNote = useCallback((time) => {
+        console.log(`play note, time ${time}`);
+        const note = noteProvider.current.moveToNextNote();
+        synth.current.triggerAttackRelease(note.getFrequency(), 0.3, time);
+        setNoteSetsQueue(noteSetChanger.nextNotePlayed());
     }, []);
 
     useEffect(() => {
         if (isPlaying) {
-            if (!isSetup) {
+            if (isFirstNote.current) {
+                isFirstNote.current = false;
                 startTone();
-                setIsSetup(true);
-                Tone.Transport.start();
             }
-        } else { stop(); }
-
-        return stop;
-    }, [isPlaying, stop, isSetup]);
-
-    useEffect(() => {
-        if (isPlaying && isSetup) {
-            synth.current.triggerAttackRelease(note.getFrequency(), 0.2);
+            // TODO fix time
+            loop.current = new Tone.Loop(playNote, '4n');
+            loop.current.start();
+            Tone.Transport.start();
+        } else {
+            if (loop.current) {
+                loop.current.stop();
+                Tone.Transport.stop();
+            }
         }
-    }, [isPlaying, isSetup, note, synth]);
+    }, [isPlaying, isFirstNote.current]);
 
-    return (<span>{isSetup ? 'setup' : 'not setup'}</span>)
+    return (<></>)
 }

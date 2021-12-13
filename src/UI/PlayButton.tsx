@@ -1,8 +1,8 @@
 import Button from 'react-bootstrap/Button';
 
 type Props = {
-    isPlaying: () => boolean,
-    setPlaying: (newValue: boolean) => void,
+    readonly isPlaying: () => boolean,
+    readonly setPlaying: React.Dispatch<boolean>,
 }
 
 export function PlayButton({ isPlaying, setPlaying }: Props) {
@@ -11,6 +11,6 @@ export function PlayButton({ isPlaying, setPlaying }: Props) {
     const click = () => { setPlaying(!isPlaying()) };
 
     return (
-        <Button id="play-button" onClick={click}> {display}</Button >
+        <Button id="play-button" onClick={click}>{display}</Button >
     )
 }
