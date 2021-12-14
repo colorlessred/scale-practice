@@ -66,7 +66,7 @@ export function ScalePlayer() {
                 noteSetChanger={noteSetChanger.current}
                 setNoteSetsQueue={setNoteSetsQueue}
             />
-
+            <div>{noteSetsQueue.toString()}</div>
         </div>
     )
 }

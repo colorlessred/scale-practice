@@ -36,10 +36,10 @@ export function Player({ isPlaying, noteSet, range, noteSetChanger, setNoteSetsQ
 
     const playNote = useCallback((time) => {
         console.log(`play note, time ${time}`);
-        const note = noteProvider.current.moveToNextNote();
+        const note = noteProvider.current.getNoteAndMoveToNext();
         synth.current.triggerAttackRelease(note.getFrequency(), 0.3, time);
         setNoteSetsQueue(noteSetChanger.nextNotePlayed());
-    }, []);
+    }, [noteSetChanger, setNoteSetsQueue]);
 
     useEffect(() => {
         if (isPlaying) {

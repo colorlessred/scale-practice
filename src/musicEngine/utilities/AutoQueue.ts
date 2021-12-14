@@ -28,6 +28,16 @@ export class AutoQueue<T> {
     }
 
     /**
+     * 
+     * @returns clone with the same values
+     */
+    public clone(): AutoQueue<T> {
+        const out = new AutoQueue<T>(this.size, this.provider);
+        out.values = this.values.slice();
+        return out;
+    }
+
+    /**
      * remove element from the queue and return it
      * this will trigger a refill from the end of the queue
      */

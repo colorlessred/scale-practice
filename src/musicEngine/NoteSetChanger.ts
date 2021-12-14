@@ -27,6 +27,9 @@ export class NoteSetChanger {
         if (this.numNotePlayed >= this.notesPerNoteSet) {
             this.numNotePlayed = 0;
             this.noteSetsQueue.dequeue();
+            // needs to clone so that React will see a different instance
+            this.noteSetsQueue = this.noteSetsQueue.clone();
+            // console.log(`move to next NoteSet: ${this.noteSetsQueue.toString()}`);
         }
         return this.getNoteSetsQueue();
     }

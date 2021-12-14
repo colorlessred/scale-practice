@@ -14,7 +14,6 @@ export class NoteProvider {
     private noteRange: NoteRange;
     /** if true, it goes up to the next note */
     private directionUp: boolean;
-    private isFirstCall: boolean;
 
     private static readonly MAX_ATTEMPTS = 10;
 
@@ -23,7 +22,6 @@ export class NoteProvider {
         this.noteRange = range;
         this.note = currentNote;
         this.directionUp = goingUp;
-        this.isFirstCall = true;
     }
 
     public getNote() { return this.note; }
@@ -56,15 +54,9 @@ export class NoteProvider {
      * if it's the first call it returns the current note
      * @returns next note
      */
-    public moveToNextNote(): Note {
-        let out: Note;
-        if (this.isFirstCall) {
-            this.isFirstCall = false;
-            out = this.note;
-        } else {
-            out = this.getNextNote();
-            this.setNote(out);
-        }
+    public getNoteAndMoveToNext(): Note {
+        let out: Note = this.note;
+        this.setNote(this.getNextNote());
         return out;
     }
 

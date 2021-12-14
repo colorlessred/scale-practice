@@ -19,7 +19,7 @@ export function NoteProviderUI({ noteCounter, currentNote, setCurrentNote, noteS
     useEffect(() => { noteProducerRef.current.setNoteRange(range) }, [range])
 
     useEffect(() => {
-        setCurrentNote(noteProducerRef.current.moveToNextNote());
+        setCurrentNote(noteProducerRef.current.getNoteAndMoveToNext());
     }, [noteCounter, setCurrentNote]);
 
     return (<></>)
