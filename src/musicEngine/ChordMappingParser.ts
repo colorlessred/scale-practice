@@ -1,33 +1,5 @@
 import { NoteSet } from "./NoteSet";
 
-/**
- * map a full text into a Set of Chord -> NoteSets
- */
-export class ChordMappingGlobal {
-    readonly mappings: Array<ChordMapping>;
-    readonly allNoteSets: Array<NoteSet>;
-
-    constructor(mappings: Array<ChordMapping>) {
-        this.mappings = mappings.slice();
-        this.allNoteSets = mappings.map(a => a.noteSetMode);
-    }
-
-    toString(): string {
-        return this.mappings.map(chordMapping => chordMapping.toString()).join('\n');
-    }
-
-    static parse(text: string): ChordMappingGlobal {
-        const mappings: Array<ChordMapping> = text
-            .split(ChordMappingGlobal.regex)
-            .map((line: string) => { return ChordMapping.parse(line) });
-
-        return new ChordMappingGlobal(mappings);
-    }
-
-    static readonly regex = /\n/;
-
-    public static readonly EMPTY_MAPPING: ChordMappingGlobal = new ChordMappingGlobal(new Array<ChordMapping>());
-}
 
 /**
  * parse single line into chord mapping
@@ -73,5 +45,36 @@ export class ChordMapping {
         return new ChordMapping(name, modeNumber, baseNoteSet, noteSetMode);
     }
 
+    static DEFAULT = new ChordMapping('7+', 0, NoteSet.Types.MAJOR, NoteSet.Types.MAJOR);
     static readonly regex = /^\s*(.*?):\s+mode\s+(\d+)\s+of\s+([\w\s]+)/
+}
+
+/**
+ * map a full text into a Set of Chord -> NoteSets
+ */
+export class ChordMappingGlobal {
+    readonly mappings: Array<ChordMapping>;
+    readonly allNoteSets: Array<NoteSet>;
+
+    constructor(mappings: Array<ChordMapping>) {
+        this.mappings = mappings.slice();
+        this.allNoteSets = mappings.map(a => a.noteSetMode);
+    }
+
+    toString(): string {
+        return this.mappings.map(chordMapping => chordMapping.toString()).join('\n');
+    }
+
+    static parse(text: string): ChordMappingGlobal {
+        const mappings: Array<ChordMapping> = text
+            .split(ChordMappingGlobal.regex)
+            .map((line: string) => { return ChordMapping.parse(line) });
+
+        return new ChordMappingGlobal(mappings);
+    }
+
+    static readonly regex = /\n/;
+
+    public static readonly EMPTY_MAPPING: ChordMappingGlobal = new ChordMappingGlobal(new Array<ChordMapping>());
+    public static readonly DEFAULT_MAPPING: ChordMappingGlobal = new ChordMappingGlobal([ChordMapping.DEFAULT]);
 }

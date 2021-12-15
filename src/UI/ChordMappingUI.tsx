@@ -6,28 +6,23 @@ const DEFAULT_MAPPING_TEXT = `7+: mode 1 of Major
 m7add6: mode 2 of Major`;
 
 type ChordMappingGlobalUIProps = {
-    readonly chordMappingGlobal: ChordMappingGlobal;
     readonly setChordMappingGlobal: React.Dispatch<ChordMappingGlobal>;
 }
 
 /**
  * let the user specify the mapping between the chord symbols and the modes
  */
-export function ChordMappingGlobalUI({ chordMappingGlobal, setChordMappingGlobal }: ChordMappingGlobalUIProps) {
+export function ChordMappingGlobalUI({ setChordMappingGlobal: setParentChordMappingGlobal }: ChordMappingGlobalUIProps) {
     const [error, setError] = useState<string>('');
     const [text, setText] = useState<string>('');
 
-    // load the default values if the passed mapping is empty
-    useEffect(() => {
-        if (!chordMappingGlobal || chordMappingGlobal.mappings.length === 0) {
-            setChordMappingGlobal(ChordMappingGlobal.parse(DEFAULT_MAPPING_TEXT));
-        }
-    }, [chordMappingGlobal, setChordMappingGlobal]);
-
+    const [chordMappingGlobal, setChordMappingGlobal] =
+        useState<ChordMappingGlobal>(ChordMappingGlobal.parse(DEFAULT_MAPPING_TEXT));
 
     useEffect(() => {
         setText(chordMappingGlobal.toString());
         setError('');
+        setParentChordMappingGlobal(chordMappingGlobal);
     }, [chordMappingGlobal, setText, setError]);
 
     const onChange = useCallback((ev: React.ChangeEvent<HTMLTextAreaElement>) => {

@@ -30,9 +30,7 @@ export function ChordScaleSelectorUI() {
     return (<></>)
 }
 
-
 // ########### ChordScale ###########
-
 type csProps = {
     readonly name: string;
     readonly baseScale: NoteSet;

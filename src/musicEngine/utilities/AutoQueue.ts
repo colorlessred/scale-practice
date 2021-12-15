@@ -23,8 +23,26 @@ export class AutoQueue<T> {
         this.values = new Array<T>()
         // init the values using the provider
         for (let i = 0; i < this.size; i++) {
-            this.values.push(provider.getNext());
+            this.values.push(this.getNext());
         }
+    }
+
+    /**
+     * 
+     * @returns next value, applying the proper hooks
+     */
+    private getNext(): T {
+        const provNext = this.provider.getNext();
+        if (!provNext) {
+            throw new Error(`empty value from provider`);
+        }
+
+        const hookNext = this.filterNextHook(provNext);
+        if (!hookNext) {
+            throw new Error(`empty value from filterNextHook`);
+        }
+
+        return hookNext;
     }
 
     /**
@@ -43,13 +61,23 @@ export class AutoQueue<T> {
      */
     public dequeue(): T {
         // refill from provider
-        this.values.push(this.provider.getNext());
+        this.values.push(this.getNext());
         const out: T | undefined = this.values.shift();
 
         if (out === undefined) {
             throw new Error('undefined value in the queue');
         }
         return out;
+    }
+
+    /**
+     * override this method if you need some specific filter applied
+     * to the new items pushed into the queue
+     * @param nextItem 
+     * @returns 
+     */
+    public filterNextHook(nextItem: T): T {
+        return nextItem;
     }
 
     /**

@@ -22,7 +22,7 @@ export function ScalePlayer() {
     const [range, setRange] = useState<NoteRange>(new NoteRange(new Note(0, 0), new Note(7 * 2, 0)));
     const [noteSetProvider, setNoteSetProvider] = useState<INoteSetProvider>(new NoteSetProviderFixed([NoteSet.Types.MAJOR]));
     const [noteSetsQueue, setNoteSetsQueue] = useState<NoteSetsQueue>(new NoteSetsQueue(2, noteSetProvider));
-    const [chordMappingGlobal, setChordMappingGlobal] = useState<ChordMappingGlobal>(ChordMappingGlobal.EMPTY_MAPPING);
+    const [chordMappingGlobal, setChordMappingGlobal] = useState<ChordMappingGlobal>(ChordMappingGlobal.DEFAULT_MAPPING);
     const [notesPerSet, setNotesPerSet] = useState<number>(4);
 
     const noteSetChanger = useRef<NoteSetChanger>(new NoteSetChanger(notesPerSet, noteSetProvider));
@@ -55,9 +55,7 @@ export function ScalePlayer() {
                 <RangeUI range={range} setRange={setRange} />
             </div>
 
-            <ChordMappingGlobalUI
-                chordMappingGlobal={chordMappingGlobal}
-                setChordMappingGlobal={setChordMappingGlobal} />
+            <ChordMappingGlobalUI setChordMappingGlobal={setChordMappingGlobal} />
 
             <Player
                 isPlaying={isPlaying}
@@ -66,7 +64,7 @@ export function ScalePlayer() {
                 noteSetChanger={noteSetChanger.current}
                 setNoteSetsQueue={setNoteSetsQueue}
             />
-            <div>{noteSetsQueue.toString()}</div>
+            {/* <div>{noteSetsQueue.toString()}</div> */}
         </div>
     )
 }

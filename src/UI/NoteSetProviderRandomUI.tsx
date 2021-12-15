@@ -24,6 +24,10 @@ export function NoteSetProviderRandomUI({ setNoteSetProvider, chordMappingGlobal
     const [roots, setRoots] = useState<Set<Note>>(new Set(ALL_ROOTS));
     const [scales, setScales] = useState<Set<NoteSet>>(new Set<NoteSet>(chordMappingGlobal.allNoteSets));
 
+    if (scales.size === 0){
+        throw new Error('Cannot set up NoteSetProviderRandomUI without some NoteSets')
+    }
+
     useEffect(() => {
         const rootsArray: Array<Note> = [...roots.values()];
         const scalesArray: Array<NoteSet> = [...scales.values()];

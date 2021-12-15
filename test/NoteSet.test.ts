@@ -128,17 +128,18 @@ describe(NoteSet.name, () => {
     });
 
     describe('minimizeAlterations', () => {
-        it('E#', () => {
-            const ns = NoteSet.Types.MAJOR.transpose(Note.parse('E#'));
-            const res = NoteSet.Types.MAJOR.transpose(Note.parse('F'));
-            expect(ns.minimizeAlterations().toString()).eq(res.toString());
-        });
-        it('D#', () => {
-            const ns = NoteSet.Types.MAJOR.transpose(Note.parse('D#'));
-            const res = NoteSet.Types.MAJOR.transpose(Note.parse('Eb'));
-            expect(ns.minimizeAlterations().toString()).eq(res.toString());
-        });
+        function doTest(transposeKey: string, betterKey: string) {
+            it(`${transposeKey} should minimize as ${betterKey}`, () => {
+                const ns = NoteSet.Types.MAJOR.transpose(Note.parse(transposeKey));
+                const res = NoteSet.Types.MAJOR.transpose(Note.parse(betterKey));
+                expect(ns.minimizeAlterations().toString()).eq(res.toString());
+            });
 
+        }
+
+        doTest('E#', 'F');
+        doTest('D#', 'Eb');
+        doTest('G#', 'Ab');
     });
 
     describe('changeRoot', () => {
