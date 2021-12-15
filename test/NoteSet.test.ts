@@ -82,6 +82,10 @@ describe(NoteSet.name, () => {
         it('full name transposed', () => {
             expect(ns.getFullName()).eq('BMajChord');
         });
+
+        it('C Major + 2min', () => {
+            expect(NoteSet.Types.MAJOR.transpose(Note.parse('Db')).toString()).eq('Db Eb F Gb Ab Bb C');
+        });
     });
 
     describe('get next note', () => {
@@ -106,12 +110,12 @@ describe(NoteSet.name, () => {
 
     describe('get prev note', () => {
         const ns = NoteSet.parse('C E G');
-        const test = (name: string, ns: NoteSet, note: string, result: string) =>
+        const doTest = (name: string, ns: NoteSet, note: string, result: string) =>
             it(name, () => { expect(ns.getClosestNote(Note.parse(note), false).toString()).eq(result) });
 
-        test('C->G(-1)', ns, 'C', 'G(-1)');
-        test('E->C', ns, 'E', 'C');
-        test('G->E', ns, 'G', 'E');
+        doTest('C->G(-1)', ns, 'C', 'G(-1)');
+        doTest('E->C', ns, 'E', 'C');
+        doTest('G->E', ns, 'G', 'E');
     });
 
     describe('getMode', () => {
@@ -121,5 +125,59 @@ describe(NoteSet.name, () => {
         it('mode 4', () => { expect(ns.getMode(4).toString()).eq('C D E F# G A B') });
         it('mode 5', () => { expect(ns.getMode(5).toString()).eq('C D E F G A Bb') });
         it('mode 7', () => { expect(ns.getMode(7).toString()).eq('C Db Eb F Gb Ab Bb') });
+    });
+
+    describe('minimizeAlterations', () => {
+        it('E#', () => {
+            const ns = NoteSet.Types.MAJOR.transpose(Note.parse('E#'));
+            const res = NoteSet.Types.MAJOR.transpose(Note.parse('F'));
+            expect(ns.minimizeAlterations().toString()).eq(res.toString());
+        });
+        it('D#', () => {
+            const ns = NoteSet.Types.MAJOR.transpose(Note.parse('D#'));
+            const res = NoteSet.Types.MAJOR.transpose(Note.parse('Eb'));
+            expect(ns.minimizeAlterations().toString()).eq(res.toString());
+        });
+
+    });
+
+    describe('changeRoot', () => {
+        it('D', () => {
+            const ns = NoteSet.Types.MAJOR.changeRoot(Note.parse('D'));
+            const res = NoteSet.Types.MAJOR.transpose(Note.parse('D'));
+            expect(ns.toString()).eq(res.toString());
+        })
+        it('E#', () => {
+            const ns = NoteSet.Types.MAJOR.changeRoot(Note.parse('E#'));
+            const res = NoteSet.Types.MAJOR.transpose(Note.parse('E#'));
+            expect(ns.toString()).eq(res.toString());
+        })
+        it('Db', () => {
+            const ns = NoteSet.Types.MAJOR.changeRoot(Note.parse('Db'));
+            const res = NoteSet.Types.MAJOR.transpose(Note.parse('Db'));
+            expect(ns.toString()).eq(res.toString());
+        })
+        it('D -> Eb', () => {
+            const ns = NoteSet.Types.MAJOR
+                .transpose(Note.parse('D'));
+            // D Major, transpose a minor second up
+            const ns2 = ns.transpose(Note.parse('Db'));
+            // Eb Major
+            const res = ns.changeRoot(Note.parse('Eb'));
+            expect(res.toString()).eq(ns2.toString());
+        })
+    });
+
+    describe('getRoot', () => {
+        function doTest(root: string, result: string = '') {
+            result = (result === '') ? root : result;
+            it(root, () => { expect(NoteSet.Types.MAJOR.transpose(Note.parse(root)).getRoot().toString()).eq(result); })
+        }
+
+        doTest('D##');
+        doTest('Bb');
+        doTest('E#');
+        doTest('Fbb');
+        doTest('B##', 'B##(-1)');
     });
 });

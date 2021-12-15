@@ -155,4 +155,20 @@ describe(Note.name, function () {
         it('D(1) to 12', () => { expect(new Note(1 + 7, 0).alterToChromaticValue(12).toString()).eq('Dbb(1)') });
     });
 
+    describe('computeIntervalToReach', () => {
+        function doTest(from: string, to: string, result: string) {
+            it(`${from} to ${to}`, () => { expect(Note.parse(from).computeIntervalToReach(Note.parse(to)).toString()).eq(result) })
+        };
+
+        doTest('C', 'D', 'D');
+        doTest('C', 'Db', 'Db');
+        doTest('C', 'D#', 'D#');
+        doTest('C', 'E#', 'E#');
+        doTest('D', 'E', 'D');
+        doTest('D', 'E#', 'D#');
+        doTest('D', 'F', 'Eb');
+        doTest('E', 'F', 'Db');
+        doTest('Cb', 'D#', 'D##');
+    });
+
 });

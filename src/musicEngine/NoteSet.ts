@@ -148,6 +148,55 @@ export class NoteSet {
 
     /**
      * 
+     * @returns the root of the NoteSet (the first note)
+     */
+    public getRoot(): Note {
+        return this.notes.get(0);
+    }
+
+    /**
+     * transpose the NoteSet of the correct interval to have the desired new root
+     * @param newRoot 
+     * @returns the transposed NoteSet
+     */
+    public changeRoot(newRoot: Note): NoteSet {
+        const interval = this.getRoot().computeIntervalToReach(newRoot);
+        const out = this.transpose(interval);
+        // console.log(`changeRoot(${newRoot}): ${this}.transpose(${interval}) = ${out}`);
+        return out;
+    }
+
+    /**
+     * return a note set with the same chromatic values but the min number of alterations
+     */
+    public minimizeAlterations(): NoteSet {
+        const root = this.getRoot();
+        if (root.getAlteration() === 0) {
+            return this;
+        }
+
+        const root_with_sharp = Note.fromChromaticValue(root.getChromaticValue(), true);
+        const root_with_flat = Note.fromChromaticValue(root.getChromaticValue(), false);
+        // console.log(`with sharp: ${root_with_sharp}, with flat: ${root_with_flat}`);
+
+        const ns_with_sharp = this.changeRoot(root_with_sharp);
+
+        if (root_with_sharp.equals(root_with_flat)) {
+            // they're the same, e.g. we had E# in origin, so both sharp and flat versions will be F
+            return ns_with_sharp;
+        } else {
+            const ns_with_flat = this.changeRoot(root_with_flat);
+            // compute the number of alterations
+            const reducer = (prev: number, note: Note) => { return prev + Math.abs(note.getAlteration()); }
+            const num_alts_sharp = ns_with_sharp.getNotes().reduce(reducer, 0);
+            const num_alts_flat = ns_with_flat.getNotes().reduce(reducer, 0);
+            const best = (num_alts_sharp < num_alts_flat) ? ns_with_sharp : ns_with_flat;
+            return best;
+        }
+    }
+
+    /**
+     * 
      * @returns string representation, using the same order of the notes as parsed
      */
     public toString(): string {
@@ -210,6 +259,8 @@ export class NoteSet {
         const rootName = this.notes.get(0).toString();
         return `${rootName}${this.name}`;
     }
+
+
 
     // ################ STATIC ################ //
     public static parse(str: string, name: string = ''): NoteSet {

@@ -106,6 +106,16 @@ export class Note {
         return this.add(new Note(7 * numOctaves, 0));
     }
 
+
+    // TODO test
+    /**
+     * return true if the note has same value and alteration
+     * @param note 
+     */
+    public equals(note: Note): boolean {
+        return this.value === note.value && this.alteration === note.alteration;
+    }
+
     /**
      * 
      * @param note the note to be subtracted
@@ -122,7 +132,7 @@ export class Note {
      * @param value the target chromatic value
      * @returns the altered note whose chromatic value equals the input
      */
-    public alterToChromaticValue(value: number) {
+    public alterToChromaticValue(value: number): Note {
         const correction = value - this.getChromaticValue();
         return this.add(new Note(0, correction));
     }
@@ -132,12 +142,12 @@ export class Note {
      * @param note 
      * @returns the note that has the opposite chromatic value
      */
-    public mirrorInterval() {
+    public mirrorInterval(): Note {
         return new Note(-this.getValue(), -this.getAlteration()).alterToChromaticValue(- this.getChromaticValue());
     }
 
     /**
-     * NB: Note(6,0) is a major 7th up, but Note(-6, 0) is NOTE a major 7th down because it's the
+     * NB: Note(6,0) is a major 7th up, but Note(-6, 0) is NOT a major 7th down because it's the
      * difference between C and D(-1), which is minor 7th down
      * @param note interval expressed as Note. The values will be added, brought back to the zero octave
      * @returns 
@@ -145,6 +155,16 @@ export class Note {
     public addInterval(note: Note): Note {
         const targetChromaticValue = this.getChromaticValue() + note.getChromaticValue();
         return this.add(note).alterToChromaticValue(targetChromaticValue);
+    }
+
+    /**
+     * 
+     * @param targetNote 
+     * @returns interval that added to this will give the target note
+     */
+    public computeIntervalToReach(targetNote: Note): Note {
+        const chromaticDiff = targetNote.getChromaticValue() - this.getChromaticValue();
+        return targetNote.subtract(this).alterToChromaticValue(chromaticDiff);
     }
 
     /**
