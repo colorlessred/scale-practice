@@ -7,7 +7,6 @@ import { NoteSetChanger } from "../musicEngine/NoteSetChanger";
 import { NoteSetsQueue } from "../musicEngine/NoteSetsQueue";
 
 type Props = {
-    // readonly note: Note
     readonly isPlaying: boolean
     readonly noteSet: NoteSet
     readonly range: NoteRange
@@ -22,7 +21,8 @@ async function startTone() {
 }
 
 export function Player({ isPlaying, noteSet, range, noteSetChanger, setNoteSetsQueue }: Props) {
-    const isFirstNote = useRef<boolean>(false);
+    const isSetUp = useRef<boolean>(false);
+    const isFirstNote = useRef<boolean>(true);
 
     const noteProvider = useRef<NoteProvider>(new NoteProvider(range.getMin(), noteSet, range, true));
     useEffect(() => { noteProvider.current.setNoteSet(noteSet) }, [noteSet])
@@ -35,16 +35,20 @@ export function Player({ isPlaying, noteSet, range, noteSetChanger, setNoteSetsQ
     }).toDestination());
 
     const playNote = useCallback((time) => {
-        console.log(`play note, time ${time}`);
+        // console.log(`play note, time ${time}`);
+        if (isFirstNote.current) {
+            isFirstNote.current = false;
+        } else {
+            setNoteSetsQueue(noteSetChanger.nextNotePlayed());
+        }
         const note = noteProvider.current.getNoteAndMoveToNext();
-        synth.current.triggerAttackRelease(note.getFrequency(), 0.3, time);
-        setNoteSetsQueue(noteSetChanger.nextNotePlayed());
+        synth.current.triggerAttackRelease(note.getFrequency(), '4n', time);
     }, [noteSetChanger, setNoteSetsQueue]);
 
     useEffect(() => {
         if (isPlaying) {
-            if (isFirstNote.current) {
-                isFirstNote.current = false;
+            if (isSetUp.current) {
+                isSetUp.current = false;
                 startTone();
             }
             // TODO fix time
@@ -56,8 +60,9 @@ export function Player({ isPlaying, noteSet, range, noteSetChanger, setNoteSetsQ
                 loop.current.stop();
                 Tone.Transport.stop();
             }
+            isFirstNote.current = true;
         }
-    }, [isPlaying, isFirstNote.current]);
+    }, [isPlaying, isSetUp, loop, isFirstNote, startTone]);
 
     return (<></>)
 }

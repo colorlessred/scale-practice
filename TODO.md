@@ -1,5 +1,5 @@
 TODO backlog
-* refresh NoteSetsQueue to make it coherent with current note (not with next)
+* reset note to range.min when stop
 * add parsing notes with octave
 * implement speed-up
 * implement ability to use different patterns (not just one up and one down)
