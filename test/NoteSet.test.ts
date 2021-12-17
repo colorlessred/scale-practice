@@ -187,4 +187,20 @@ describe(NoteSet.name, () => {
         doTest('Fbb');
         doTest('B##', 'B##(-1)');
     });
+
+    describe('contains', () => {
+        const ns = NoteSet.parse('C E G');
+        function doTest(noteValue: number, isContained: boolean) {
+            const note = new Note(noteValue, 0);
+            it(note.toString(), () => { expect(ns.contains(note)).eq(isContained); });
+        }
+        doTest(0, true);
+        doTest(14, true);
+        doTest(2, true);
+        doTest(4, true);
+        //
+        doTest(5, false);
+        doTest(3, false);
+        doTest(1, false);
+    });
 });

@@ -1,6 +1,6 @@
 import { NoteSet } from "./NoteSet";
 import { FixedProvider } from "./utilities/FixedProvider";
-import { IProvider } from "./utilities/Provider";
+import { IProvider } from "./utilities/IProvider";
 import { RandomProvider } from "./utilities/RandomProvider";
 
 export type INoteSetProvider = IProvider<NoteSet>;

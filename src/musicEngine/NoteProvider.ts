@@ -1,38 +1,62 @@
 import { Note } from "./Note"
 import { NoteRange } from "./NoteRange"
 import { NoteSet } from "./NoteSet"
+import { IProvider } from "./utilities/IProvider";
 
 
 /** 
  * produce the sequence of notes in the given range, 
  * matching the underlying NoteSet
  */
-export class NoteProvider {
+export class NoteProvider implements IProvider<Note>{
     // TODO move to IProvider<Note>
-    private note: Note;
+    private currentNote: Note;
     private noteSet: NoteSet;
     private noteRange: NoteRange;
     /** if true, it goes up to the next note */
     private directionUp: boolean;
+    private readonly firstNote: Note;
+    private isFirst: boolean;
 
     private static readonly MAX_ATTEMPTS = 10;
 
-    constructor(currentNote: Note, noteSet: NoteSet, range: NoteRange, goingUp: boolean) {
+    constructor(firstNote: Note, noteSet: NoteSet, range: NoteRange, goingUp: boolean) {
+        this.firstNote = firstNote;
         this.noteSet = noteSet;
         this.noteRange = range;
-        this.note = currentNote;
         this.directionUp = goingUp;
+        this.currentNote = firstNote;
+        this.isFirst = true;
+        this.fixCurrentNote();
     }
 
-    public getNote() { return this.note; }
+    /**
+     * if the first note passed is not in the note set, or out of range => move to the closest one
+     * in the movement direction
+     */
+    private fixCurrentNote() {
+        if (!this.noteSet.contains(this.currentNote) ||
+            !this.noteRange.contains(this.currentNote)) {
+            this.currentNote = this.computeNext();
+            this.isFirst = true;
+        }
+    }
 
-    public getNextNote(): Note {
-        let nextNote = this.noteSet.getClosestNote(this.note, this.directionUp);
+    // TODO test
+    /** reset provider to first note */
+    public reset(): void {
+        this.currentNote = this.firstNote;
+    }
+
+    public getNote() { return this.currentNote; }
+
+    public computeNext(): Note {
+        let nextNote = this.noteSet.getClosestNote(this.currentNote, this.directionUp);
 
         if (!this.noteRange.contains(nextNote)) {
             // fix direction
             this.directionUp = this.noteRange.getMax().isHigherThan(nextNote);
-            nextNote = this.note;
+            nextNote = this.currentNote;
 
             // it is possible that the range doesn't contain any note from the NoteSet, so
             // use a max number of attempts to avoid infinite loops and then throw an error
@@ -44,25 +68,39 @@ export class NoteProvider {
             }
         }
 
-        // console.log(`next note is ${nextNote.toString()}`)
-
         return nextNote;
     }
 
     /**
-     * move to next note and return its value. 
-     * if it's the first call it returns the current note
+     * return current note and then move to next 
      * @returns next note
      */
-    public getNoteAndMoveToNext(): Note {
-        let out: Note = this.note;
-        this.setNote(this.getNextNote());
-        return out;
+    public getNext(): Note {
+        if (this.isFirst) {
+            this.isFirst = false;
+        } else {
+            this.setNote(this.computeNext());
+        }
+        return this.currentNote;
     }
 
     public getDirectionUp(): boolean { return this.directionUp; }
 
-    public setNote(note: Note) { this.note = note; }
-    public setNoteSet(noteSet: NoteSet) { this.noteSet = noteSet; }
-    public setNoteRange(noteRange: NoteRange) { this.noteRange = noteRange; }
+    // TODO test fix cases
+    public setNote(note: Note) {
+        this.currentNote = note;
+        this.fixCurrentNote();
+    }
+
+    // TODO test fix cases
+    public setNoteSet(noteSet: NoteSet) {
+        this.noteSet = noteSet;
+        this.fixCurrentNote();
+    }
+
+    // TODO test fix cases
+    public setNoteRange(noteRange: NoteRange) {
+        this.noteRange = noteRange;
+        this.fixCurrentNote();
+    }
 }

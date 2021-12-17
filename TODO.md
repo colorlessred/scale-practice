@@ -1,4 +1,5 @@
 TODO backlog
+* implement note set changing with generic provider
 * implement change of speed
 * fix: it's playing notes from the wrong note set
 * fix minimize alterations when playing (it's not working)

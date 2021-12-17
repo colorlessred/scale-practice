@@ -1,6 +1,6 @@
 import { SmartArray } from "./SmartArray";
 import { SmartIndex } from "./SmartIndex";
-import { IProvider } from "./Provider";
+import { IProvider } from "./IProvider";
 
 /**
  * cycle over a fixed set of NoteSets

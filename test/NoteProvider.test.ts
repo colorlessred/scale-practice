@@ -10,7 +10,7 @@ describe(NoteProvider.name, () => {
             new NoteRange(Note.parse('C'), new Note(7, 0)), true);
 
         const testAndMove = (noteProducer: NoteProvider, noteString: string) => {
-            it(noteString, () => { expect(noteProducer.getNoteAndMoveToNext().toString()).eq(noteString) })
+            it(noteString, () => { expect(noteProducer.getNext().toString()).eq(noteString) })
         };
 
         testAndMove(np, 'C');
@@ -36,25 +36,38 @@ describe(NoteProvider.name, () => {
             const range = new NoteRange(new Note(0, 0), new Note(14, 0))
             const np = new NoteProvider(Note.parse('C'), NoteSet.parse('C E G'), range, true);
 
-            const testAndMove = (noteProducer: NoteProvider, noteString: string) => {
-                expect(noteProducer.getNoteAndMoveToNext().toString()).eq(noteString);
+            const doTest = (noteProvider: NoteProvider, noteString: string) => {
+                expect(noteProvider.getNext().toString()).eq(noteString);
             };
 
-            testAndMove(np, 'C');
-            testAndMove(np, 'E');
+            doTest(np, 'C');
+            doTest(np, 'E');
+            doTest(np, 'G');
             np.setNoteSet(NoteSet.parse('Bb D F'));
-            testAndMove(np, 'G');
-            testAndMove(np, 'Bb');
-            testAndMove(np, 'D(1)');
-            testAndMove(np, 'F(1)');
-            testAndMove(np, 'Bb(1)');
-            testAndMove(np, 'F(1)');
+            doTest(np, 'Bb');
+            doTest(np, 'D(1)');
+            doTest(np, 'F(1)');
+            doTest(np, 'Bb(1)');
+            doTest(np, 'F(1)');
             np.setNoteSet(NoteSet.parse('C D E'));
-            testAndMove(np, 'D(1)');
-            testAndMove(np, 'C(1)');
-            testAndMove(np, 'E');
-            testAndMove(np, 'D');
+            doTest(np, 'E(1)');
+            doTest(np, 'D(1)');
+            doTest(np, 'C(1)');
+            doTest(np, 'E');
+            doTest(np, 'D');
         });
     });
+
+    describe('first note out of note set', () => {
+        function doTest(goingUp: boolean, expected: string) {
+            it(`going up? ${goingUp}`, () => {
+                const range = new NoteRange(new Note(0, 0), new Note(14, 0))
+                const np = new NoteProvider(Note.parse('D'), NoteSet.parse('C E G'), range, goingUp);
+                expect(np.getNext().toString()).eq(expected);
+            });
+        }
+        doTest(true, 'E');
+        doTest(false, 'C');
+    })
 
 });

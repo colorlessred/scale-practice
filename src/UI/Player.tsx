@@ -34,7 +34,7 @@ export function Player({ isPlaying, noteProvider, notePlayedCallback }: Props) {
         // console.log(`play note, time ${time}`);
         if (!isFirstNote.current) { notePlayedCallback(); }
         isFirstNote.current = false;
-        const noteToPlay = noteProviderRef.current.getNoteAndMoveToNext();
+        const noteToPlay = noteProviderRef.current.getNext();
         setNote(noteToPlay);
         synth.current.triggerAttackRelease(noteToPlay.getFrequency(), '4n', time, 0.5);
     }, [setNote, notePlayedCallback]);

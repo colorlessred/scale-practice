@@ -207,6 +207,17 @@ export class NoteSet {
         return buff.join(' ');
     }
 
+    // TODO test
+    /** true if the NoteSet contains the note (its value in the zero octave) */
+    public contains(note: Note): boolean {
+        if (!note) {
+            throw new Error(`must pass a valid note`);
+        }
+        const storedNote = this.valuesToNotes.get(note.getChromaticValueZeroOctave());
+
+        return (storedNote !== undefined);
+    }
+
     /**
      * 
      * @param note starting note

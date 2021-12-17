@@ -1,24 +1,28 @@
-import { IProvider } from "./Provider";
+import { IProvider } from "./IProvider";
 
 /**
  * fixed length queue that has its own provider that refills it automatically
  */
 export class AutoQueue<T> {
-    size: number;
+    // TODO ? implement IProvider<T>?
+    readonly size: number;
     values: Array<T>;
     provider: IProvider<T>;
+    readonly beforeGetNext: () => void;
 
     /**
      * @param size queue size
      * @param provider provider that automatically refills the queue
      */
-    constructor(size: number, provider: IProvider<T>) {
+    constructor(size: number, provider: IProvider<T>, beforeGetNext: () => void = () => { }) {
         if (size < 2) {
             throw new Error(`size must be at least 2. Received ${size}`);
         }
         this.size = size;
 
         this.provider = provider;
+
+        this.beforeGetNext = beforeGetNext;
 
         this.values = new Array<T>()
         // init the values using the provider
@@ -32,6 +36,9 @@ export class AutoQueue<T> {
      * @returns next value, applying the proper hooks
      */
     private getNext(): T {
+
+        this.beforeGetNext();
+
         const provNext = this.provider.getNext();
         if (!provNext) {
             throw new Error(`empty value from provider`);
@@ -50,7 +57,7 @@ export class AutoQueue<T> {
      * @returns clone with the same values
      */
     public clone(): AutoQueue<T> {
-        const out = new AutoQueue<T>(this.size, this.provider);
+        const out = new AutoQueue<T>(this.size, this.provider, this.beforeGetNext);
         out.values = this.values.slice();
         return out;
     }
@@ -69,16 +76,6 @@ export class AutoQueue<T> {
         }
         return out;
     }
-
-    // /**
-    //  * override this method if you need some specific filter applied
-    //  * to the new items pushed into the queue
-    //  * @param nextItem 
-    //  * @returns 
-    //  */
-    // public filterNextHook(nextItem: T): T {
-    //     return nextItem;
-    // }
 
     /**
      * 

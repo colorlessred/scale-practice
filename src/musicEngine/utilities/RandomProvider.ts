@@ -1,4 +1,4 @@
-import { IProvider } from "./Provider";
+import { IProvider } from "./IProvider";
 
 const RECYCLE_FACTOR: number = 0.5;
 

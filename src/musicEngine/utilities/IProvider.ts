@@ -1,5 +1,6 @@
 
 export interface IProvider<T> {
+    /** get next element */
     getNext(): T;
 
     /** 
