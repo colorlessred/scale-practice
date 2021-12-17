@@ -60,6 +60,8 @@ export class NoteProvider {
         return out;
     }
 
+    public getDirectionUp(): boolean { return this.directionUp; }
+
     public setNote(note: Note) { this.note = note; }
     public setNoteSet(noteSet: NoteSet) { this.noteSet = noteSet; }
     public setNoteRange(noteRange: NoteRange) { this.noteRange = noteRange; }

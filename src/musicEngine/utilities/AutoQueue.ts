@@ -37,12 +37,12 @@ export class AutoQueue<T> {
             throw new Error(`empty value from provider`);
         }
 
-        const hookNext = this.filterNextHook(provNext);
-        if (!hookNext) {
+        // const hookNext = this.filterNextHook(provNext);
+        if (!provNext) {
             throw new Error(`empty value from filterNextHook`);
         }
 
-        return hookNext;
+        return provNext;
     }
 
     /**
@@ -70,15 +70,15 @@ export class AutoQueue<T> {
         return out;
     }
 
-    /**
-     * override this method if you need some specific filter applied
-     * to the new items pushed into the queue
-     * @param nextItem 
-     * @returns 
-     */
-    public filterNextHook(nextItem: T): T {
-        return nextItem;
-    }
+    // /**
+    //  * override this method if you need some specific filter applied
+    //  * to the new items pushed into the queue
+    //  * @param nextItem 
+    //  * @returns 
+    //  */
+    // public filterNextHook(nextItem: T): T {
+    //     return nextItem;
+    // }
 
     /**
      * 

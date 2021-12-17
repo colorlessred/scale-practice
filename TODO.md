@@ -1,4 +1,7 @@
 TODO backlog
+* implement change of speed
+* fix: it's playing notes from the wrong note set
+* fix minimize alterations when playing (it's not working)
 * reset note to range.min when stop
 * add parsing notes with octave
 * implement speed-up

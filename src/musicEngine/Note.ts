@@ -125,8 +125,6 @@ export class Note {
         return new Note(this.value - note.value, this.alteration - note.alteration);
     }
 
-
-    // TODO test
     /**
      * add alterations to note to reach the desired target value
      * @param value the target chromatic value

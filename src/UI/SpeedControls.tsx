@@ -1,12 +1,12 @@
 import { SpeedControlManual } from "./SpeedControlManual";
 
 type Props = {
-    getNpm: () => number,
+    npm: number,
     setNpm: (newValue: number) => void,
 }
 
 // control player speed
-export function SpeedControls({ getNpm, setNpm }: Props) {
+export function SpeedControls({ npm, setNpm }: Props) {
 
     return (
         <div id="SpeedControls" className="row">
@@ -15,11 +15,11 @@ export function SpeedControls({ getNpm, setNpm }: Props) {
                 <label className="form-check-label" htmlFor="coding">Auto Speed-Up</label>
             </div>
             <div className="col-md-3">
-                <p className="col-md-6">{getNpm()} bpm</p>
+                <p className="col-md-6">{npm} bpm</p>
             </div>
             <div className="col-md-3">
-                <SpeedControlManual step={5} getSpeed={getNpm} setSpeed={setNpm} />
-                <SpeedControlManual step={-5} getSpeed={getNpm} setSpeed={setNpm} />
+                <SpeedControlManual step={5} speed={npm} setSpeed={setNpm} />
+                <SpeedControlManual step={-5} speed={npm} setSpeed={setNpm} />
             </div>
         </div>
     )

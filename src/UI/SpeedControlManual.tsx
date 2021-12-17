@@ -3,15 +3,15 @@ import Button from 'react-bootstrap/Button';
 
 type Props = {
     readonly step: number
-    readonly getSpeed: () => number
+    readonly speed: number
     readonly setSpeed: React.Dispatch<number>
 }
 
-export function SpeedControlManual({ step, getSpeed, setSpeed }: Props) {
+export function SpeedControlManual({ step, speed, setSpeed }: Props) {
     const ref = useRef<{ display: string }>({ display: (step > 0) ? '+' : "-" });
 
     const click = function () {
-        setSpeed(getSpeed() + step)
+        setSpeed(speed + step)
     };
 
     return (

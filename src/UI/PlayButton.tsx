@@ -1,14 +1,14 @@
 import Button from 'react-bootstrap/Button';
 
 type Props = {
-    readonly isPlaying: () => boolean,
+    readonly isPlaying: boolean,
     readonly setPlaying: React.Dispatch<boolean>,
 }
 
 export function PlayButton({ isPlaying, setPlaying }: Props) {
-    const display = isPlaying() ? "Stop" : "Play";
+    const display = isPlaying ? "Stop" : "Play";
 
-    const click = () => { setPlaying(!isPlaying()) };
+    const click = () => { setPlaying(!isPlaying) };
 
     return (
         <Button id="play-button" onClick={click}>{display}</Button >

@@ -6,39 +6,34 @@ const DEFAULT_MAPPING_TEXT = `7+: mode 1 of Major
 m7add6: mode 2 of Major`;
 
 type ChordMappingGlobalUIProps = {
-    readonly setChordMappingGlobal: React.Dispatch<ChordMappingGlobal>;
+    readonly chordMappingGlobal: ChordMappingGlobal
+    readonly setChordMappingGlobal: React.Dispatch<ChordMappingGlobal>
 }
 
 /**
  * let the user specify the mapping between the chord symbols and the modes
  */
-export function ChordMappingGlobalUI({ setChordMappingGlobal: setParentChordMappingGlobal }: ChordMappingGlobalUIProps) {
+export function ChordMappingGlobalUI({ chordMappingGlobal, setChordMappingGlobal }: ChordMappingGlobalUIProps) {
     const [error, setError] = useState<string>('');
     const [text, setText] = useState<string>('');
 
-    const [chordMappingGlobal, setChordMappingGlobal] =
-        useState<ChordMappingGlobal>(ChordMappingGlobal.parse(DEFAULT_MAPPING_TEXT));
-
-    const refTextarea = useRef();
-
-    // set up values the first time only
+    const isFirstRef = useRef<boolean>(true);
+ 
     useEffect(() => {
-        setText(chordMappingGlobal.toString());
-        setError('');
-        setParentChordMappingGlobal(chordMappingGlobal);
-    }, []);
-
-    useEffect(() => {
-        // setText(chordMappingGlobal.toString());
-        setError('');
-        setParentChordMappingGlobal(chordMappingGlobal);
-    }, [chordMappingGlobal, setError]);
+        if (isFirstRef.current) {
+            const chordMappingGlobal = ChordMappingGlobal.parse(DEFAULT_MAPPING_TEXT);
+            setChordMappingGlobal(chordMappingGlobal);
+            setText(chordMappingGlobal.toString());
+        }
+        isFirstRef.current = false;
+    }, [isFirstRef, setChordMappingGlobal, setText]);
 
     const onChange = useCallback((ev: React.ChangeEvent<HTMLTextAreaElement>) => {
         const textValue = ev.target.value;
         try {
             const parsed = ChordMappingGlobal.parse(textValue);
             setChordMappingGlobal(parsed);
+            setError('');
         } catch (e) {
             if (e instanceof Error) {
                 setError(e.message);
@@ -51,7 +46,6 @@ export function ChordMappingGlobalUI({ setChordMappingGlobal: setParentChordMapp
     return (<div className="row">
         <div className="col">
             <textarea
-                ref={refTextarea.current}
                 className="form-control"
                 onChange={onChange}
                 value={text}
@@ -60,7 +54,7 @@ export function ChordMappingGlobalUI({ setChordMappingGlobal: setParentChordMapp
             <div className="col">{error}</div>
         </div>
         <div className="col">{chordMappingGlobal.mappings.map((chordMapping) => {
-            return <ChordMappingUI chordMapping={chordMapping} />
+            return <ChordMappingUI key={`${chordMapping}`} chordMapping={chordMapping} />
         })}</div>
     </div>)
 }
