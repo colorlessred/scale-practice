@@ -1,20 +1,18 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { ChordMappingGlobal } from '../musicEngine/ChordMappingParser';
-import { Note } from '../musicEngine/Note';
-import { NoteProvider } from '../musicEngine/NoteProvider';
-import { NoteRange } from '../musicEngine/NoteRange';
-import { NoteSet } from '../musicEngine/NoteSet';
-import { NoteSetChanger } from '../musicEngine/NoteSetChanger';
-import { INoteSetProvider, NoteSetProviderFixed } from '../musicEngine/NoteSetProviders';
-import { NoteSetsQueue } from '../musicEngine/NoteSetsQueue';
-import { ChordMappingGlobalUI } from './ChordMappingUI';
-import { NoteSetProviderUI } from './NoteSetProviderUI';
-import { NoteSetUI } from './NoteSetUI';
-import { PlayButton } from './PlayButton';
-import { Player } from './Player';
-import { RangeUI } from './RangeUI';
-import { SpeedControls } from './SpeedControls';
+import {useEffect, useState} from 'react';
+import {ChordMappingGlobal} from '../musicEngine/ChordMappingParser';
+import {Note} from '../musicEngine/Note';
+import {NoteRange} from '../musicEngine/NoteRange';
+import {NoteSet} from '../musicEngine/NoteSet';
+import {INoteSetProvider, NoteSetProviderFixed} from '../musicEngine/NoteSetProviders';
+import {NoteSetsQueue} from '../musicEngine/NoteSetsQueue';
+import {ChordMappingGlobalUI} from './ChordMappingUI';
+import {NoteSetProviderUI} from './NoteSetProviderUI';
+import {NoteSetUI} from './NoteSetUI';
+import {PlayButton} from './PlayButton';
+import {Player} from './Player';
+import {RangeUI} from './RangeUI';
+import {SpeedControls} from './SpeedControls';
 
 export function ScalePlayer() {
     /** notes per minute */
@@ -29,22 +27,6 @@ export function ScalePlayer() {
 
     const [noteSetsQueue, setNoteSetsQueue] = useState<NoteSetsQueue>(new NoteSetsQueue(2, noteSetProvider));
     useEffect(() => { setNoteSetsQueue(new NoteSetsQueue(2, noteSetProvider)) }, [noteSetProvider]);
-
-    const noteProviderRef = useRef<NoteProvider>(new NoteProvider(range.getMin(), noteSetsQueue.peek(0), range, true));
-    useEffect(() => {
-        noteProviderRef.current.setNoteRange(range);
-        noteProviderRef.current.setNoteSet(noteSetsQueue.peek(0));
-    }, [range, noteSetsQueue]);
-
-    const noteSetChangerRef = useRef<NoteSetChanger>(new NoteSetChanger(notesPerSet, noteSetProvider));
-    useEffect(() => {
-        console.log(`noteSetProvider changed`);
-        noteSetChangerRef.current = new NoteSetChanger(notesPerSet, noteSetProvider);
-    }, [notesPerSet, noteSetProvider]);
-
-    const notePlayedCallback = useCallback(() => {
-        setNoteSetsQueue(noteSetChangerRef.current.nextNotePlayed());
-    }, [setNoteSetsQueue, noteSetChangerRef]);
 
     return (
         <div id="scalePlayer" className="container-fluid">
@@ -78,8 +60,9 @@ export function ScalePlayer() {
 
             <Player
                 isPlaying={isPlaying}
-                noteProvider={noteProviderRef.current}
-                notePlayedCallback={notePlayedCallback}
+                noteSetProvider={noteSetProvider}
+                notesPerNoteSet={notesPerSet}
+                range={range}
             />
         </div>
     )

@@ -1,6 +1,6 @@
-import { Note } from "./Note";
-import { Utils } from "./Utils";
-import { SmartArray } from "./utilities/SmartArray";
+import {Note} from "./Note";
+import {Utils} from "./Utils";
+import {SmartArray} from "./utilities/SmartArray";
 
 /**
  * represents a set of notes where their octave has not importance, like a scale or a chord
@@ -190,8 +190,7 @@ export class NoteSet {
             const reducer = (prev: number, note: Note) => { return prev + Math.abs(note.getAlteration()); }
             const num_alts_sharp = ns_with_sharp.getNotes().reduce(reducer, 0);
             const num_alts_flat = ns_with_flat.getNotes().reduce(reducer, 0);
-            const best = (num_alts_sharp < num_alts_flat) ? ns_with_sharp : ns_with_flat;
-            return best;
+            return (num_alts_sharp < num_alts_flat) ? ns_with_sharp : ns_with_flat;
         }
     }
 

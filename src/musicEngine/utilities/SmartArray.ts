@@ -3,7 +3,7 @@ import { SmartIndex } from "./SmartIndex";
 
 /**
  * an array whose get and set methods wrap around, so the indexes are accessed
- * modulo the arrary lenght
+ * modulo the array length
  */
 export class SmartArray<T>{
     private readonly arr: Array<T>;

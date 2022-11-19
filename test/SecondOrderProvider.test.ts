@@ -19,6 +19,14 @@ describe(SecondOrderProvider.name, () => {
         expect(queue.toString()).eq([1, 2, 1, 3, 4, 3, 1, 2, 1, 3].join(' / '));
     });
 
+    it('currentS', () => {
+        const fp1 = [1, 2];
+        const fp2 = [3, 4];
+        const fp3 = new FixedProvider<Array<number>>([fp1, fp2]);
+        const secondOrderProvider = new SecondOrderProvider(fp3, 3, (a, b) => { return new FixedProvider(a); });
+        let a = secondOrderProvider.getNext();
+        expect(secondOrderProvider.getCurrentS().toString()).eq([1, 2].toString());
+    });
 });
 
 describe(SecondOrderNoteProvider.name, () => {

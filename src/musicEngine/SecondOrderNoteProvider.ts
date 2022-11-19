@@ -27,9 +27,11 @@ export class SecondOrderNoteProvider implements IProvider<Note> {
             (noteSet: NoteSet, previousProvider: NoteProvider) => {
                 let out: NoteProvider;
                 if (previousProvider !== undefined) {
+                    // reuse previous provider, changing the noteSet
                     out = previousProvider;
                     out.setNoteSet(noteSet);
                 } else {
+                    // instantiate the first time
                     out = new NoteProvider(this.firstNote, noteSet, this.range, true);
                 }
 
@@ -38,7 +40,10 @@ export class SecondOrderNoteProvider implements IProvider<Note> {
         )
     }
 
-    // TODO test
+    getNoteSet(): NoteSet {
+        return this.secondOrderProvider.getCurrentS();
+    }
+
     getNext(): Note {
         return this.secondOrderProvider.getNext();
     }

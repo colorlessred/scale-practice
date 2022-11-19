@@ -11,10 +11,11 @@ import { IProvider } from "./IProvider";
 export class SecondOrderProvider<S, U extends IProvider<T>, T> implements IProvider<T>{
     private readonly firstProvider: IProvider<S>
     private readonly itemsPerGroup: number;
-    private readonly createInnerProvider: (a: S, previousProvider: U) => U;
+    private readonly createInnerProvider: (a: S, b: U) => U;
     // 
     innerProvider: U;
     count: number;
+    private currentS: S;
 
     /**
      * 
@@ -22,18 +23,26 @@ export class SecondOrderProvider<S, U extends IProvider<T>, T> implements IProvi
      * @param itemsPerGroup how many items to extract from the second level provider
      * @param createInnerProvider function that takes an item from the first provider and the previous inner provider and returns the next inner provider
      */
-    constructor(firstProvider: IProvider<S>, itemsPerGroup: number, createInnerProvider: (a: S, prevInnerProvider: U) => U) {
+    constructor(firstProvider: IProvider<S>, itemsPerGroup: number, createInnerProvider: (a: S, b: U) => U) {
         this.firstProvider = firstProvider;
         this.itemsPerGroup = itemsPerGroup;
         this.createInnerProvider = createInnerProvider
         // 
+        this.currentS = this.firstProvider.getNext();
         this.innerProvider = this.getInnerProvider();
         this.count = 0;
     }
 
     private getInnerProvider(): U {
-        let out = this.createInnerProvider(this.firstProvider.getNext(), this.innerProvider);
-        return out;
+        return this.createInnerProvider(this.currentS, this.innerProvider);
+    }
+    
+    /**
+     * 
+     * @returns the current value of the item returned by the first provider
+     */
+    getCurrentS(): S {
+        return this.currentS;
     }
 
     /**
@@ -42,7 +51,7 @@ export class SecondOrderProvider<S, U extends IProvider<T>, T> implements IProvi
      */
     getNext(): T {
         if (this.count >= this.itemsPerGroup) {
-            // console.log(`get next inner provider`);
+            this.currentS = this.firstProvider.getNext();
             this.innerProvider = this.getInnerProvider();
             this.count = 0;
         }
