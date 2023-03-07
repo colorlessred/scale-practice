@@ -17,11 +17,11 @@ class ChordScale {
 // ##############
 
 const DEFAULT_MAPPING: Array<ChordScale> = [
-    // new ChordScale(NoteSet.Types.MAJOR);
+    // new ChordScale(NoteSetTypes.MAJOR);
 ];
 
 type CssProps = {
-
+/* */
 }
 
 export function ChordScaleSelectorUI() {

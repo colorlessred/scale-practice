@@ -4,7 +4,7 @@ import {useEffect, useState} from 'react';
 import {ChordMappingGlobal} from '../musicEngine/ChordMappingParser';
 import {Note} from '../musicEngine/Note';
 import {NoteRange} from '../musicEngine/NoteRange';
-import {NoteSet} from '../musicEngine/NoteSet';
+import {NoteSet, NoteSetTypes} from '../musicEngine/NoteSet';
 import {INoteSetProvider, NoteSetProviderFixed} from '../musicEngine/NoteSetProviders';
 import {NoteSetsQueue} from '../musicEngine/NoteSetsQueue';
 import {ChordMappingGlobalUI} from './ChordMappingUI';
@@ -24,7 +24,7 @@ export function ScalePlayer() {
     const [notesPerSet, setNotesPerSet] = useState<number>(4);
 
     // noteSetProvider fills noteSetsQueue which give the current noteSet from which create the NoteProvider
-    const [noteSetProvider, setNoteSetProvider] = useState<INoteSetProvider>(new NoteSetProviderFixed([NoteSet.Types.MAJOR]));
+    const [noteSetProvider, setNoteSetProvider] = useState<INoteSetProvider>(new NoteSetProviderFixed([NoteSetTypes.MAJOR]));
 
     const [noteSetsQueue, setNoteSetsQueue] = useState<NoteSetsQueue>(new NoteSetsQueue(2, noteSetProvider));
     useEffect(() => { setNoteSetsQueue(new NoteSetsQueue(2, noteSetProvider)) }, [noteSetProvider]);

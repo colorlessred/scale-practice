@@ -1,4 +1,4 @@
-import { NoteSet } from "./NoteSet";
+import {NoteSet, NoteSetTypes} from "./NoteSet";
 
 
 /**
@@ -31,7 +31,7 @@ export class ChordMapping {
         }
 
         const [name, mode, baseNoteSetName] = res.slice(1);
-        const baseNoteSet = NoteSet.Types.ALL.get(baseNoteSetName.trim());
+        const baseNoteSet = NoteSetTypes.ALL.get(baseNoteSetName.trim());
 
         if (!baseNoteSet) {
             throw new Error(`NoteSet not found: "${baseNoteSetName}"`);
@@ -45,7 +45,7 @@ export class ChordMapping {
         return new ChordMapping(name, modeNumber, baseNoteSet, noteSetMode);
     }
 
-    static DEFAULT = new ChordMapping('7+', 0, NoteSet.Types.MAJOR, NoteSet.Types.MAJOR);
+    static DEFAULT = new ChordMapping('7+', 0, NoteSetTypes.MAJOR, NoteSetTypes.MAJOR);
     static readonly regex = /^\s*(.*?):\s+mode\s+(\d+)\s+of\s+([\w\s]+)/
 }
 
