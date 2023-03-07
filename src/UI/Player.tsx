@@ -1,3 +1,4 @@
+import React from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import * as Tone from 'tone';
 import { Note } from "../musicEngine/Note";
@@ -42,9 +43,9 @@ export function Player({ isPlaying, noteSetProvider, range, notesPerNoteSet }: P
 
     useEffect(() => {
         if (isPlaying) {
-            if (isSetUp.current) {
-                isSetUp.current = false;
+            if (!isSetUp.current) {
                 startTone();
+                isSetUp.current = true;
             }
             // TODO fix time
             loop.current = new Tone.Loop(playNote, '4n');

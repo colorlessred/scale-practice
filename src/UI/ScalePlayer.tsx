@@ -1,4 +1,5 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
+import React from 'react';
 import {useEffect, useState} from 'react';
 import {ChordMappingGlobal} from '../musicEngine/ChordMappingParser';
 import {Note} from '../musicEngine/Note';

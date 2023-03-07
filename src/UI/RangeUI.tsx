@@ -1,3 +1,4 @@
+import React from "react";
 import { useEffect, useState } from "react";
 import { Note } from "../musicEngine/Note";
 import { NoteRange } from "../musicEngine/NoteRange";

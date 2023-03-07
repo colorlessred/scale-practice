@@ -36,7 +36,7 @@ export class SecondOrderProvider<S, U extends IProvider<T>, T> implements IProvi
     private getInnerProvider(): U {
         return this.createInnerProvider(this.currentS, this.innerProvider);
     }
-    
+
     /**
      * 
      * @returns the current value of the item returned by the first provider
@@ -55,6 +55,7 @@ export class SecondOrderProvider<S, U extends IProvider<T>, T> implements IProvi
             this.innerProvider = this.getInnerProvider();
             this.count = 0;
         }
+        // console.log("second order provider, count: " + this.count);
         const out = this.innerProvider.getNext();
         this.count++;
         return out;
