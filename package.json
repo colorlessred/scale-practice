@@ -22,7 +22,7 @@
     "start": "react-scripts --openssl-legacy-provider start",
     "build": "react-scripts --openssl-legacy-provider build",
     "eject": "react-scripts eject",
-    "test": "cross-env TS_NODE_PROJECT='./tsconfig.commonjs.json' mocha -r ts-node/register test/**/*.test.ts",
+    "test": "cross-env TS_NODE_PROJECT='./tsconfig.commonjs.json' mocha -r ts-node/register src/__tests__/**/*.test.ts",
     "coverage": "nyc -r lcov -e .ts -x \"*.test.ts\" npm run test"
   },
   "eslintConfig": {
@@ -43,11 +43,16 @@
       "last 1 safari version"
     ]
   },
+  "jest": {
+  },
   "devDependencies": {
     "@types/chai": "^4.2.22",
     "@types/mocha": "^9.0.0",
+    "@typescript-eslint/eslint-plugin": "^5.54.1",
+    "@typescript-eslint/parser": "^5.54.1",
     "chai": "^4.3.4",
     "cross-env": "^7.0.3",
+    "eslint": "^8.35.0",
     "mocha": "^10.2.0",
     "nyc": "^15.1.0",
     "ts-node": "^10.4.0",

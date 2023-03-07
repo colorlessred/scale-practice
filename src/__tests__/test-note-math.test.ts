@@ -1,7 +1,7 @@
 import { expect } from 'chai';
-import { Note } from "../src/musicEngine/Note";
-import { NoteRange } from "../src/musicEngine/NoteRange";
-import { Utils } from "../src/musicEngine/Utils";
+import { Note } from "../musicEngine/Note";
+import { NoteRange } from "../musicEngine/NoteRange";
+import { Utils } from "../musicEngine/Utils";
 
 describe('Utils', () => {
     describe('smart module', () => {

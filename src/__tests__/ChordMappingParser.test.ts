@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { ChordMapping, ChordMappingGlobal } from '../src/musicEngine/ChordMappingParser';
+import { ChordMapping, ChordMappingGlobal } from '../musicEngine/ChordMappingParser';
 
 describe(ChordMapping.name, () => {
     function test(line: string, result: string) {

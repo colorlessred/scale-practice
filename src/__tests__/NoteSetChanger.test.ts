@@ -1,7 +1,7 @@
 import { expect } from 'chai';
-import { NoteSet } from '../src/musicEngine/NoteSet';
-import { NoteSetChanger } from '../src/musicEngine/NoteSetChanger'
-import { NoteSetProviderFixed } from '../src/musicEngine/NoteSetProviders';
+import { NoteSet } from '../musicEngine/NoteSet';
+import { NoteSetChanger } from '../musicEngine/NoteSetChanger'
+import { NoteSetProviderFixed } from '../musicEngine/NoteSetProviders';
 
 describe(NoteSetChanger.name, () => {
     const noteSetProvider = new NoteSetProviderFixed([NoteSet.parse('C E G'), NoteSet.parse('D F A')]);

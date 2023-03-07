@@ -1,12 +1,12 @@
 import { expect } from 'chai';
-import { AutoQueue } from '../src/musicEngine/utilities/AutoQueue';
-import { FixedProvider } from '../src/musicEngine/utilities/FixedProvider';
-import { SecondOrderProvider } from '../src/musicEngine/utilities/SecondOrderProvider';
-import { SecondOrderNoteProvider } from '../src/musicEngine/SecondOrderNoteProvider';
-import { NoteSetProviderFixed } from '../src/musicEngine/NoteSetProviders';
-import { NoteSet } from '../src/musicEngine/NoteSet';
-import { Note } from '../src/musicEngine/Note';
-import { NoteRange } from '../src/musicEngine/NoteRange';
+import { AutoQueue } from '../musicEngine/utilities/AutoQueue';
+import { FixedProvider } from '../musicEngine/utilities/FixedProvider';
+import { SecondOrderProvider } from '../musicEngine/utilities/SecondOrderProvider';
+import { SecondOrderNoteProvider } from '../musicEngine/SecondOrderNoteProvider';
+import { NoteSetProviderFixed } from '../musicEngine/NoteSetProviders';
+import { NoteSet } from '../musicEngine/NoteSet';
+import { Note } from '../musicEngine/Note';
+import { NoteRange } from '../musicEngine/NoteRange';
 
 describe(SecondOrderProvider.name, () => {
     it('fixedProvider', () => {

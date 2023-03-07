@@ -33,11 +33,13 @@ export class NoteSet {
     private readonly prevNotes: SmartArray<Note> = new SmartArray<Note>(12);
 
     constructor(notes: Array<Note>, name: string) {
-        const baseNotes: Array<Note> = notes.map<Note>((note) => { return note.getNoteInChromaticBase() });
+        const baseNotes: Array<Note> = notes.map<Note>((note) => {
+            return note.getNoteInChromaticBase();
+        });
         this.notes = SmartArray.fromArray(baseNotes);
         this.name = name;
         this.steps = new SmartArray<number>(notes.length);
-        this.computeValuesToNotes()
+        this.computeValuesToNotes();
         this.computeSteps();
         this.computePrevAndNextNotes();
     }
@@ -56,9 +58,9 @@ export class NoteSet {
     }
 
     /**
-    * 
-    * @returns the steps between the notes
-    */
+     *
+     * @returns the steps between the notes
+     */
     private computeSteps() {
         const newSteps: number[] = [];
         const root = this.notes.get(0);
@@ -110,11 +112,16 @@ export class NoteSet {
             }
             chromaticIndex.moveIndex(1);
             stepsIndex.moveIndex(1);
-        };
+        }
     }
 
-    public getNextNotes() { return this.nextNotes; }
-    public getPrevNotes() { return this.prevNotes; }
+    public getNextNotes() {
+        return this.nextNotes;
+    }
+
+    public getPrevNotes() {
+        return this.prevNotes;
+    }
 
     public getNoteFromChromaticValue(chromaticValue: number): Note | undefined {
         return this.valuesToNotes.get(chromaticValue);
@@ -129,7 +136,7 @@ export class NoteSet {
     }
 
     /**
-     * 
+     *
      * @returns shallow copy of the array with the underlying notes
      */
     public getNotes(): Array<Note> {
@@ -141,13 +148,13 @@ export class NoteSet {
      * @param note new NoteSet translated
      */
     public transpose(note: Note): NoteSet {
-        const newNotes = this.notes.map(nsNote => nsNote.addInterval(note).getNoteInChromaticBase())
+        const newNotes = this.notes.map(nsNote => nsNote.addInterval(note).getNoteInChromaticBase());
 
         return new NoteSet(newNotes, this.name);
     }
 
     /**
-     * 
+     *
      * @returns the root of the NoteSet (the first note)
      */
     public getRoot(): Note {
@@ -156,7 +163,7 @@ export class NoteSet {
 
     /**
      * transpose the NoteSet of the correct interval to have the desired new root
-     * @param newRoot 
+     * @param newRoot
      * @returns the transposed NoteSet
      */
     public changeRoot(newRoot: Note): NoteSet {
@@ -187,7 +194,9 @@ export class NoteSet {
         } else {
             const ns_with_flat = this.changeRoot(root_with_flat);
             // compute the number of alterations
-            const reducer = (prev: number, note: Note) => { return prev + Math.abs(note.getAlteration()); }
+            const reducer = (prev: number, note: Note) => {
+                return prev + Math.abs(note.getAlteration());
+            };
             const num_alts_sharp = ns_with_sharp.getNotes().reduce(reducer, 0);
             const num_alts_flat = ns_with_flat.getNotes().reduce(reducer, 0);
             return (num_alts_sharp < num_alts_flat) ? ns_with_sharp : ns_with_flat;
@@ -195,7 +204,7 @@ export class NoteSet {
     }
 
     /**
-     * 
+     *
      * @returns string representation, using the same order of the notes as parsed
      */
     public toString(): string {
@@ -218,7 +227,7 @@ export class NoteSet {
     }
 
     /**
-     * 
+     *
      * @param note starting note
      * @param next if true return next note, otherwise return previous note
      * @returns closest (next/previous) note
@@ -241,13 +250,15 @@ export class NoteSet {
 
     /**
      * @param modeNumber 1-based mode number. mode 1 is the same scale
-     * @returns the nth mode. 
+     * @returns the nth mode.
      */
     public getMode(modeNumber: number, newName?: string): NoteSet {
-        let newNotes = new Array<Note>()
+        let newNotes = new Array<Note>();
         const modeIndex = modeNumber - 1;
         // get the same notes, but starting from the new mode root
-        this.notes.forEach((note, index) => { newNotes.push(this.notes.get(index + modeIndex)) });
+        this.notes.forEach((note, index) => {
+            newNotes.push(this.notes.get(index + modeIndex));
+        });
         // the amount of translation needed
         const interval = this.notes.get(modeIndex).subtract(this.notes.get(0));
         newNotes = newNotes.map(note => note.addInterval(interval.mirrorInterval()));
@@ -256,13 +267,15 @@ export class NoteSet {
     }
 
     /**
-     * 
+     *
      * @returns then name, e.g. "Major"
      */
-    public getName(): string { return this.name; }
+    public getName(): string {
+        return this.name;
+    }
 
     /**
-     * 
+     *
      * @returns full name with root and note set "type" (e.g. Maj)
      */
     public getFullName(): string {
@@ -271,9 +284,8 @@ export class NoteSet {
     }
 
 
-
     // ################ STATIC ################ //
-    public static parse(str: string, name: string = ''): NoteSet {
+    public static parse(str: string, name = ''): NoteSet {
         const notes: Note[] = [];
 
         str.split(/\s+/).forEach((item: string) => {
@@ -291,6 +303,9 @@ export namespace NoteSet {
         static readonly MAJOR: NoteSet = NoteSet.parse("C D E F G A B", 'Major');
         static readonly MELODIC_MINOR: NoteSet = NoteSet.parse("C D Eb F G A B", 'Melodic Minor');
         static readonly ALL: Map<string, NoteSet> = [this.MAJOR, this.MELODIC_MINOR]
-            .reduce((map, noteSet) => { map.set(noteSet.getName(), noteSet); return map; }, new Map<string, NoteSet>());
+            .reduce((map, noteSet) => {
+                map.set(noteSet.getName(), noteSet);
+                return map;
+            }, new Map<string, NoteSet>());
     }
 }

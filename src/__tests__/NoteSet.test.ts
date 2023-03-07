@@ -1,6 +1,6 @@
 import { expect } from 'chai';
-import { Note } from "../src/musicEngine/Note";
-import { NoteSet } from "../src/musicEngine/NoteSet";
+import { Note } from "../musicEngine/Note";
+import { NoteSet } from "../musicEngine/NoteSet";
 
 describe(NoteSet.name, () => {
     describe('constructor', () => {

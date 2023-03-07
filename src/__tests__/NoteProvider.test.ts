@@ -1,8 +1,8 @@
 import { expect } from 'chai';
-import { Note } from "../src/musicEngine/Note";
-import { NoteSet } from "../src/musicEngine/NoteSet";
-import { NoteProvider } from "../src/musicEngine/NoteProvider";
-import { NoteRange } from '../src/musicEngine/NoteRange';
+import { Note } from "../musicEngine/Note";
+import { NoteSet } from "../musicEngine/NoteSet";
+import { NoteProvider } from "../musicEngine/NoteProvider";
+import { NoteRange } from '../musicEngine/NoteRange';
 
 describe(NoteProvider.name, () => {
     describe('basic scale up and down', () => {

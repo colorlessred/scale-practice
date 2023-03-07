@@ -1,10 +1,10 @@
 
 import { expect } from 'chai';
-import { AutoQueue } from '../src/musicEngine/utilities/AutoQueue';
-import { FixedProvider } from '../src/musicEngine/utilities/FixedProvider';
-import { RandomProvider } from '../src/musicEngine/utilities/RandomProvider';
-import { SmartArray } from '../src/musicEngine/utilities/SmartArray';
-import { SmartIndex } from '../src/musicEngine/utilities/SmartIndex';
+import { AutoQueue } from '../musicEngine/utilities/AutoQueue';
+import { FixedProvider } from '../musicEngine/utilities/FixedProvider';
+import { RandomProvider } from '../musicEngine/utilities/RandomProvider';
+import { SmartArray } from '../musicEngine/utilities/SmartArray';
+import { SmartIndex } from '../musicEngine/utilities/SmartIndex';
 
 describe(SmartIndex.name, () => {
     const a: SmartArray<string> = SmartArray.fromArray(['a', 'b', 'c']);

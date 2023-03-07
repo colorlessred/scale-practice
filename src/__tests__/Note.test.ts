@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { Note } from "../src/musicEngine/Note";
+import { Note } from "../musicEngine/Note";
 
 describe(Note.name, function () {
     it('add', function () {
@@ -32,19 +32,19 @@ describe(Note.name, function () {
         });
 
         it('single flat', function () {
-            let note = Note.parse('Ab');
+            const note = Note.parse('Ab');
             expect(note.getValue(), 'value').eq(5);
             expect(note.getAlteration(), 'alteration').eq(-1);
         });
 
         it('double flat', function () {
-            let note = Note.parse('Cbb');
+            const note = Note.parse('Cbb');
             expect(note.getValue(), 'value').eq(0);
             expect(note.getAlteration(), 'alteration').eq(-2);
         });
 
         it('double sharp', function () {
-            let note = Note.parse('B##');
+            const note = Note.parse('B##');
             expect(note.getValue(), 'value').eq(6);
             expect(note.getAlteration(), 'alteration').eq(2);
         });
@@ -158,7 +158,7 @@ describe(Note.name, function () {
     describe('computeIntervalToReach', () => {
         function doTest(from: string, to: string, result: string) {
             it(`${from} to ${to}`, () => { expect(Note.parse(from).computeIntervalToReach(Note.parse(to)).toString()).eq(result) })
-        };
+        }
 
         doTest('C', 'D', 'D');
         doTest('C', 'Db', 'Db');
