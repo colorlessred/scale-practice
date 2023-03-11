@@ -6,9 +6,4 @@ import { AutoQueue } from "./utilities/AutoQueue";
  */
 export class NoteSetsQueue extends AutoQueue<NoteSet> {
 
-    // public filterNextHook(nextItem: NoteSet): NoteSet {
-    //     // remove unnecessary alterations from the NoteSets pushed into the queue
-    //     return nextItem.minimizeAlterations();
-    // }
-
 }

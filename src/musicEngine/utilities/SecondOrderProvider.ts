@@ -58,6 +58,7 @@ export class SecondOrderProvider<S, U extends IProvider<T>, T> implements IProvi
         // console.log("second order provider, count: " + this.count);
         const out = this.innerProvider.getNext();
         this.count++;
+        // console.log(`SOP count: ${this.count}`)
         return out;
     }
 

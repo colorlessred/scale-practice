@@ -1,21 +1,21 @@
-import { Utils } from "../Utils";
-import { SmartArray } from "./SmartArray";
+import {Utils} from "../Utils";
+import {SmartArray} from "./SmartArray";
 
 /**
- * wrap array in and index that can access items wrapping around the 
+ * wrap array in and index that can access items wrapping around the
  * array edges
  */
 export class SmartIndex<T> {
     private readonly array: SmartArray<T>;
     private readonly length: number;
-    private index: number = 0;
+    private index = 0;
 
     /**
-     * 
-     * @param array 
-     * @param initialValue 
+     *
+     * @param array
+     * @param initialValue
      */
-    constructor(array: SmartArray<T>, initialValue: number = 0) {
+    constructor(array: SmartArray<T>, initialValue = 0) {
         this.array = array;
         this.length = array.getSize();
         this.setIndex(initialValue);
@@ -29,8 +29,13 @@ export class SmartIndex<T> {
         return Utils.smartMod(value, this.length);
     }
 
-    public getIndex() { return this.index; }
-    public getValue(): T { return this.array.get(this.index); }
+    public getIndex() {
+        return this.index;
+    }
+
+    public getValue(): T {
+        return this.array.get(this.index);
+    }
 
     public moveNextAndGetValue(): T {
         this.moveIndex(1);
@@ -49,7 +54,7 @@ export class SmartIndex<T> {
     /**
      * does NOT modify the current index position
      * @param offset value to add
-     * @returns 
+     * @returns
      */
     public getIndexWithOffset(offset: number): number {
         return this.computeIndexValue(this.index + offset);
@@ -57,7 +62,7 @@ export class SmartIndex<T> {
 
     /**
      * does NOT modify the current index position
-     * @param offset 
+     * @param offset
      * @returns value at offset position
      */
     public getValueWithOffset(offset: number): T {

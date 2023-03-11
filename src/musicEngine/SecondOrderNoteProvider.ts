@@ -12,7 +12,6 @@ export class SecondOrderNoteProvider implements IProvider<Note> {
     readonly range: NoteRange;
     readonly firstNote: Note;
 
-    // 
     secondOrderProvider: SecondOrderProvider<NoteSet, NoteProvider, Note>;
 
     constructor(noteSetProvider: INoteSetProvider, notesPerNoteSet: number, range: NoteRange, firstNote: Note) {

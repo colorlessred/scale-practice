@@ -46,9 +46,9 @@ export class AutoQueue<T> {
         }
 
         // const hookNext = this.filterNextHook(provNext);
-        if (!provNext) {
-            throw new Error(`empty value from filterNextHook`);
-        }
+        // if (!provNext) {
+        //     throw new Error(`empty value from filterNextHook`);
+        // }
 
         return provNext;
     }

@@ -1,6 +1,6 @@
 import { IProvider } from "./IProvider";
 
-const RECYCLE_FACTOR: number = 0.5;
+const RECYCLE_FACTOR = 0.5;
 
 export class RandomProvider<T> implements IProvider<T> {
     private values: Array<T>;
@@ -11,6 +11,7 @@ export class RandomProvider<T> implements IProvider<T> {
         if (!values || values.length === 0) {
             throw new Error('values array must contain some values');
         }
+        // randomize the values provided
         this.values = RandomProvider.shuffle<T>(values);
         this.maxRecycleZoneSize = Math.ceil(this.values.length * RECYCLE_FACTOR);
     }
@@ -24,6 +25,8 @@ export class RandomProvider<T> implements IProvider<T> {
      * @returns get next pseudo random value
      */
     public getNext(): T {
+        // strategy: pick the first value and then reinserted it back towards the end of the array, so that
+        // it won't show up too soon
         const value: T = this.values[0];
         const newIndex = this.values.length - Math.floor(Math.random() * this.maxRecycleZoneSize) - 1;
         // rebuild the values by reinserting the value in the recycle position

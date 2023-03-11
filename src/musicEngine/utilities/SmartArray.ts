@@ -69,8 +69,8 @@ export class SmartArray<T>{
         return out;
     }
 
-    // not sure this is a good idea, since now SmartIndex and SmartArray depend on each other
-    public getSmartIndex(initValue: number = 0): SmartIndex<T> {
+    // not sure if this is a good idea, since now SmartIndex and SmartArray depend on each other
+    public getSmartIndex(initValue = 0): SmartIndex<T> {
         return new SmartIndex<T>(this, initValue);
     }
 

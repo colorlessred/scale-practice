@@ -24,6 +24,7 @@ export function ScalePlayer() {
     const [notesPerSet, setNotesPerSet] = useState<number>(4);
 
     // noteSetProvider fills noteSetsQueue which give the current noteSet from which create the NoteProvider
+    // start with a fixed major chord
     const [noteSetProvider, setNoteSetProvider] = useState<INoteSetProvider>(new NoteSetProviderFixed([NoteSetTypes.MAJOR]));
 
     const [noteSetsQueue, setNoteSetsQueue] = useState<NoteSetsQueue>(new NoteSetsQueue(2, noteSetProvider));
