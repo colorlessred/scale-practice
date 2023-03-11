@@ -168,9 +168,8 @@ export class NoteSet {
      */
     public changeRoot(newRoot: Note): NoteSet {
         const interval = this.getRoot().computeIntervalToReach(newRoot);
-        const out = this.transpose(interval);
+        return this.transpose(interval);
         // console.log(`changeRoot(${newRoot}): ${this}.transpose(${interval}) = ${out}`);
-        return out;
     }
 
     /**
@@ -250,6 +249,7 @@ export class NoteSet {
 
     /**
      * @param modeNumber 1-based mode number. mode 1 is the same scale
+     * @param newName new mode name
      * @returns the nth mode.
      */
     public getMode(modeNumber: number, newName?: string): NoteSet {
@@ -298,7 +298,6 @@ export class NoteSet {
     }
 }
 
-// export namespace NoteSet {
 export class NoteSetTypes {
     static readonly MAJOR: NoteSet = NoteSet.parse("C D E F G A B", 'Major');
     static readonly MELODIC_MINOR: NoteSet = NoteSet.parse("C D Eb F G A B", 'Melodic Minor');
@@ -309,4 +308,3 @@ export class NoteSetTypes {
         }, new Map<string, NoteSet>());
 }
 
-// }

@@ -31,7 +31,7 @@ export class Note {
 
     private readonly frequency: number;
 
-    private static readonly reFormat = /^([A-G])([b#]*)/;
+    private static readonly reFormat = /^([A-G])([b#]*)(\((\d+)\))?/;
     private static readonly charAValue = "A".charCodeAt(0);
     /**
      * values of the notes in the C Major scale
@@ -137,7 +137,6 @@ export class Note {
 
     /**
      * Note(6, 0) => Note(-6, 1)
-     * @param note 
      * @returns the note that has the opposite chromatic value
      */
     public mirrorInterval(): Note {
@@ -195,10 +194,15 @@ export class Note {
     public static parse(note: string): Note {
         const res = Note.reFormat.exec(note);
         if (res) {
-            const [noteName, noteAlts] = [res[1], res[2]];
-            const value = (noteName.charCodeAt(0) - Note.charAValue + 5) % 7;
+            const [noteName, noteAlts, octave] = [res[1], res[2], res[4]];
+            let value = (noteName.charCodeAt(0) - Note.charAValue + 5) % 7;
+
+            if (octave){
+                value += (parseInt(octave) * 7);
+            }
+
             // we want C = 0 and B = 6
-            // if the value is A we get (0 + 5) % 7 = 5
+            // if the value is A, we get (0 + 5) % 7 = 5
             return new Note(value, Note.parseAlterations(noteAlts));
         } else {
             throw new Error(`Cannot parse Note '${note}'`);

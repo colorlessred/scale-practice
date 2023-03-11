@@ -4,7 +4,6 @@ import {IProvider} from "./IProvider";
  * fixed length queue that has its own provider that refills it automatically
  */
 export class AutoQueue<T> {
-    // TODO ? implement IProvider<T>?
     readonly size: number;
     values: Array<T>;
     provider: IProvider<T>;
@@ -15,7 +14,8 @@ export class AutoQueue<T> {
      * @param provider provider that automatically refills the queue
      * @param beforeGetNext function called before generating the next value
      */
-    constructor(size: number, provider: IProvider<T>, beforeGetNext: () => void = () => { /* */ }) {
+    constructor(size: number, provider: IProvider<T>, beforeGetNext: () => void = () => { /* */
+    }) {
         if (size < 2) {
             throw new Error(`size must be at least 2. Received ${size}`);
         }
@@ -30,6 +30,10 @@ export class AutoQueue<T> {
         for (let i = 0; i < this.size; i++) {
             this.values.push(this.getNext());
         }
+    }
+
+    reset(): void {
+        throw new Error("Method not implemented.");
     }
 
     /**

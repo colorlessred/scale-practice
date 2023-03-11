@@ -1,15 +1,14 @@
-import { Note } from "./Note"
-import { NoteRange } from "./NoteRange"
-import { NoteSet } from "./NoteSet"
-import { IProvider } from "./utilities/IProvider";
+import {Note} from "./Note";
+import {NoteRange} from "./NoteRange";
+import {NoteSet} from "./NoteSet";
+import {IProvider} from "./utilities/IProvider";
 
 
-/** 
- * produce the sequence of notes in the given range, 
+/**
+ * produce the sequence of notes in the given range,
  * matching the underlying NoteSet
  */
-export class NoteProvider implements IProvider<Note>{
-    // TODO move to IProvider<Note>
+export class NoteProvider implements IProvider<Note> {
     private currentNote: Note;
     private noteSet: NoteSet;
     private noteRange: NoteRange;
@@ -45,10 +44,13 @@ export class NoteProvider implements IProvider<Note>{
     // TODO test
     /** reset provider to first note */
     public reset(): void {
+        // TODO maybe use setFirstValue()?
         this.currentNote = this.firstNote;
     }
 
-    public getNote() { return this.currentNote; }
+    public getNote() {
+        return this.currentNote;
+    }
 
     public computeNext(): Note {
         let nextNote = this.noteSet.getClosestNote(this.currentNote, this.directionUp);
@@ -72,22 +74,28 @@ export class NoteProvider implements IProvider<Note>{
     }
 
     /**
-     * return current note and then move to next 
+     * return current note and then move to next
      * @returns next note
      */
     public getNext(): Note {
         if (this.isFirst) {
             this.isFirst = false;
         } else {
-            this.setNote(this.computeNext());
+            this.setFirstValue(this.computeNext());
         }
         return this.currentNote;
     }
 
-    public getDirectionUp(): boolean { return this.directionUp; }
+    public getDirectionUp(): boolean {
+        return this.directionUp;
+    }
+
+    public setDirectionUp(up: boolean) {
+        this.directionUp = up;
+    }
 
     // TODO test fix cases
-    public setNote(note: Note) {
+    public setFirstValue(note: Note) {
         this.currentNote = note;
         this.fixCurrentNote();
     }
