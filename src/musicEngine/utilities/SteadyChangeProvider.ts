@@ -2,8 +2,10 @@ import {IProvider} from "./IProvider";
 
 /**
  * a provider of T, which generates then from a providers that change once every fixed number of elements T returned
+ * U: the actual implementation of the IProvider<T>
+ * T: the type returned by the provider
  */
-export class Order2Provider<U extends IProvider<T>, T> implements IProvider<T> {
+export class SteadyChangeProvider<U extends IProvider<T>, T> implements IProvider<T> {
     // readonly
     private readonly providerProvider: IProvider<U>;
     private readonly numElementsInGroup: number;

@@ -6,6 +6,7 @@ import { INoteSetProvider } from "./NoteSetProviders";
 import { IProvider } from "./utilities/IProvider";
 import { SecondOrderProvider } from "./utilities/SecondOrderProvider";
 
+// TODO probably obsolete
 export class SecondOrderNoteProvider implements IProvider<Note> {
     readonly noteSetProvider: INoteSetProvider;
     readonly notesPerNoteSet: number;

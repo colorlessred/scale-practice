@@ -1,6 +1,8 @@
 import { expect } from 'chai';
 import { Note } from "../musicEngine/Note";
 import {NoteSet, NoteSetTypes} from "../musicEngine/NoteSet";
+import {NoteProvider} from "../musicEngine/NoteProvider";
+import {NoteRange} from "../musicEngine/NoteRange";
 
 describe(NoteSet.name, () => {
     describe('constructor', () => {
@@ -203,4 +205,6 @@ describe(NoteSet.name, () => {
         doTest(3, false);
         doTest(1, false);
     });
+
+
 });

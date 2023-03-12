@@ -25,10 +25,6 @@ export class NoteRange {
         return val >= this.min.getChromaticValue() && val <= this.max.getChromaticValue();
     }
 
-    // public containsNoteString(note: string): boolean {
-    //     return this.contains((Note.parse(note)));
-    // }
-
     public toString(): string {
         return `${this.min.toString()}-${this.max.toString()}`;
     }

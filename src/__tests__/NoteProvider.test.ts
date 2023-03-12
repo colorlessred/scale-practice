@@ -1,8 +1,8 @@
-import { expect } from 'chai';
-import { Note } from "../musicEngine/Note";
-import { NoteSet } from "../musicEngine/NoteSet";
-import { NoteProvider } from "../musicEngine/NoteProvider";
-import { NoteRange } from '../musicEngine/NoteRange';
+import {expect} from 'chai';
+import {Note} from "../musicEngine/Note";
+import {NoteSet, NoteSetTypes} from "../musicEngine/NoteSet";
+import {NoteProvider} from "../musicEngine/NoteProvider";
+import {NoteRange} from '../musicEngine/NoteRange';
 
 describe(NoteProvider.name, () => {
     describe('basic scale up and down', () => {
@@ -10,7 +10,9 @@ describe(NoteProvider.name, () => {
             new NoteRange(Note.parse('C'), new Note(7, 0)), true);
 
         const testAndMove = (noteProducer: NoteProvider, noteString: string) => {
-            it(noteString, () => { expect(noteProducer.getNext().toString()).eq(noteString) })
+            it(noteString, () => {
+                expect(noteProducer.getNext().toString()).eq(noteString);
+            });
         };
 
         testAndMove(np, 'C');
@@ -33,7 +35,7 @@ describe(NoteProvider.name, () => {
 
     describe('Scale with change', () => {
         it('check scale', () => {
-            const range = new NoteRange(new Note(0, 0), new Note(14, 0))
+            const range = new NoteRange(new Note(0, 0), new Note(14, 0));
             const np = new NoteProvider(Note.parse('C'), NoteSet.parse('C E G'), range, true);
 
             const doTest = (noteProvider: NoteProvider, noteString: string) => {
@@ -61,13 +63,32 @@ describe(NoteProvider.name, () => {
     describe('first note out of note set', () => {
         function doTest(goingUp: boolean, expected: string) {
             it(`going up? ${goingUp}`, () => {
-                const range = new NoteRange(new Note(0, 0), new Note(14, 0))
+                const range = new NoteRange(new Note(0, 0), new Note(14, 0));
                 const np = new NoteProvider(Note.parse('D'), NoteSet.parse('C E G'), range, goingUp);
                 expect(np.getNext().toString()).eq(expected);
             });
         }
+
         doTest(true, 'E');
         doTest(false, 'C');
-    })
+    });
 
+    describe('first note', () => {
+        const noteSet = NoteSetTypes.MAJOR.changeRoot(Note.parse('C'));
+
+        function doTest(range: string, first: string, expected: string, desc: string) {
+            const noteRange = NoteRange.parse(range);
+            const noteProvider = new NoteProvider(Note.parse(first), noteSet, noteRange, true);
+
+            it(desc, () => {
+                expect(noteProvider.getCurrentNote().toString()).eq(expected);
+            });
+        }
+
+        doTest('C(0)-C(1)', 'C', 'C', 'first already in set');
+        doTest('C(1)-C(2)', 'C', 'C(1)', 'go up to match range');
+        doTest('C(1)-C(2)', 'Cb(1)', 'C(1)', 'go up from alteration to match range');
+        doTest('C(1)-C(2)', 'C#(1)', 'D(1)', 'go up inside range');
+        doTest('C(0)-C(1)', 'D(1)', 'C(1)', 'go down to match range');
+    });
 });
