@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { Note } from "../musicEngine/Note";
-import { NoteProvider } from "../musicEngine/NoteProvider";
+import {Direction, NoteAndDirection, NoteProvider} from "../musicEngine/NoteProvider";
 import { NoteRange } from "../musicEngine/NoteRange";
 import { NoteSet } from "../musicEngine/NoteSet";
 
@@ -13,7 +13,7 @@ type Props = {
 }
 
 export function NoteProviderUI({ noteCounter, currentNote, setCurrentNote, noteSet, range }: Props) {
-    const noteProducerRef = useRef<NoteProvider>(new NoteProvider(currentNote, noteSet, range, true));
+    const noteProducerRef = useRef<NoteProvider>(new NoteProvider(new NoteAndDirection(currentNote, Direction.UP), noteSet, range));
 
     useEffect(() => { noteProducerRef.current.setNoteSet(noteSet) }, [noteSet])
     useEffect(() => { noteProducerRef.current.setNoteRange(range) }, [range])

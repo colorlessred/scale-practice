@@ -1,7 +1,7 @@
 import {expect} from 'chai';
 import {Note} from "../musicEngine/Note";
 import {NoteSet, NoteSetTypes} from "../musicEngine/NoteSet";
-import {NoteAndDirection} from "../musicEngine/NoteProvider";
+import {Direction, NoteAndDirection} from "../musicEngine/NoteProvider";
 
 describe(NoteSet.name, () => {
     describe('constructor', () => {
@@ -115,7 +115,7 @@ describe(NoteSet.name, () => {
         const ns = NoteSet.parse('C E G Bb');
         const testNote = (name: string, ns: NoteSet, note: Note, result: string) =>
             it(name, () => {
-                expect(ns.getClosestNote(new NoteAndDirection(note, true)).toString()).eq(result);
+                expect(ns.getClosestNote(new NoteAndDirection(note, Direction.UP)).toString()).eq(result);
             });
 
         const testName = (name: string, ns: NoteSet, note: string, result: string) => testNote(name, ns, Note.parse(note), result);
@@ -137,7 +137,7 @@ describe(NoteSet.name, () => {
         const ns = NoteSet.parse('C E G');
         const doTest = (name: string, ns: NoteSet, note: string, result: string) =>
             it(name, () => {
-                expect(ns.getClosestNote(new NoteAndDirection(Note.parse(note), false)).toString()).eq(result);
+                expect(ns.getClosestNote(new NoteAndDirection(Note.parse(note), Direction.DOWN)).toString()).eq(result);
             });
 
         doTest('C->G(-1)', ns, 'C', 'G(-1)');

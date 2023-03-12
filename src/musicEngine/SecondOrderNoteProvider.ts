@@ -1,10 +1,10 @@
-import { Note } from "./Note";
-import { NoteProvider } from "./NoteProvider";
-import { NoteRange } from "./NoteRange";
-import { NoteSet } from "./NoteSet";
-import { INoteSetProvider } from "./NoteSetProviders";
-import { IProvider } from "./utilities/IProvider";
-import { SecondOrderProvider } from "./utilities/SecondOrderProvider";
+import {Note} from "./Note";
+import {Direction, NoteAndDirection, NoteProvider} from "./NoteProvider";
+import {NoteRange} from "./NoteRange";
+import {NoteSet} from "./NoteSet";
+import {INoteSetProvider} from "./NoteSetProviders";
+import {IProvider} from "./utilities/IProvider";
+import {SecondOrderProvider} from "./utilities/SecondOrderProvider";
 
 // TODO probably obsolete
 export class SecondOrderNoteProvider implements IProvider<Note> {
@@ -32,12 +32,12 @@ export class SecondOrderNoteProvider implements IProvider<Note> {
                     out.setNoteSet(noteSet);
                 } else {
                     // instantiate the first time
-                    out = new NoteProvider(this.firstNote, noteSet, this.range, true);
+                    out = new NoteProvider(new NoteAndDirection(this.firstNote, Direction.UP), noteSet, this.range);
                 }
 
                 return out;
             }
-        )
+        );
     }
 
     getNoteSet(): NoteSet {

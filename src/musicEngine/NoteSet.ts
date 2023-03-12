@@ -1,7 +1,7 @@
 import {Note} from "./Note";
 import {Utils} from "./Utils";
 import {SmartArray} from "./utilities/SmartArray";
-import {NoteAndDirection} from "./NoteProvider";
+import {Direction, NoteAndDirection} from "./NoteProvider";
 
 /**
  * represents a set of notes where their octave has not importance, like a scale or a chord
@@ -233,7 +233,7 @@ export class NoteSet {
      * @returns closest (next/previous) note
      */
     public getClosestNote(noteAndDirection: NoteAndDirection): Note {
-        const notesArray = noteAndDirection.up ? this.nextNotes : this.prevNotes;
+        const notesArray = noteAndDirection.direction.equals(Direction.UP) ? this.nextNotes : this.prevNotes;
 
         // move note to 0-11 chromatic range to figure out next note and then
         // bring it back to the original octave

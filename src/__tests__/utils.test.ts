@@ -7,7 +7,7 @@ import {SmartIndex} from '../musicEngine/utilities/SmartIndex';
 import {SteadyChangeProvider} from "../musicEngine/utilities/SteadyChangeProvider";
 import {NoteSetTypes} from "../musicEngine/NoteSet";
 import {Note} from "../musicEngine/Note";
-import {NoteAndDirection, NoteProvider} from "../musicEngine/NoteProvider";
+import {Direction, NoteAndDirection, NoteProvider} from "../musicEngine/NoteProvider";
 import {NoteRange} from "../musicEngine/NoteRange";
 
 describe(SmartIndex.name, () => {
@@ -147,8 +147,8 @@ describe(SteadyChangeProvider.name, () => {
 
         const range = NoteRange.parse('C(0)-C(3)');
 
-        const np1 = new NoteProvider(new NoteAndDirection(range.getMin(), true), ns1, range);
-        const np2 = new NoteProvider(new NoteAndDirection(range.getMin(), true), ns2, range);
+        const np1 = new NoteProvider(new NoteAndDirection(range.getMin(), Direction.UP), ns1, range);
+        const np2 = new NoteProvider(new NoteAndDirection(range.getMin(), Direction.UP), ns2, range);
 
         const providerProvider = new FixedProvider([np1, np2]);
         const o2provider = new SteadyChangeProvider<NoteProvider, Note>(providerProvider,
