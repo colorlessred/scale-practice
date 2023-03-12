@@ -1,4 +1,4 @@
-import {NoteProvider} from "./NoteProvider";
+import {NoteAndDirection, NoteProvider} from "./NoteProvider";
 import {IProvider} from "./utilities/IProvider";
 import {NoteRange} from "./NoteRange";
 import {INoteSetProvider} from "./NoteSetProviders";
@@ -18,7 +18,7 @@ export class NoteProviderProvider implements IProvider<NoteProvider> {
         this.noteRange = noteRange;
 
         // create the first NoteProvider, default to the lowest note in the range and going up direction
-        this.currentNoteProvider = new NoteProvider(noteRange.getMin(), noteSetProvider.getNext(), noteRange, true);
+        this.currentNoteProvider = new NoteProvider(new NoteAndDirection(noteRange.getMin(), true), noteSetProvider.getNext(), noteRange);
     }
 
     getNext(): NoteProvider {
@@ -26,10 +26,9 @@ export class NoteProviderProvider implements IProvider<NoteProvider> {
 
         // init the next NoteProvider, starting the current note
         return new NoteProvider(
-            // TODO wrong to set it as first note
-            this.currentNoteProvider.getCurrentNote(),
-            nextNoteSet, this.noteRange,
-            this.currentNoteProvider.getDirectionUp());
+            this.currentNoteProvider.getNoteAndDirection(),
+            nextNoteSet, this.noteRange
+        );
     }
 
     reset(): void {

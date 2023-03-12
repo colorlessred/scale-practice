@@ -1,7 +1,7 @@
 import {expect} from 'chai';
 import {Note} from "../musicEngine/Note";
 import {NoteSet, NoteSetTypes} from "../musicEngine/NoteSet";
-import {NoteProvider} from "../musicEngine/NoteProvider";
+import {NoteAndDirection, NoteProvider} from "../musicEngine/NoteProvider";
 import {NoteRange} from '../musicEngine/NoteRange';
 
 describe(NoteProvider.name, () => {
@@ -9,7 +9,7 @@ describe(NoteProvider.name, () => {
     it('basic scale up and down', () => {
         const noteRange = NoteRange.parse('C(0)-C(1)');
 
-        const noteProvider = new NoteProvider(noteRange.getMin(), NoteSetTypes.MAJOR, noteRange, true);
+        const noteProvider = new NoteProvider(new NoteAndDirection(noteRange.getMin(), true), NoteSetTypes.MAJOR, noteRange);
         const notes = [...Array(16)].map(() => noteProvider.getNext().toString()).join('-');
 
         expect(notes).eq('C-D-E-F-G-A-B-C(1)-B-A-G-F-E-D-C-D');
@@ -18,7 +18,7 @@ describe(NoteProvider.name, () => {
     describe('Scale with change', () => {
         it('check scale', () => {
             const range = new NoteRange(new Note(0, 0), new Note(14, 0));
-            const np = new NoteProvider(Note.parse('C'), NoteSet.parse('C E G'), range, true);
+            const np = new NoteProvider(new NoteAndDirection(Note.parse('C'), true), NoteSet.parse('C E G'), range);
 
             const doTest = (noteProvider: NoteProvider, noteString: string) => {
                 expect(noteProvider.getNext().toString()).eq(noteString);
@@ -46,7 +46,7 @@ describe(NoteProvider.name, () => {
         function doTest(goingUp: boolean, expected: string) {
             it(`going up? ${goingUp}`, () => {
                 const range = new NoteRange(new Note(0, 0), new Note(14, 0));
-                const np = new NoteProvider(Note.parse('D'), NoteSet.parse('C E G'), range, goingUp);
+                const np = new NoteProvider(new NoteAndDirection(Note.parse('D'), goingUp), NoteSet.parse('C E G'), range);
                 expect(np.getNext().toString()).eq(expected);
             });
         }
@@ -60,7 +60,7 @@ describe(NoteProvider.name, () => {
 
         function doTest(range: string, first: string, expected: string, desc: string) {
             const noteRange = NoteRange.parse(range);
-            const noteProvider = new NoteProvider(Note.parse(first), noteSet, noteRange, true);
+            const noteProvider = new NoteProvider(new NoteAndDirection(Note.parse(first), true), noteSet, noteRange);
 
             it(desc, () => {
                 expect(noteProvider.getNext().toString()).eq(expected);

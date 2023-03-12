@@ -11,6 +11,7 @@ export class NoteAndDirection {
     /**
      * if true, direction is up, otherwise it is down
      */
+    // TODO use enum instead of boolean
     readonly up: boolean;
 
     constructor(note: Note, up: boolean) {
@@ -28,18 +29,17 @@ export class NoteProvider implements IProvider<Note> {
     private noteSet: NoteSet;
     private noteRange: NoteRange;
 
-    private currentNoteAndDirection: NoteAndDirection;
+    private noteAndDirection: NoteAndDirection;
 
-    private readonly firstNote: Note;
+    // private readonly firstNote: Note;
     private isFirst: boolean;
 
     private static readonly MAX_ATTEMPTS = 10;
 
-    constructor(firstNote: Note, noteSet: NoteSet, range: NoteRange, goingUp: boolean) {
-        this.firstNote = firstNote;
+    constructor(noteAndDirection: NoteAndDirection, noteSet: NoteSet, noteRange: NoteRange) {
+        this.noteAndDirection = noteAndDirection;
         this.noteSet = noteSet;
-        this.noteRange = range;
-        this.currentNoteAndDirection = new NoteAndDirection(firstNote, goingUp);
+        this.noteRange = noteRange;
         this.isFirst = true;
     }
 
@@ -48,15 +48,15 @@ export class NoteProvider implements IProvider<Note> {
     /** reset provider to first note */
     public reset(): void {
         // TODO maybe use setFirstValue()?
-        this.currentNoteAndDirection = new NoteAndDirection(this.firstNote, this.currentNoteAndDirection.up);
+        // this.currentNoteAndDirection = new NoteAndDirection(this.firstNote, this.currentNoteAndDirection.up);
     }
 
     public computeNextNoteAndDirection(): NoteAndDirection {
-        let nextNoteAndDirection = new NoteAndDirection(this.noteSet.getClosestNote(this.currentNoteAndDirection), this.currentNoteAndDirection.up);
+        let nextNoteAndDirection = new NoteAndDirection(this.noteSet.getClosestNote(this.noteAndDirection), this.noteAndDirection.up);
 
         if (!this.noteRange.contains(nextNoteAndDirection.note)) {
             // fix direction
-            nextNoteAndDirection = new NoteAndDirection(this.currentNoteAndDirection.note,
+            nextNoteAndDirection = new NoteAndDirection(this.noteAndDirection.note,
                 this.noteRange.getMax().isHigherThan(nextNoteAndDirection.note));
 
             // it is possible that the range doesn't contain any note from the NoteSet, so
@@ -87,24 +87,24 @@ export class NoteProvider implements IProvider<Note> {
     public getNext(): Note {
         if (this.isFirst) {
             this.isFirst = false;
-            if (this.contains(this.firstNote)) {
-                return this.firstNote;
+            if (this.contains(this.noteAndDirection.note)) {
+                return this.noteAndDirection.note;
             }
         }
-        this.currentNoteAndDirection = this.computeNextNoteAndDirection();
-        return this.currentNoteAndDirection.note;
+        this.noteAndDirection = this.computeNextNoteAndDirection();
+        return this.noteAndDirection.note;
     }
 
     public getDirectionUp(): boolean {
-        return this.currentNoteAndDirection.up;
+        return this.noteAndDirection.up;
     }
 
     public setNoteAndDirection(noteAndDirection: NoteAndDirection) {
-        this.currentNoteAndDirection = noteAndDirection;
+        this.noteAndDirection = noteAndDirection;
     }
 
     public getNoteAndDirection(): NoteAndDirection {
-        return this.currentNoteAndDirection;
+        return this.noteAndDirection;
     }
 
     // TODO test fix cases
