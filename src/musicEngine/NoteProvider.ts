@@ -43,8 +43,6 @@ export class NoteProvider implements IProvider<Note> {
         this.noteSet = noteSet;
         this.noteRange = range;
         this.currentNoteAndDirection = new NoteAndDirection(firstNote, goingUp);
-        // this.directionUp = goingUp;
-        // this.currentNote = firstNote;
         this.isFirst = true;
         this.fixCurrentNote();
     }
@@ -61,25 +59,25 @@ export class NoteProvider implements IProvider<Note> {
         return this.currentNoteAndDirection.note;
     }
 
-    public computeNext(): NoteAndDirection {
-
-        let nextNoteAndDirection = new NoteAndDirection(this.noteSet.getClosestNote(this.currentNoteAndDirection), true);
+    public computeNextNoteAndDirection(): NoteAndDirection {
+        let nextNoteAndDirection = new NoteAndDirection(this.noteSet.getClosestNote(this.currentNoteAndDirection), this.currentNoteAndDirection.up);
 
         if (!this.noteRange.contains(nextNoteAndDirection.note)) {
             // fix direction
-            nextNoteAndDirection = new NoteAndDirection(this.currentNoteAndDirection.note, this.noteRange.getMax().isHigherThan(nextNoteAndDirection.note));
+            nextNoteAndDirection = new NoteAndDirection(this.currentNoteAndDirection.note,
+                this.noteRange.getMax().isHigherThan(nextNoteAndDirection.note));
 
             // it is possible that the range doesn't contain any note from the NoteSet, so
             // use a max number of attempts to avoid infinite loops and then throw an error
-            for (let i = 0; i < NoteProvider.MAX_ATTEMPTS && (i === 0 || !this.noteRange.contains(nextNote)); i++) {
-                nextNote = this.noteSet.getClosestNote(nextNote, up);
+            for (let i = 0; i < NoteProvider.MAX_ATTEMPTS && (i === 0 || !this.noteRange.contains(nextNoteAndDirection.note)); i++) {
+                nextNoteAndDirection = new NoteAndDirection(this.noteSet.getClosestNote(nextNoteAndDirection), nextNoteAndDirection.up);
             }
-            if (!this.noteRange.contains(nextNote)) {
+            if (!this.noteRange.contains(nextNoteAndDirection.note)) {
                 throw new Error(`Cannot find note in range: ${this.noteRange.toString()}`);
             }
         }
 
-        return new NoteProvider.NoteAndDirection(nextNote, up);
+        return nextNoteAndDirection;
     }
 
     /**
@@ -87,9 +85,9 @@ export class NoteProvider implements IProvider<Note> {
      * in the movement direction
      */
     private fixCurrentNote() {
-        if (!this.noteSet.contains(this.currentNote) ||
-            !this.noteRange.contains(this.currentNote)) {
-            this.currentNote = this.computeNext();
+        if (!this.noteSet.contains(this.currentNoteAndDirection.note) ||
+            !this.noteRange.contains(this.currentNoteAndDirection.note)) {
+            this.currentNoteAndDirection = this.computeNextNoteAndDirection();
             this.isFirst = true;
         }
     }
@@ -102,22 +100,22 @@ export class NoteProvider implements IProvider<Note> {
         if (this.isFirst) {
             this.isFirst = false;
         } else {
-            this.currentNote = this.computeNext();
+            this.currentNoteAndDirection = this.computeNextNoteAndDirection();
         }
-        return this.currentNote;
+        return this.currentNoteAndDirection.note;
     }
 
     public getDirectionUp(): boolean {
-        return this.directionUp;
+        return this.currentNoteAndDirection.up;
     }
 
     public setDirectionUp(up: boolean) {
-        this.directionUp = up;
+        this.currentNoteAndDirection.up = up;
     }
 
     // TODO test fix cases
     public setFirstValue(note: Note) {
-        this.currentNote = note;
+        this.currentNoteAndDirection.note = note;
         this.fixCurrentNote();
     }
 

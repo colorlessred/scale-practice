@@ -5,32 +5,14 @@ import {NoteProvider} from "../musicEngine/NoteProvider";
 import {NoteRange} from '../musicEngine/NoteRange';
 
 describe(NoteProvider.name, () => {
-    describe('basic scale up and down', () => {
-        const np = new NoteProvider(Note.parse('C'), NoteSet.parse('C D E F G A B'),
-            new NoteRange(Note.parse('C'), new Note(7, 0)), true);
 
-        const testAndMove = (noteProducer: NoteProvider, noteString: string) => {
-            it(noteString, () => {
-                expect(noteProducer.getNext().toString()).eq(noteString);
-            });
-        };
+    it('basic scale up and down', () => {
+        const noteRange = NoteRange.parse('C(0)-C(1)');
 
-        testAndMove(np, 'C');
-        testAndMove(np, 'D');
-        testAndMove(np, 'E');
-        testAndMove(np, 'F');
-        testAndMove(np, 'G');
-        testAndMove(np, 'A');
-        testAndMove(np, 'B');
-        testAndMove(np, 'C(1)');
-        testAndMove(np, 'B');
-        testAndMove(np, 'A');
-        testAndMove(np, 'G');
-        testAndMove(np, 'F');
-        testAndMove(np, 'E');
-        testAndMove(np, 'D');
-        testAndMove(np, 'C');
-        testAndMove(np, 'D');
+        const noteProvider = new NoteProvider(noteRange.getMin(), NoteSetTypes.MAJOR, noteRange, true);
+        const notes = [...Array(16)].map(() => noteProvider.getNext().toString()).join('-');
+
+        expect(notes).eq('C-D-E-F-G-A-B-C(1)-B-A-G-F-E-D-C-D');
     });
 
     describe('Scale with change', () => {
