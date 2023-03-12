@@ -26,7 +26,6 @@ export class NoteAndDirection {
     /**
      * if true, direction is up, otherwise it is down
      */
-        // TODO use enum instead of boolean
     readonly direction: Direction;
 
     constructor(note: Note, direction: Direction) {
@@ -105,8 +104,14 @@ export class NoteProvider implements IProvider<Note> {
         return this.noteAndDirection.note;
     }
 
-    public setNoteAndDirection(noteAndDirection: NoteAndDirection) {
-        this.noteAndDirection = noteAndDirection;
+    /**
+     * changes how getNext() is computed
+     * if isFirst == true, then it will return the current note if it is contained
+     * if isFirst == false, it will always try and get the next one. This is useful when chaining NoteProviders to avoid repeating values
+     * @param isFirst
+     */
+    public setIsFirst(isFirst: boolean) {
+        this.isFirst = isFirst;
     }
 
     public getNoteAndDirection(): NoteAndDirection {

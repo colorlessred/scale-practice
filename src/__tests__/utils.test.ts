@@ -7,8 +7,10 @@ import {SmartIndex} from '../musicEngine/utilities/SmartIndex';
 import {SteadyChangeProvider} from "../musicEngine/utilities/SteadyChangeProvider";
 import {NoteSetTypes} from "../musicEngine/NoteSet";
 import {Note} from "../musicEngine/Note";
-import {Direction, NoteAndDirection, NoteProvider} from "../musicEngine/NoteProvider";
 import {NoteRange} from "../musicEngine/NoteRange";
+import {NoteProviderProvider} from "../musicEngine/NoteProviderProvider";
+import {NoteSetProviderFixed} from "../musicEngine/NoteSetProviders";
+import {Direction, NoteAndDirection} from "../musicEngine/NoteProvider";
 
 describe(SmartIndex.name, () => {
     const a: SmartArray<string> = SmartArray.fromArray(['a', 'b', 'c']);
@@ -142,23 +144,30 @@ describe(RandomProvider.name, () => {
 
 describe(SteadyChangeProvider.name, () => {
     it('changes every 4', () => {
+        const range = NoteRange.parse('C(0)-C(3)');
         const ns1 = NoteSetTypes.MAJOR.changeRoot(Note.parse('C'));
         const ns2 = NoteSetTypes.MAJOR.changeRoot(Note.parse('C#'));
+        const noteProviderProvider = new NoteProviderProvider(new NoteSetProviderFixed([ns1, ns2]), range, new NoteAndDirection(range.getMin(), Direction.UP));
 
-        const range = NoteRange.parse('C(0)-C(3)');
+        const steadyChangeProvider = new SteadyChangeProvider<Note>(noteProviderProvider, 4);
 
-        const np1 = new NoteProvider(new NoteAndDirection(range.getMin(), Direction.UP), ns1, range);
-        const np2 = new NoteProvider(new NoteAndDirection(range.getMin(), Direction.UP), ns2, range);
-
-        const providerProvider = new FixedProvider([np1, np2]);
-        const o2provider = new SteadyChangeProvider<NoteProvider, Note>(providerProvider,
-            4,
-            (prev, next) => {
-                next.setNoteAndDirection(prev.getNoteAndDirection());
-            }
-        );
-
-        const notes = [...Array(10)].map(() => o2provider.getNext().toString()).join(', ');
-        // expect(notes).eq('');
+        const notes = [...Array(16)].map(() => steadyChangeProvider.getNext().toString()).join('-');
+        expect(notes).eq('');
     });
 });
+
+describe(NoteProviderProvider.name, () => {
+    it('change when going down', () => {
+        const range = NoteRange.parse('C(0)-C(1)');
+        const ns1 = NoteSetTypes.MAJOR.changeRoot(Note.parse('C'));
+        const ns2 = NoteSetTypes.MAJOR.changeRoot(Note.parse('C#'));
+        const noteProviderProvider = new NoteProviderProvider(new NoteSetProviderFixed([ns1, ns2]), range, new NoteAndDirection(Note.parse('B'), Direction.UP));
+        let noteProvider =  noteProviderProvider.getNext(); // C Scale
+        expect(noteProvider.getNext().toString()).eq('B');
+        expect(noteProvider.getNext().toString()).eq('C(1)');
+        noteProvider = noteProviderProvider.getNext(); // C# scale
+        expect(noteProvider.getNext().toString()).eq('A#');
+        expect(noteProvider.getNext().toString()).eq('G#');
+    });
+});
+
