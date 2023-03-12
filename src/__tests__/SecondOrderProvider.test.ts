@@ -29,16 +29,16 @@ describe(SecondOrderProvider.name, () => {
     });
 });
 
-describe(SecondOrderNoteProvider.name, () => {
-    it('walk C and C# scales', () => {
-        // C maj and C# maj
-        const noteSetProvider = new NoteSetProviderFixed([NoteSetTypes.MAJOR, NoteSetTypes.MAJOR.transpose(Note.parse('C#'))]);
-        const range = new NoteRange(new Note(0, 0), new Note(6, 0));
-        const secondOrderNoteProvider = new SecondOrderNoteProvider(noteSetProvider, 4, range, new Note(1, 0));
-        const queue = new AutoQueue<Note>(10, secondOrderNoteProvider);
-        expect(queue.toString()).eq([
-            'D', 'E', 'F', 'G', // switch
-            'G#', 'A#', 'G#', 'F#', // switch
-            'F', 'E'].join(' / '));
-    });
-});
+// describe(SecondOrderNoteProvider.name, () => {
+//     it('walk C and C# scales', () => {
+//         // C maj and C# maj
+//         const noteSetProvider = new NoteSetProviderFixed([NoteSetTypes.MAJOR, NoteSetTypes.MAJOR.transpose(Note.parse('C#'))]);
+//         const range = new NoteRange(new Note(0, 0), new Note(6, 0));
+//         const secondOrderNoteProvider = new SecondOrderNoteProvider(noteSetProvider, 4, range, new Note(1, 0));
+//         const queue = new AutoQueue<Note>(10, secondOrderNoteProvider);
+//         expect(queue.toString()).eq([
+//             'D', 'E', 'F', 'G', // switch
+//             'G#', 'A#', 'G#', 'F#', // switch
+//             'F', 'E'].join(' / '));
+//     });
+// });

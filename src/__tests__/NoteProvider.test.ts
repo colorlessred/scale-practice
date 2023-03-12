@@ -63,7 +63,7 @@ describe(NoteProvider.name, () => {
             const noteProvider = new NoteProvider(Note.parse(first), noteSet, noteRange, true);
 
             it(desc, () => {
-                expect(noteProvider.getCurrentNote().toString()).eq(expected);
+                expect(noteProvider.getNext().toString()).eq(expected);
             });
         }
 

@@ -154,8 +154,7 @@ describe(SteadyChangeProvider.name, () => {
         const o2provider = new SteadyChangeProvider<NoteProvider, Note>(providerProvider,
             4,
             (prev, next) => {
-                next.setDirectionUp(prev.getDirectionUp());
-                next.setFirstValue(prev.getCurrentNote());
+                next.setNoteAndDirection(prev.getNoteAndDirection());
             }
         );
 

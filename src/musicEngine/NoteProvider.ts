@@ -7,11 +7,11 @@ import {IProvider} from "./utilities/IProvider";
  * encapsulate note and direction
  */
 export class NoteAndDirection {
-    note: Note;
+    readonly note: Note;
     /**
      * if true, direction is up, otherwise it is down
      */
-    up: boolean;
+    readonly up: boolean;
 
     constructor(note: Note, up: boolean) {
         this.note = note;
@@ -27,12 +27,9 @@ export class NoteProvider implements IProvider<Note> {
 
     private noteSet: NoteSet;
     private noteRange: NoteRange;
-    // private currentNote: Note;
 
     private currentNoteAndDirection: NoteAndDirection;
 
-    /** if true, it goes up to the next note */
-        // private directionUp: boolean;
     private readonly firstNote: Note;
     private isFirst: boolean;
 
@@ -44,7 +41,6 @@ export class NoteProvider implements IProvider<Note> {
         this.noteRange = range;
         this.currentNoteAndDirection = new NoteAndDirection(firstNote, goingUp);
         this.isFirst = true;
-        this.fixCurrentNote();
     }
 
 
@@ -52,11 +48,7 @@ export class NoteProvider implements IProvider<Note> {
     /** reset provider to first note */
     public reset(): void {
         // TODO maybe use setFirstValue()?
-        this.currentNoteAndDirection.note = this.firstNote;
-    }
-
-    public getCurrentNote() {
-        return this.currentNoteAndDirection.note;
+        this.currentNoteAndDirection = new NoteAndDirection(this.firstNote, this.currentNoteAndDirection.up);
     }
 
     public computeNextNoteAndDirection(): NoteAndDirection {
@@ -81,15 +73,11 @@ export class NoteProvider implements IProvider<Note> {
     }
 
     /**
-     * if the first note passed is not in the note set, or out of range => move to the closest one
-     * in the movement direction
+     * true if the note is in the NoteSet and in the NoteRange
+     * @param note
      */
-    private fixCurrentNote() {
-        if (!this.noteSet.contains(this.currentNoteAndDirection.note) ||
-            !this.noteRange.contains(this.currentNoteAndDirection.note)) {
-            this.currentNoteAndDirection = this.computeNextNoteAndDirection();
-            this.isFirst = true;
-        }
+    public contains(note: Note) {
+        return this.noteSet.contains(note) && this.noteRange.contains(note);
     }
 
     /**
@@ -99,9 +87,11 @@ export class NoteProvider implements IProvider<Note> {
     public getNext(): Note {
         if (this.isFirst) {
             this.isFirst = false;
-        } else {
-            this.currentNoteAndDirection = this.computeNextNoteAndDirection();
+            if (this.contains(this.firstNote)) {
+                return this.firstNote;
+            }
         }
+        this.currentNoteAndDirection = this.computeNextNoteAndDirection();
         return this.currentNoteAndDirection.note;
     }
 
@@ -109,27 +99,21 @@ export class NoteProvider implements IProvider<Note> {
         return this.currentNoteAndDirection.up;
     }
 
-    public setDirectionUp(up: boolean) {
-        this.currentNoteAndDirection.up = up;
+    public setNoteAndDirection(noteAndDirection: NoteAndDirection) {
+        this.currentNoteAndDirection = noteAndDirection;
     }
 
-    // TODO test fix cases
-    public setFirstValue(note: Note) {
-        this.currentNoteAndDirection.note = note;
-        this.fixCurrentNote();
+    public getNoteAndDirection(): NoteAndDirection {
+        return this.currentNoteAndDirection;
     }
 
     // TODO test fix cases
     public setNoteSet(noteSet: NoteSet) {
         this.noteSet = noteSet;
-        this.fixCurrentNote();
     }
 
     // TODO test fix cases
     public setNoteRange(noteRange: NoteRange) {
         this.noteRange = noteRange;
-        this.fixCurrentNote();
     }
-
-
 }

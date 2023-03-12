@@ -26,6 +26,7 @@ export class NoteProviderProvider implements IProvider<NoteProvider> {
 
         // init the next NoteProvider, starting the current note
         return new NoteProvider(
+            // TODO wrong to set it as first note
             this.currentNoteProvider.getCurrentNote(),
             nextNoteSet, this.noteRange,
             this.currentNoteProvider.getDirectionUp());
