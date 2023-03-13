@@ -154,6 +154,18 @@ describe(SteadyChangeProvider.name, () => {
         const notes = [...Array(16)].map(() => steadyChangeProvider.getNext().toString()).join('-');
         expect(notes).eq('C-D-E-F-F#-G#-A#-B#-D(1)-E(1)-F(1)-G(1)-G#(1)-A#(1)-B#(1)-C#(2)');
     });
+
+    it('changes every 4, changes direction', () => {
+        const range = NoteRange.parse('C(0)-C(1)');
+        const ns1 = NoteSetTypes.MAJOR.changeRoot(Note.parse('C'));
+        const ns2 = NoteSetTypes.MAJOR.changeRoot(Note.parse('C#'));
+        const noteProviderProvider = new NoteProviderProvider(new NoteSetProviderFixed([ns1, ns2]), range, new NoteAndDirection(range.getMin(), Direction.UP));
+
+        const steadyChangeProvider = new SteadyChangeProvider<Note>(noteProviderProvider, 4);
+
+        const notes = [...Array(21)].map(() => steadyChangeProvider.getNext().toString()).join('-');
+        expect(notes).eq('C-D-E-F-F#-G#-A#-B#-B-A-G-F-D#-C#-B#(-1)-C#-D-E-F-G-G#');
+    });
 });
 
 describe(NoteProviderProvider.name, () => {
