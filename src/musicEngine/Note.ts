@@ -1,8 +1,7 @@
-import { Utils } from "./Utils";
+import {Utils} from "./Utils";
 
 const A_440 = 440;
 const SEMITONE = Math.pow(2, 1 / 12);
-
 
 export class Note {
     // the value of the note. Can be beyond the 0-11 range, it doesn't matter
@@ -62,7 +61,7 @@ export class Note {
     }
 
     /**
-     * 
+     *
      * @returns The chromatic value. Can be any positive or negative integer
      */
     public getChromaticValue(): number {
@@ -70,7 +69,7 @@ export class Note {
     }
 
     /**
-     * 
+     *
      * @returns the octave of the note
      */
     public getOctave(): number {
@@ -78,28 +77,33 @@ export class Note {
     }
 
     /**
-     * 
+     *
      * @returns Chromatic value in the zero octave. 0-11 integer
      */
     public getChromaticValueZeroOctave(): number {
         return this.chromaticValueZeroOctave;
     }
 
-    public getValue() { return this.value; }
-    public getAlteration() { return this.alteration; }
+    public getValue() {
+        return this.value;
+    }
+
+    public getAlteration() {
+        return this.alteration;
+    }
 
     /**
      * add two notes and their alterations
-     * @param note 
-     * @returns 
+     * @param note
+     * @returns
      */
     public add(note: Note): Note {
         return new Note(this.value + note.value, this.alteration + note.alteration);
     }
 
     /**
-     * 
-     * @param numOctaves 
+     *
+     * @param numOctaves
      * @returns new note with the octaves added (or subtracted if numOctaves is negative)
      */
     public addOctaves(numOctaves: number) {
@@ -110,16 +114,16 @@ export class Note {
     // TODO test
     /**
      * return true if the note has same value and alteration
-     * @param note 
+     * @param note
      */
     public equals(note: Note): boolean {
         return this.value === note.value && this.alteration === note.alteration;
     }
 
     /**
-     * 
+     *
      * @param note the note to be subtracted
-     * @returns 
+     * @returns
      */
     public subtract(note: Note): Note {
         return new Note(this.value - note.value, this.alteration - note.alteration);
@@ -140,14 +144,14 @@ export class Note {
      * @returns the note that has the opposite chromatic value
      */
     public mirrorInterval(): Note {
-        return new Note(-this.getValue(), -this.getAlteration()).alterToChromaticValue(- this.getChromaticValue());
+        return new Note(-this.getValue(), -this.getAlteration()).alterToChromaticValue(-this.getChromaticValue());
     }
 
     /**
      * NB: Note(6,0) is a major 7th up, but Note(-6, 0) is NOT a major 7th down because it's the
      * difference between C and D(-1), which is minor 7th down
      * @param note interval expressed as Note. The values will be added, brought back to the zero octave
-     * @returns 
+     * @returns
      */
     public addInterval(note: Note): Note {
         const targetChromaticValue = this.getChromaticValue() + note.getChromaticValue();
@@ -155,8 +159,8 @@ export class Note {
     }
 
     /**
-     * 
-     * @param targetNote 
+     *
+     * @param targetNote
      * @returns interval that added to this will give the target note
      */
     public computeIntervalToReach(targetNote: Note): Note {
@@ -165,7 +169,7 @@ export class Note {
     }
 
     /**
-     * return new note whose chromatic value is in 0-11. 
+     * return new note whose chromatic value is in 0-11.
      * NB: this means that it could be in other octaves, e.g. Cb(1) has value of 11
      */
     public getNoteInChromaticBase(): Note {
@@ -187,9 +191,9 @@ export class Note {
 
     // ################ STATIC ################
     /**
-     * 
+     *
      * @param note string to be parsed, e.g. C# or Gbb
-     * @returns 
+     * @returns
      */
     public static parse(note: string): Note {
         const res = Note.reFormat.exec(note);
@@ -197,7 +201,7 @@ export class Note {
             const [noteName, noteAlts, octave] = [res[1], res[2], res[4]];
             let value = (noteName.charCodeAt(0) - Note.charAValue + 5) % 7;
 
-            if (octave){
+            if (octave) {
                 value += (parseInt(octave) * 7);
             }
 
@@ -227,7 +231,7 @@ export class Note {
     }
 
     /**
-     * 
+     *
      * @param value the chromatic value of the note to be created
      * @param withSharps if true it will use sharps. if false will use flats
      */

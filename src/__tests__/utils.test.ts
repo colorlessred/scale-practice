@@ -11,6 +11,7 @@ import {NoteRange} from "../musicEngine/NoteRange";
 import {NoteProviderProvider} from "../musicEngine/NoteProviderProvider";
 import {NoteSetProviderFixed} from "../musicEngine/NoteSetProviders";
 import {Direction, NoteAndDirection} from "../musicEngine/NoteProvider";
+import {TestUtils} from "../musicEngine/utilities/TestUtils";
 
 describe(SmartIndex.name, () => {
     const a: SmartArray<string> = SmartArray.fromArray(['a', 'b', 'c']);
@@ -71,27 +72,14 @@ describe(SmartArray.name, () => {
 describe('IProvider', () => {
     describe(FixedProvider.name, () => {
         const fixedProvider = new FixedProvider<number>([1, 2, 3, 4]);
-        it('1', () => {
-            expect(fixedProvider.getNext()).eq(1);
-        });
-        it('2', () => {
-            expect(fixedProvider.getNext()).eq(2);
-        });
-        it('3', () => {
-            expect(fixedProvider.getNext()).eq(3);
-        });
-        it('4', () => {
-            expect(fixedProvider.getNext()).eq(4);
-        });
-        it('1', () => {
-            expect(fixedProvider.getNext()).eq(1);
+        it('restart from head', ()=>{
+            expect(TestUtils.joinItemsFromProvider(fixedProvider, 5)).eq('1-2-3-4-1');
         });
 
         it('reset', () => {
             fixedProvider.reset();
             expect(fixedProvider.getNext()).eq(1);
         });
-
     });
 });
 
@@ -151,8 +139,7 @@ describe(SteadyChangeProvider.name, () => {
 
         const steadyChangeProvider = new SteadyChangeProvider<Note>(noteProviderProvider, 4);
 
-        const notes = [...Array(16)].map(() => steadyChangeProvider.getNext().toString()).join('-');
-        expect(notes).eq('C-D-E-F-F#-G#-A#-B#-D(1)-E(1)-F(1)-G(1)-G#(1)-A#(1)-B#(1)-C#(2)');
+        expect(TestUtils.joinItemsFromProvider(steadyChangeProvider, 16)).eq('C-D-E-F-F#-G#-A#-B#-D(1)-E(1)-F(1)-G(1)-G#(1)-A#(1)-B#(1)-C#(2)');
     });
 
     it('changes every 4, changes direction', () => {
@@ -163,8 +150,7 @@ describe(SteadyChangeProvider.name, () => {
 
         const steadyChangeProvider = new SteadyChangeProvider<Note>(noteProviderProvider, 4);
 
-        const notes = [...Array(21)].map(() => steadyChangeProvider.getNext().toString()).join('-');
-        expect(notes).eq('C-D-E-F-F#-G#-A#-B#-B-A-G-F-D#-C#-B#(-1)-C#-D-E-F-G-G#');
+        expect(TestUtils.joinItemsFromProvider(steadyChangeProvider, 21)).eq('C-D-E-F-F#-G#-A#-B#-B-A-G-F-D#-C#-B#(-1)-C#-D-E-F-G-G#');
     });
 });
 
@@ -175,11 +161,9 @@ describe(NoteProviderProvider.name, () => {
         const ns2 = NoteSetTypes.MAJOR.changeRoot(Note.parse('C#'));
         const noteProviderProvider = new NoteProviderProvider(new NoteSetProviderFixed([ns1, ns2]), range, new NoteAndDirection(Note.parse('B'), Direction.UP));
         let noteProvider =  noteProviderProvider.getNext(); // C Scale
-        expect(noteProvider.getNext().toString()).eq('B');
-        expect(noteProvider.getNext().toString()).eq('C(1)');
+        expect(TestUtils.joinItemsFromProvider(noteProvider, 2)).eq('B-C(1)');
         noteProvider = noteProviderProvider.getNext(); // C# scale
-        expect(noteProvider.getNext().toString()).eq('A#');
-        expect(noteProvider.getNext().toString()).eq('G#');
+        expect(TestUtils.joinItemsFromProvider(noteProvider, 2)).eq('A#-G#');
     });
 });
 
