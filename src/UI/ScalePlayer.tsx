@@ -21,13 +21,13 @@ export function ScalePlayer() {
     const [isPlaying, setPlaying] = useState<boolean>(false);
     const [range, setRange] = useState<NoteRange>(new NoteRange(new Note(0, 0), new Note(7 * 2, 0)));
     const [chordMappingGlobal, setChordMappingGlobal] = useState<ChordMappingGlobal>(ChordMappingGlobal.DEFAULT_MAPPING);
-    const [notesPerSet, setNotesPerSet] = useState<number>(4);
+    const [notesPerSet] = useState<number>(4);
 
     // noteSetProvider fills noteSetsQueue which give the current noteSet from which create the NoteProvider
     // start with a fixed major chord
     const [noteSetProvider, setNoteSetProvider] = useState<INoteSetProvider>(new NoteSetProviderFixed([NoteSetTypes.MAJOR]));
-
     const [noteSetsQueue, setNoteSetsQueue] = useState<NoteSetsQueue>(new NoteSetsQueue(2, noteSetProvider));
+
     useEffect(() => { setNoteSetsQueue(new NoteSetsQueue(2, noteSetProvider)) }, [noteSetProvider]);
 
     return (
