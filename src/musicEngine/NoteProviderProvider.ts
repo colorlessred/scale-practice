@@ -28,7 +28,7 @@ export class NoteProviderProvider implements IProvider<NoteProvider> {
             return this.currentNoteProvider;
         } else {
             const nextNoteSet = this.noteSetProvider.getNext();
-            const noteProvider = new NoteProvider(
+            this.currentNoteProvider  = new NoteProvider(
                 this.currentNoteProvider.getNoteAndDirection(),
                 nextNoteSet, this.noteRange
             );
@@ -36,8 +36,8 @@ export class NoteProviderProvider implements IProvider<NoteProvider> {
             // advance, even if the current note is in the NoteSet. Otherwise, if the
             // last Note of the previous NoteSet is contained in the next NoteSet it
             // will be repeated
-            noteProvider.setIsFirst(false);
-            return noteProvider;
+            this.currentNoteProvider.setIsFirst(false);
+            return this.currentNoteProvider;
         }
     }
 

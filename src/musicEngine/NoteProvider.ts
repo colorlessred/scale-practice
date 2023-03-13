@@ -14,6 +14,10 @@ export class Direction {
         return direction.isUp == this.isUp;
     }
 
+    public toString(): string {
+        return this.isUp ? 'UP' : 'DOWN';
+    }
+
     public static readonly UP = new Direction(true);
     public static readonly DOWN = new Direction(false);
 }
@@ -64,6 +68,7 @@ export class NoteProvider implements IProvider<Note> {
         let nextNoteAndDirection = new NoteAndDirection(this.noteSet.getClosestNote(this.noteAndDirection), this.noteAndDirection.direction);
 
         if (!this.contains(nextNoteAndDirection.note)) {
+            console.log(`next note ${nextNoteAndDirection.note.toString()} is not in the NoteProvider ${this.toString()} `);
             // fix direction
             const direction = this.noteRange.getMax().isHigherThan(nextNoteAndDirection.note) ? Direction.UP : Direction.DOWN;
             nextNoteAndDirection = new NoteAndDirection(this.noteAndDirection.note, direction);
@@ -126,5 +131,9 @@ export class NoteProvider implements IProvider<Note> {
     // TODO test fix cases
     public setNoteRange(noteRange: NoteRange) {
         this.noteRange = noteRange;
+    }
+
+    public toString(): string {
+        return `noteSet: ${this.noteSet.toString()}, noteRange: ${this.noteRange.toString()}, note: ${this.noteAndDirection.note.toString()}, direction: ${this.noteAndDirection.direction}`;
     }
 }

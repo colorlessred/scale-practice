@@ -152,7 +152,7 @@ describe(SteadyChangeProvider.name, () => {
         const steadyChangeProvider = new SteadyChangeProvider<Note>(noteProviderProvider, 4);
 
         const notes = [...Array(16)].map(() => steadyChangeProvider.getNext().toString()).join('-');
-        expect(notes).eq('');
+        expect(notes).eq('C-D-E-F-F#-G#-A#-B#-D(1)-E(1)-F(1)-G(1)-G#(1)-A#(1)-B#(1)-C#(2)');
     });
 });
 
