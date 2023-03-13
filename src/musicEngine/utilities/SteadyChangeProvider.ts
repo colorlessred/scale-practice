@@ -19,7 +19,6 @@ export class SteadyChangeProvider<T> implements IProvider<T> {
      *
      * @param providerProvider the "provider of the provider"
      * @param numElementsInGroup the number of T elements after which it will get another Provider<T>
-     * @param alignFunction function called with the previous and next IProvider<T> to let them align the values
      */
     constructor(providerProvider: IProvider<IProvider<T>>,
                 numElementsInGroup: number) {
@@ -42,8 +41,7 @@ export class SteadyChangeProvider<T> implements IProvider<T> {
         if (this.countInGroup % this.numElementsInGroup == 0) {
             // we have already extracted all the elements we want
             this.countInGroup = 0;
-            const nextProvider = this.providerProvider.getNext();
-            this.provider = nextProvider;
+            this.provider = this.providerProvider.getNext();
         }
         this.countInGroup++;
         this.value = this.provider.getNext();

@@ -1,19 +1,20 @@
-import { NoteSet } from "../musicEngine/NoteSet";
+import {NoteSet} from "../musicEngine/NoteSet";
 
 type Props = {
     title: string;
-    noteSet: NoteSet;
+    noteSet: NoteSet | undefined;
 }
 
-export function NoteSetUI({ title, noteSet }: Props) {
+export function NoteSetUI({title, noteSet}: Props) {
     // this will display the notes on the staff, probably using opensheetmusicdisplay
+
+    const display = (noteSet) ? `${noteSet.getFullName()}: ${noteSet.toString()}` : '';
+
     return (<>
-        <label htmlFor={`ns-${title}`}>{title}</label>
-        <div className="note-set-ui" id={`ns-${title}`}>
-            <span className="noteSet">
-                {noteSet.getFullName()}: {noteSet.toString()}
-            </span>
-        </div>
-    </>
-    )
+            <label htmlFor={`ns-${title}`}>{title}</label>
+            <div className="note-set-ui" id={`ns-${title}`}>
+                <span className="noteSet">{display}</span>
+            </div>
+        </>
+    );
 }

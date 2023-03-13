@@ -3,6 +3,7 @@ import { FixedProvider } from "./utilities/FixedProvider";
 import { IProvider } from "./utilities/IProvider";
 import { RandomProvider } from "./utilities/RandomProvider";
 
+// TODO remove
 export type INoteSetProvider = IProvider<NoteSet>;
 
 /**

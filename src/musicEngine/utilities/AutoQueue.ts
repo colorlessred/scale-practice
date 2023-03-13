@@ -3,26 +3,23 @@ import {IProvider} from "./IProvider";
 /**
  * fixed length queue that has its own provider that refills it automatically
  */
-export class AutoQueue<T> {
+export class AutoQueue<T> implements IProvider<T> {
     readonly size: number;
     values: Array<T>;
     provider: IProvider<T>;
-    readonly beforeGetNext: () => void;
+    readonly beforeGetNext: (() => void) | undefined;
 
     /**
      * @param size queue size
      * @param provider provider that automatically refills the queue
      * @param beforeGetNext function called before generating the next value
      */
-    constructor(size: number, provider: IProvider<T>, beforeGetNext: () => void = () => { /* */
-    }) {
+    constructor(size: number, provider: IProvider<T>, beforeGetNext?: (() => void)) {
         if (size < 2) {
             throw new Error(`size must be at least 2. Received ${size}`);
         }
         this.size = size;
-
         this.provider = provider;
-
         this.beforeGetNext = beforeGetNext;
 
         this.values = new Array<T>();
@@ -40,19 +37,15 @@ export class AutoQueue<T> {
      *
      * @returns next value, applying the proper hooks
      */
-    private getNext(): T {
-
-        this.beforeGetNext();
+    public getNext(): T {
+        if (this.beforeGetNext) {
+            this.beforeGetNext();
+        }
 
         const provNext = this.provider.getNext();
         if (!provNext) {
             throw new Error(`empty value from provider`);
         }
-
-        // const hookNext = this.filterNextHook(provNext);
-        // if (!provNext) {
-        //     throw new Error(`empty value from filterNextHook`);
-        // }
 
         return provNext;
     }
@@ -64,21 +57,6 @@ export class AutoQueue<T> {
     public clone(): AutoQueue<T> {
         const out = new AutoQueue<T>(this.size, this.provider, this.beforeGetNext);
         out.values = this.values.slice();
-        return out;
-    }
-
-    /**
-     * remove element from the queue and return it
-     * this will trigger a refill from the end of the queue
-     */
-    public dequeue(): T {
-        // refill from provider
-        this.values.push(this.getNext());
-        const out: T | undefined = this.values.shift();
-
-        if (out === undefined) {
-            throw new Error('undefined value in the queue');
-        }
         return out;
     }
 

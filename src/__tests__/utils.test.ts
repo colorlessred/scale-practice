@@ -89,9 +89,9 @@ describe(AutoQueue.name, () => {
     it('init', () => {
         expect(`${autoQueue}`).eq('1 / 2 / 3');
     });
-    it('dequeue', () => {
-        expect(autoQueue.dequeue()).eq(1);
-    });
+    // it('dequeue', () => {
+    //     expect(autoQueue.dequeue()).eq(1);
+    // });
     it('refill', () => {
         expect(`${autoQueue}`).eq('2 / 3 / 1');
     });

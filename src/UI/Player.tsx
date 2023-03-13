@@ -1,15 +1,11 @@
 import React, {useCallback, useEffect, useRef, useState} from "react";
 import * as Tone from 'tone';
 import {Note} from "../musicEngine/Note";
-import {NoteRange} from "../musicEngine/NoteRange";
-import {INoteSetProvider} from "../musicEngine/NoteSetProviders";
-import {SecondOrderNoteProvider} from "../musicEngine/SecondOrderNoteProvider";
+import {IProvider} from "../musicEngine/utilities/IProvider";
 
 type Props = {
     readonly isPlaying: boolean
-    readonly noteSetProvider: INoteSetProvider
-    range: NoteRange
-    notesPerNoteSet: number
+    readonly noteProvider: IProvider<Note> | undefined
 }
 
 // TODO: maybe move the start to the main class when it gets some user input? also start/stop transport there.
@@ -18,29 +14,23 @@ async function startTone() {
     console.log('Tone.start');
 }
 
-export function Player({isPlaying, noteSetProvider, range, notesPerNoteSet}: Props) {
+export function Player({isPlaying, noteProvider}: Props) {
     const isSetUp = useRef<boolean>(false);
-    const isFirstNote = useRef<boolean>(true);
     const loop = useRef<Tone.Loop>();
 
     const [note, setNote] = useState<Note>();
-
-    // const noteProviderRef = useRef<SecondOrderNoteProvider>(
-    //     new SecondOrderNoteProvider(noteSetProvider, notesPerNoteSet, range, range.getMin())
-    // );
-
-    const [noteProvider] = useState<SecondOrderNoteProvider>(
-        new SecondOrderNoteProvider(noteSetProvider, notesPerNoteSet, range, range.getMin()));
 
     const synth = useRef<Tone.Synth>(new Tone.Synth({
         envelope: {attack: 0.01, decay: 0.01, sustain: 0.5, release: 0.1}
     }).toDestination());
 
     const playNote = useCallback((time) => {
-        const noteToPlay = noteProvider.getNext();
-        synth.current.triggerAttackRelease(noteToPlay.getFrequency(), '4n', time, 0.5);
-        setNote(noteToPlay);
-    }, [setNote]);
+        if (noteProvider) {
+            const noteToPlay = noteProvider.getNext();
+            synth.current.triggerAttackRelease(noteToPlay.getFrequency(), '4n', time, 0.5);
+            setNote(noteToPlay);
+        }
+    }, [setNote, noteProvider]);
 
     useEffect(() => {
         if (isPlaying) {
@@ -56,9 +46,8 @@ export function Player({isPlaying, noteSetProvider, range, notesPerNoteSet}: Pro
                 Tone.Transport.stop();
                 loop.current.stop();
             }
-            isFirstNote.current = true;
         }
-    }, [isPlaying, isSetUp, loop, isFirstNote, playNote]);
+    }, [isPlaying, isSetUp, loop, playNote]);
 
     return (<>{note?.toString()}</>);
 }
