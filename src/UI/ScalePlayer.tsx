@@ -28,11 +28,11 @@ export function ScalePlayer() {
     const [notesPerSet] = useState<number>(4);
 
     const [noteSetProvider, setNoteSetProvider] = useState<IProvider<NoteSet>>(new NoteSetProviderFixed([NoteSetTypes.MAJOR]));
-    const noteSetQueue = useRef<AutoQueue<NoteSet>>(new AutoQueue<NoteSet>(2, noteSetProvider));
+    const [noteSetQueue, setNoteSetQueue] = useState<AutoQueue<NoteSet>>(new AutoQueue<NoteSet>(2, noteSetProvider));
 
     useEffect(() => {
         console.log(`changed noteSetProvider`);
-        noteSetQueue.current = new AutoQueue<NoteSet>(2, noteSetProvider);
+        setNoteSetQueue(new AutoQueue<NoteSet>(2, noteSetProvider));
     }, [noteSetProvider]);
 
     const [currentNoteSet, setCurrentNoteSet] = useState<NoteSet>();
@@ -40,18 +40,18 @@ export function ScalePlayer() {
     const [noteProvider, setNoteProvider] = useState<IProvider<Note>>();
 
     useEffect(() => {
-        const queue = noteSetQueue.current;
-        const noteProviderProvider = new NoteProviderProvider(queue, noteRange,
+        // const queue = noteSetQueue.current;
+        const noteProviderProvider = new NoteProviderProvider(noteSetQueue, noteRange,
             // TODO: this is wrong, it will need to be connected to the previous
             new NoteAndDirection(noteRange.getMin(), Direction.UP));
         const changeProvider = new SteadyChangeProvider(noteProviderProvider, notesPerSet);
         const proxy = new ProviderProxy(changeProvider, () => {
-            console.log(queue.peek(0).toString());
-            setCurrentNoteSet(queue.peek(0));
-            setNextNoteSet(queue.peek(1));
+            console.log(noteSetQueue.peek(0).toString());
+            setCurrentNoteSet(noteSetQueue.peek(0));
+            setNextNoteSet(noteSetQueue.peek(1));
         });
         setNoteProvider(proxy);
-    }, [noteRange, notesPerSet]);
+    }, [noteRange, notesPerSet,noteSetQueue]);
 
     return (
         <div id="scalePlayer" className="container-fluid">
