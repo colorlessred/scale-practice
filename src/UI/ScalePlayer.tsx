@@ -1,11 +1,10 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {ChordMappingGlobal} from '../musicEngine/ChordMappingParser';
 import {Note} from '../musicEngine/Note';
 import {NoteRange} from '../musicEngine/NoteRange';
 import {NoteSet, NoteSetTypes} from '../musicEngine/NoteSet';
-import {INoteSetProvider, NoteSetProviderFixed} from '../musicEngine/NoteSetProviders';
-import {NoteSetsQueue} from '../musicEngine/NoteSetsQueue';
+import {NoteSetProviderFixed} from '../musicEngine/NoteSetProviders';
 import {ChordMappingGlobalUI} from './ChordMappingUI';
 import {NoteSetProviderUI} from './NoteSetProviderUI';
 import {NoteSetUI} from './NoteSetUI';
@@ -17,34 +16,8 @@ import {IProvider} from "../musicEngine/utilities/IProvider";
 import {SteadyChangeProvider} from "../musicEngine/utilities/SteadyChangeProvider";
 import {NoteProviderProvider} from "../musicEngine/NoteProviderProvider";
 import {Direction, NoteAndDirection} from "../musicEngine/NoteProvider";
-
-/**
- * proxy that will intercept calls for the next note
- */
-class NoteProviderProxy implements IProvider<Note> {
-    private readonly noteProvider: IProvider<Note>;
-    private readonly afterNext: () => void;
-
-    /**
-     *
-     * @param noteProvider the IProvider<Note> to wrap
-     * @param afterNext the lambda to be called before returning the next note
-     */
-    constructor(noteProvider: IProvider<Note>, afterNext: () => void) {
-        this.noteProvider = noteProvider;
-        this.afterNext = afterNext;
-    }
-
-    getNext(): Note {
-        const note: Note = this.noteProvider.getNext();
-        this.afterNext();
-        return note;
-    }
-
-    reset(): void {
-        throw Error("not yet implemented");
-    }
-}
+import {ProviderProxy} from "../musicEngine/utilities/ProviderProxy";
+import {AutoQueue} from "../musicEngine/utilities/AutoQueue";
 
 export function ScalePlayer() {
     /** notes per minute */
@@ -54,13 +27,12 @@ export function ScalePlayer() {
     const [chordMappingGlobal, setChordMappingGlobal] = useState<ChordMappingGlobal>(ChordMappingGlobal.DEFAULT_MAPPING);
     const [notesPerSet] = useState<number>(4);
 
-    // noteSetProvider fills noteSetsQueue which give the current noteSet from which create the NoteProvider
-    // start with a fixed major chord
-    const [noteSetProvider, setNoteSetProvider] = useState<INoteSetProvider>(new NoteSetProviderFixed([NoteSetTypes.MAJOR]));
-    const [noteSetsQueue, setNoteSetsQueue] = useState<NoteSetsQueue>(new NoteSetsQueue(2, noteSetProvider));
+    const [noteSetProvider, setNoteSetProvider] = useState<IProvider<NoteSet>>(new NoteSetProviderFixed([NoteSetTypes.MAJOR]));
+    const noteSetQueue = useRef<AutoQueue<NoteSet>>(new AutoQueue<NoteSet>(2, noteSetProvider));
 
     useEffect(() => {
-        setNoteSetsQueue(new NoteSetsQueue(2, noteSetProvider));
+        console.log(`changed noteSetProvider`);
+        noteSetQueue.current = new AutoQueue<NoteSet>(2, noteSetProvider);
     }, [noteSetProvider]);
 
     const [currentNoteSet, setCurrentNoteSet] = useState<NoteSet>();
@@ -68,17 +40,18 @@ export function ScalePlayer() {
     const [noteProvider, setNoteProvider] = useState<IProvider<Note>>();
 
     useEffect(() => {
-        const noteProviderProvider = new NoteProviderProvider(noteSetsQueue, noteRange,
+        const queue = noteSetQueue.current;
+        const noteProviderProvider = new NoteProviderProvider(queue, noteRange,
             // TODO: this is wrong, it will need to be connected to the previous
             new NoteAndDirection(noteRange.getMin(), Direction.UP));
         const changeProvider = new SteadyChangeProvider(noteProviderProvider, notesPerSet);
-        const proxy = new NoteProviderProxy(changeProvider, () => {
-            console.log(noteSetsQueue.peek(0).toString());
-            setCurrentNoteSet(noteSetsQueue.peek(0));
-            setNextNoteSet(noteSetsQueue.peek(1));
+        const proxy = new ProviderProxy(changeProvider, () => {
+            console.log(queue.peek(0).toString());
+            setCurrentNoteSet(queue.peek(0));
+            setNextNoteSet(queue.peek(1));
         });
         setNoteProvider(proxy);
-    }, [noteRange, notesPerSet, noteSetsQueue]);
+    }, [noteRange, notesPerSet]);
 
     return (
         <div id="scalePlayer" className="container-fluid">

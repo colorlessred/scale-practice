@@ -1,14 +1,14 @@
-import { useEffect, useState } from "react";
-import { isCompositeComponentWithType } from "react-dom/test-utils";
-import { ChordMappingGlobal } from "../musicEngine/ChordMappingParser";
-import { ALL_NOTES_FLAT_AND_SHARP, Note } from "../musicEngine/Note";
-import { NoteSet } from "../musicEngine/NoteSet";
-import { INoteSetProvider, NoteSetProviderRandom } from "../musicEngine/NoteSetProviders";
-import { SelectorUI } from "./SelectorUI";
+import React, {useEffect, useState} from "react";
+import {ChordMappingGlobal} from "../musicEngine/ChordMappingParser";
+import {ALL_NOTES_FLAT_AND_SHARP, Note} from "../musicEngine/Note";
+import {NoteSet} from "../musicEngine/NoteSet";
+import { NoteSetProviderRandom} from "../musicEngine/NoteSetProviders";
+import {SelectorUI} from "./SelectorUI";
+import {IProvider} from "../musicEngine/utilities/IProvider";
 
 type Props = {
     // TODO: modify other props to use React.Dispatch
-    readonly setNoteSetProvider: React.Dispatch<INoteSetProvider>;
+    readonly setNoteSetProvider: React.Dispatch<IProvider<NoteSet>>;
     readonly chordMappingGlobal: ChordMappingGlobal;
 }
 

@@ -87,19 +87,19 @@ describe(AutoQueue.name, () => {
     const autoQueue: AutoQueue<number> = new AutoQueue(3, new FixedProvider<number>([1, 2, 3]));
 
     it('init', () => {
-        expect(`${autoQueue}`).eq('1 / 2 / 3');
-    });
-    // it('dequeue', () => {
-    //     expect(autoQueue.dequeue()).eq(1);
-    // });
-    it('refill', () => {
-        expect(`${autoQueue}`).eq('2 / 3 / 1');
+        expect(`${autoQueue}`).eq('1-2-3');
     });
     it('peek', () => {
-        expect(autoQueue.peek(0)).eq(2);
+        expect(autoQueue.peek(0)).eq(1);
     });
     it('peek', () => {
-        expect(autoQueue.peek(1)).eq(3);
+        expect(autoQueue.peek(1)).eq(2);
+    });
+    it('getNext', () => {
+        expect(autoQueue.getNext()).eq(1);
+    });
+    it('values after first pull', () => {
+        expect(`${autoQueue}`).eq('2-3-1');
     });
 });
 

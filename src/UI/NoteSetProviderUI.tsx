@@ -1,10 +1,11 @@
-import { ChordMappingGlobal } from "../musicEngine/ChordMappingParser";
-import { INoteSetProvider } from "../musicEngine/NoteSetProviders";
-import { NoteSetProviderRandomUI } from "./NoteSetProviderRandomUI";
+import {ChordMappingGlobal} from "../musicEngine/ChordMappingParser";
+import {NoteSetProviderRandomUI} from "./NoteSetProviderRandomUI";
+import {NoteSet} from "../musicEngine/NoteSet";
+import {IProvider} from "../musicEngine/utilities/IProvider";
 
 type Props = {
     // TODO: modify other props to use React.Dispatch
-    setNoteSetProvider: React.Dispatch<INoteSetProvider>;
+    setNoteSetProvider: React.Dispatch<IProvider<NoteSet>>;
     chordMappingGlobal: ChordMappingGlobal;
 }
 

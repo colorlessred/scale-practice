@@ -1,7 +1,10 @@
-import { IProvider } from "./IProvider";
+import {IProvider} from "./IProvider";
 
 const RECYCLE_FACTOR = 0.5;
 
+/**
+ * a Provider that randomly returns the values it was built with
+ */
 export class RandomProvider<T> implements IProvider<T> {
     private values: Array<T>;
     /** size of the recycle zone where the index can be reinserted */
@@ -37,8 +40,8 @@ export class RandomProvider<T> implements IProvider<T> {
 
     private static shuffle<T>(array: Array<T>): Array<T> {
         return array
-            .map((value) => ({ value, sort: Math.random() }))
+            .map((value) => ({value, sort: Math.random()}))
             .sort((a, b) => a.sort - b.sort)
-            .map(({ value }) => value)
+            .map(({value}) => value);
     }
 }

@@ -25,7 +25,7 @@ export class AutoQueue<T> implements IProvider<T> {
         this.values = new Array<T>();
         // init the values using the provider
         for (let i = 0; i < this.size; i++) {
-            this.values.push(this.getNext());
+            this.values.push(this.getNextFromProvider());
         }
     }
 
@@ -34,10 +34,25 @@ export class AutoQueue<T> implements IProvider<T> {
     }
 
     /**
+     * remove element from the queue and return it
+     * this will trigger a refill from the end of the queue
+     */
+    public getNext(): T {
+        // refill from provider
+        this.values.push(this.getNextFromProvider());
+        const out: T | undefined = this.values.shift();
+
+        if (out === undefined) {
+            throw new Error('undefined value in the queue');
+        }
+        return out;
+    }
+
+    /**
      *
      * @returns next value, applying the proper hooks
      */
-    public getNext(): T {
+    private getNextFromProvider(): T {
         if (this.beforeGetNext) {
             this.beforeGetNext();
         }
@@ -60,6 +75,8 @@ export class AutoQueue<T> implements IProvider<T> {
         return out;
     }
 
+
+
     /**
      *
      * @param index index in the queue. 0 is the first in the queue
@@ -79,7 +96,7 @@ export class AutoQueue<T> implements IProvider<T> {
     }
 
     public toString(): string {
-        return this.values.map(value => `${value}`).join(' / ');
+        return this.values.map(value => `${value}`).join('-');
     }
 
     public getProvider(): IProvider<T> {

@@ -3,7 +3,7 @@ import { SmartIndex } from "./SmartIndex";
 import { IProvider } from "./IProvider";
 
 /**
- * cycle over a fixed set of NoteSets
+ * cycle over a fixed set of elements
  */
 
 export class FixedProvider<T> implements IProvider<T> {
@@ -26,7 +26,7 @@ export class FixedProvider<T> implements IProvider<T> {
 
     /**
      *
-     * @returns if first call return first value. Otherwise move next and return value
+     * @returns if first call return first value. Otherwise, move next and return value
      */
     getNext(): T {
         let out: T;
