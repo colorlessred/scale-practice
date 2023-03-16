@@ -1,5 +1,5 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {ChordMappingGlobal} from '../musicEngine/ChordMappingParser';
 import {Note} from '../musicEngine/Note';
 import {NoteRange} from '../musicEngine/NoteRange';
@@ -37,11 +37,11 @@ export function ScalePlayer() {
 
     const [currentNoteSet, setCurrentNoteSet] = useState<NoteSet>();
     const [nextNoteSet, setNextNoteSet] = useState<NoteSet>();
-    const [noteProvider, setNoteProvider] = useState<IProvider<Note>>();
 
+
+    const [noteProvider, setNoteProvider] = useState<IProvider<Note>>();
     useEffect(() => {
-        // const queue = noteSetQueue.current;
-        const noteProviderProvider = new NoteProviderProvider(noteSetQueue, noteRange,
+        const noteProviderProvider: IProvider<IProvider<Note>> = new NoteProviderProvider(noteSetQueue, noteRange,
             // TODO: this is wrong, it will need to be connected to the previous
             new NoteAndDirection(noteRange.getMin(), Direction.UP));
         const changeProvider = new SteadyChangeProvider(noteProviderProvider, notesPerSet);
@@ -51,7 +51,7 @@ export function ScalePlayer() {
             setNextNoteSet(noteSetQueue.peek(1));
         });
         setNoteProvider(proxy);
-    }, [noteRange, notesPerSet,noteSetQueue]);
+    }, [noteRange, notesPerSet, noteSetQueue]);
 
     return (
         <div id="scalePlayer" className="container-fluid">
@@ -86,6 +86,7 @@ export function ScalePlayer() {
             <Player
                 isPlaying={isPlaying}
                 noteProvider={noteProvider}
+                npm={npm}
             />
         </div>
     );

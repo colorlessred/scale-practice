@@ -1,5 +1,4 @@
 TODO backlog
-* implement note set changing with generic provider
 * implement change of speed
 * fix: it's playing notes from the wrong note set
 * fix minimize alterations when playing (it's not working)
@@ -18,4 +17,3 @@ TODO backlog
 * possibility to have scales without the root note
 * transform empty components into custom hooks?
 * add possibility to define custom scale (using steps? note?)
-* use Tone.Loop instead of Clock

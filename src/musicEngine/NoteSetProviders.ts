@@ -1,7 +1,6 @@
-import { NoteSet } from "./NoteSet";
-import { FixedProvider } from "./utilities/FixedProvider";
-import { IProvider } from "./utilities/IProvider";
-import { RandomProvider } from "./utilities/RandomProvider";
+import {NoteSet} from "./NoteSet";
+import {FixedProvider} from "./utilities/FixedProvider";
+import {RandomProvider} from "./utilities/RandomProvider";
 
 /**
  * cycle over a fixed set of NoteSets
