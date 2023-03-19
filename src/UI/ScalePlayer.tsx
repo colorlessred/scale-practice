@@ -9,7 +9,6 @@ import {ChordMappingGlobalUI} from './ChordMappingUI';
 import {NoteSetProviderUI} from './NoteSetProviderUI';
 import {NoteSetUI} from './NoteSetUI';
 import {PlayButton} from './PlayButton';
-import {Player} from './Player';
 import {RangeUI} from './RangeUI';
 import {SpeedControls} from './SpeedControls';
 import {IProvider} from "../musicEngine/utilities/IProvider";
@@ -18,6 +17,8 @@ import {NoteProviderProvider} from "../musicEngine/NoteProviderProvider";
 import {Direction, NoteAndDirection} from "../musicEngine/NoteProvider";
 import {ProviderProxy} from "../musicEngine/utilities/ProviderProxy";
 import {AutoQueue} from "../musicEngine/utilities/AutoQueue";
+import {Player} from "../musicEngine/Player";
+import * as Tone from "tone";
 
 export function ScalePlayer() {
     /** notes per minute */
@@ -37,9 +38,8 @@ export function ScalePlayer() {
 
     const [currentNoteSet, setCurrentNoteSet] = useState<NoteSet>();
     const [nextNoteSet, setNextNoteSet] = useState<NoteSet>();
-
-
     const [noteProvider, setNoteProvider] = useState<IProvider<Note>>();
+
     useEffect(() => {
         const noteProviderProvider: IProvider<IProvider<Note>> = new NoteProviderProvider(noteSetQueue, noteRange,
             // TODO: this is wrong, it will need to be connected to the previous
@@ -52,6 +52,36 @@ export function ScalePlayer() {
         });
         setNoteProvider(proxy);
     }, [noteRange, notesPerSet, noteSetQueue]);
+
+    const [player, setPlayer] = useState<Player>();
+
+    useEffect(() => {
+        if (noteProvider) {
+            const player = new Player(noteProvider, npm);
+            setPlayer(player);
+        } else {
+            if (player) {
+                player.stop();
+            }
+            setPlayer(undefined);
+        }
+    }, [noteProvider]);
+
+    useEffect(() => {
+        if (player) {
+            player.npm = npm;
+        }
+    }, [player, npm]);
+
+    useEffect(() => {
+        if (player) {
+            if (isPlaying) {
+                player.start();
+            } else {
+                player.stop();
+            }
+        }
+    }, [player, isPlaying]);
 
     return (
         <div id="scalePlayer" className="container-fluid">
@@ -83,11 +113,11 @@ export function ScalePlayer() {
                 setChordMappingGlobal={setChordMappingGlobal}
             />
 
-            <Player
-                isPlaying={isPlaying}
-                noteProvider={noteProvider}
-                npm={npm}
-            />
+            {/*<PlayerUI*/}
+            {/*    isPlaying={isPlaying}*/}
+            {/*    noteProvider={noteProvider}*/}
+            {/*    npm={npm}*/}
+            {/*/>*/}
         </div>
     );
 }
