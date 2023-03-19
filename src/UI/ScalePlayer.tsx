@@ -18,7 +18,6 @@ import {Direction, NoteAndDirection} from "../musicEngine/NoteProvider";
 import {ProviderProxy} from "../musicEngine/utilities/ProviderProxy";
 import {AutoQueue} from "../musicEngine/utilities/AutoQueue";
 import {Player} from "../musicEngine/Player";
-import * as Tone from "tone";
 
 export function ScalePlayer() {
     /** notes per minute */
@@ -57,8 +56,12 @@ export function ScalePlayer() {
 
     useEffect(() => {
         if (noteProvider) {
-            const player = new Player(noteProvider, npm);
-            setPlayer(player);
+            if (!player) {
+                const player = new Player(noteProvider, npm);
+                setPlayer(player);
+            } else {
+                player.noteProvider = noteProvider;
+            }
         } else {
             if (player) {
                 player.stop();

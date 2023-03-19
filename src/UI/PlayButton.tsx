@@ -10,8 +10,6 @@ export function PlayButton({isPlaying, setPlaying}: Props) {
     const display = isPlaying ? "Stop" : "Play";
 
     const click = () => {
-        Tone.start();
-        console.log('Tone.start');
         setPlaying(!isPlaying);
     };
 

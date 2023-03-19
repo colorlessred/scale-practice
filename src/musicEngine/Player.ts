@@ -21,6 +21,10 @@ export class Player {
         this.npm = npm;
     }
 
+    set noteProvider(noteProvider: IProvider<Note>) {
+        this._noteProvider = noteProvider;
+    }
+
     set npm(value: number) {
         this._npm = value;
         this._duration = 60 / this._npm;
@@ -33,7 +37,7 @@ export class Player {
     }
 
     private playNote(time: number) {
-        console.log(`play note, time ${time}`);
+        // console.log(`play note, time ${time}`);
         if (this._noteProvider) {
             const noteToPlay = this._noteProvider.getNext();
             this.synth.triggerAttackRelease(noteToPlay.getFrequency(), this._duration, time, 0.5);
