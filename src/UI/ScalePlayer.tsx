@@ -18,6 +18,7 @@ import {Direction, NoteAndDirection} from "../musicEngine/NoteProvider";
 import {ProviderProxy} from "../musicEngine/utilities/ProviderProxy";
 import {AutoQueue} from "../musicEngine/utilities/AutoQueue";
 import {Player} from "../musicEngine/Player";
+import {CurrentNoteUI} from "./CurrentNoteUI";
 
 export function ScalePlayer() {
     /** notes per minute */
@@ -25,6 +26,7 @@ export function ScalePlayer() {
     const [isPlaying, setPlaying] = useState<boolean>(false);
     const [noteRange, setNoteRange] = useState<NoteRange>(NoteRange.parse('C(0)-C(2)'));
     const [chordMappingGlobal, setChordMappingGlobal] = useState<ChordMappingGlobal>(ChordMappingGlobal.DEFAULT_MAPPING);
+    /** to add later UI to modify it **/
     const [notesPerSet] = useState<number>(4);
 
     const [noteSetProvider, setNoteSetProvider] = useState<IProvider<NoteSet>>(new NoteSetProviderFixed([NoteSetTypes.MAJOR]));
@@ -41,23 +43,23 @@ export function ScalePlayer() {
 
     useEffect(() => {
         const noteProviderProvider: IProvider<IProvider<Note>> = new NoteProviderProvider(noteSetQueue, noteRange,
-            // TODO: this is wrong, it will need to be connected to the previous
             new NoteAndDirection(noteRange.getMin(), Direction.UP));
         const changeProvider = new SteadyChangeProvider(noteProviderProvider, notesPerSet);
         const proxy = new ProviderProxy(changeProvider, () => {
-            console.log(noteSetQueue.peek(0).toString());
-            setCurrentNoteSet(noteSetQueue.peek(0));
-            setNextNoteSet(noteSetQueue.peek(1));
+            // console.log(noteSetQueue.peek(0).toString());
+            setCurrentNoteSet(noteSetQueue.current);
+            setNextNoteSet(noteSetQueue.peek(0));
         });
         setNoteProvider(proxy);
     }, [noteRange, notesPerSet, noteSetQueue]);
 
+    const [currentNote, setCurrentNote] = useState<Note>();
     const [player, setPlayer] = useState<Player>();
 
     useEffect(() => {
         if (noteProvider) {
             if (!player) {
-                const player = new Player(noteProvider, npm);
+                const player = new Player(noteProvider, npm, setCurrentNote);
                 setPlayer(player);
             } else {
                 player.noteProvider = noteProvider;
@@ -93,8 +95,9 @@ export function ScalePlayer() {
                 <div className="col-md-11"><SpeedControls npm={npm} setNpm={setNpm}/></div>
             </div>
             <div className="row">
-                <div className="col-md-6"><NoteSetUI title="Current" noteSet={currentNoteSet}/></div>
-                <div className="col-md-6"><NoteSetUI title="Next" noteSet={nextNoteSet}/></div>
+                <div className="col-md-2"><CurrentNoteUI note={currentNote} title={"Current Note"}/></div>
+                <div className="col-md-5"><NoteSetUI title="Current" noteSet={currentNoteSet}/></div>
+                <div className="col-md-5"><NoteSetUI title="Next" noteSet={nextNoteSet}/></div>
             </div>
             <div className="row">
                 <div className="col-md-12">
@@ -115,12 +118,6 @@ export function ScalePlayer() {
                 chordMappingGlobal={chordMappingGlobal}
                 setChordMappingGlobal={setChordMappingGlobal}
             />
-
-            {/*<PlayerUI*/}
-            {/*    isPlaying={isPlaying}*/}
-            {/*    noteProvider={noteProvider}*/}
-            {/*    npm={npm}*/}
-            {/*/>*/}
         </div>
     );
 }

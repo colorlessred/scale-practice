@@ -8,6 +8,7 @@ export class AutoQueue<T> implements IProvider<T> {
     values: Array<T>;
     provider: IProvider<T>;
     readonly beforeGetNext: (() => void) | undefined;
+    private _current: T | undefined;
 
     /**
      * @param size queue size
@@ -33,6 +34,10 @@ export class AutoQueue<T> implements IProvider<T> {
         throw new Error("Method not implemented.");
     }
 
+    public get current(): T | undefined {
+        return this._current;
+    }
+
     /**
      * remove element from the queue and return it
      * this will trigger a refill from the end of the queue
@@ -40,12 +45,12 @@ export class AutoQueue<T> implements IProvider<T> {
     public getNext(): T {
         // refill from provider
         this.values.push(this.getNextFromProvider());
-        const out: T | undefined = this.values.shift();
+        this._current = this.values.shift();
 
-        if (out === undefined) {
+        if (this._current === undefined) {
             throw new Error('undefined value in the queue');
         }
-        return out;
+        return this._current;
     }
 
     /**
@@ -74,7 +79,6 @@ export class AutoQueue<T> implements IProvider<T> {
         out.values = this.values.slice();
         return out;
     }
-
 
 
     /**

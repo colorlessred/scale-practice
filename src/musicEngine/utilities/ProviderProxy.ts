@@ -4,24 +4,27 @@ import {IProvider} from "./IProvider";
  * proxy that will intercept calls for the next note
  */
 export class ProviderProxy<T> implements IProvider<T> {
-    // TODO move to proper location
     private readonly noteProvider: IProvider<T>;
-    private readonly afterNext: () => void;
+    /**
+     * function to be executed before moving getting the next value.
+     * useful to get the NoteSets before getting the next note that might trigger a change of NoteSet
+     * @private
+     */
+    private readonly beforeNext: () => void;
 
     /**
      *
      * @param noteProvider the IProvider to wrap
-     * @param afterNext the lambda to be called before returning the next note
+     * @param beforeNext the lambda to be called before returning the next note
      */
-    constructor(noteProvider: IProvider<T>, afterNext: () => void) {
+    constructor(noteProvider: IProvider<T>, beforeNext: () => void) {
         this.noteProvider = noteProvider;
-        this.afterNext = afterNext;
+        this.beforeNext = beforeNext;
     }
 
     getNext(): T {
-        const item: T = this.noteProvider.getNext();
-        this.afterNext();
-        return item;
+        this.beforeNext();
+        return this.noteProvider.getNext();
     }
 
     reset(): void {

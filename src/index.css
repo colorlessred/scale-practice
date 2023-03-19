@@ -9,8 +9,7 @@ code {
     font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
-div.note-set-ui,
-#notes {
+div.note-set-ui, div.current-note, #notes {
     border: 1px solid #ccc;
     font-size: 30px;
     height: 300px;
