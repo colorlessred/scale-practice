@@ -20,6 +20,7 @@ import {AutoQueue} from "../musicEngine/utilities/AutoQueue";
 import {Player} from "../musicEngine/Player";
 import {CurrentNoteUI} from "./CurrentNoteUI";
 
+
 export function ScalePlayer() {
     /** notes per minute */
     const [npm, setNpm] = useState<number>(60);
@@ -46,7 +47,6 @@ export function ScalePlayer() {
             new NoteAndDirection(noteRange.getMin(), Direction.UP));
         const changeProvider = new SteadyChangeProvider(noteProviderProvider, notesPerSet);
         const proxy = new ProviderProxy(changeProvider, () => {
-            // console.log(noteSetQueue.peek(0).toString());
             setCurrentNoteSet(noteSetQueue.current);
             setNextNoteSet(noteSetQueue.peek(0));
         });
@@ -54,37 +54,21 @@ export function ScalePlayer() {
     }, [noteRange, notesPerSet, noteSetQueue]);
 
     const [currentNote, setCurrentNote] = useState<Note>();
-    const [player, setPlayer] = useState<Player>();
+    const [player] = useState<Player>(new Player(setCurrentNote));
 
     useEffect(() => {
-        if (noteProvider) {
-            if (!player) {
-                const player = new Player(noteProvider, npm, setCurrentNote);
-                setPlayer(player);
-            } else {
-                player.noteProvider = noteProvider;
-            }
-        } else {
-            if (player) {
-                player.stop();
-            }
-            setPlayer(undefined);
-        }
-    }, [noteProvider]);
+        player.noteProvider = noteProvider;
+    }, [player, noteProvider]);
 
     useEffect(() => {
-        if (player) {
-            player.npm = npm;
-        }
+        player.npm = npm;
     }, [player, npm]);
 
     useEffect(() => {
-        if (player) {
-            if (isPlaying) {
-                player.start();
-            } else {
-                player.stop();
-            }
+        if (isPlaying) {
+            player.start();
+        } else {
+            player.stop();
         }
     }, [player, isPlaying]);
 

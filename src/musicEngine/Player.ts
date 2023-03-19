@@ -4,13 +4,13 @@ import * as Tone from "tone";
 import {Loop} from "tone";
 
 export class Player {
-    private _noteProvider: IProvider<Note>;
-    private _npm: number;
+    private _noteProvider: IProvider<Note> | undefined;
+    private _npm: number | undefined;
     /**
      * note duration, in seconds.
      * it is also the interval in time between the notes being played
      */
-    private _interval: number;
+    private _interval: number | undefined;
     private _loop: Loop | undefined;
 
     private synth = new Tone.Synth({
@@ -23,13 +23,10 @@ export class Player {
      */
     private readonly _setCurrentNote: (note: Note) => void;
 
-    constructor(noteProvider: IProvider<Note>, npm: number, setCurrentNote: (note: Note) => void) {
-        this._noteProvider = noteProvider;
-        this._npm = 1;
-        this._interval = 1;
+    constructor(setCurrentNote: (note: Note) => void) {
+        this.noteProvider = undefined;
+        this.npm = undefined;
         this._setCurrentNote = setCurrentNote;
-
-        this.npm = npm;
     }
 
     private static async startTone() {
@@ -38,18 +35,25 @@ export class Player {
         Tone.Transport.start();
     }
 
-    set noteProvider(noteProvider: IProvider<Note>) {
+    set noteProvider(noteProvider: IProvider<Note> | undefined) {
+        if (!noteProvider) {
+            this.stop();
+        }
         this._noteProvider = noteProvider;
     }
 
-    set npm(value: number) {
+    set npm(value: number | undefined) {
         this._npm = value;
-        this._interval = 60 / this._npm;
+        if (value === undefined) {
+            this._interval = undefined;
+        } else {
+            this._interval = 60 / value;
+        }
     }
 
     private playNote(time: number) {
         // console.log(`play note, time ${time}`);
-        if (this._noteProvider) {
+        if (this._noteProvider && this._interval) {
             console.log(`playNote() with duration ${this._interval}`);
             const noteToPlay = this._noteProvider.getNext();
             this._setCurrentNote(noteToPlay);
