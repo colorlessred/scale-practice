@@ -23,7 +23,7 @@ import {CurrentNoteUI} from "./CurrentNoteUI";
 
 export function ScalePlayer() {
     /** notes per minute */
-    const [npm, setNpm] = useState<number>(60);
+    const [bpm, setBpm] = useState<number>(60);
     const [isPlaying, setPlaying] = useState<boolean>(false);
     const [noteRange, setNoteRange] = useState<NoteRange>(NoteRange.parse('C(0)-C(2)'));
     const [chordMappingGlobal, setChordMappingGlobal] = useState<ChordMappingGlobal>(ChordMappingGlobal.DEFAULT_MAPPING);
@@ -61,8 +61,8 @@ export function ScalePlayer() {
     }, [player, noteProvider]);
 
     useEffect(() => {
-        player.npm = npm;
-    }, [player, npm]);
+        player.bpm = bpm;
+    }, [player, bpm]);
 
     useEffect(() => {
         if (isPlaying) {
@@ -76,7 +76,7 @@ export function ScalePlayer() {
         <div id="scalePlayer" className="container-fluid">
             <div className="row">
                 <div className="col-md-1"><PlayButton isPlaying={isPlaying} setPlaying={setPlaying}/></div>
-                <div className="col-md-11"><SpeedControls npm={npm} setNpm={setNpm}/></div>
+                <div className="col-md-11"><SpeedControls npm={bpm} setNpm={setBpm}/></div>
             </div>
             <div className="row">
                 <div className="col-md-2"><CurrentNoteUI note={currentNote} title={"Current Note"}/></div>

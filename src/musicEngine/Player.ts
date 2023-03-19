@@ -3,14 +3,18 @@ import {Note} from "./Note";
 import * as Tone from "tone";
 import {Loop} from "tone";
 
+/**
+ * we play quarter notes, with a variable transport BPM speed
+ */
+const NOTE_DURATION = '4n';
+
 export class Player {
     private _noteProvider: IProvider<Note> | undefined;
-    private _npm: number | undefined;
     /**
-     * note duration, in seconds.
-     * it is also the interval in time between the notes being played
+     * beats per minute. We are playing quarter notes
+     * @private
      */
-    private _interval: number | undefined;
+    private _bpm: number | undefined;
     private _loop: Loop | undefined;
 
     private synth = new Tone.Synth({
@@ -25,7 +29,7 @@ export class Player {
 
     constructor(setCurrentNote: (note: Note) => void) {
         this.noteProvider = undefined;
-        this.npm = undefined;
+        this.bpm = undefined;
         this._setCurrentNote = setCurrentNote;
     }
 
@@ -42,32 +46,24 @@ export class Player {
         this._noteProvider = noteProvider;
     }
 
-    set npm(value: number | undefined) {
-        this._npm = value;
+    set bpm(value: number | undefined) {
+        this._bpm = value;
         if (value === undefined) {
-            this._interval = undefined;
+            this.stop();
         } else {
-            this._interval = 60 / value;
+            Tone.Transport.bpm.value = value;
         }
     }
 
     private playNote(time: number) {
-        // console.log(`play note, time ${time}`);
-        if (this._noteProvider && this._interval) {
-            console.log(`playNote() with duration ${this._interval}`);
+        if (this._noteProvider) {
             const noteToPlay = this._noteProvider.getNext();
             this._setCurrentNote(noteToPlay);
-            // modify the loop interval, in case the speed has changed
-            const loop = this._loop;
-            if (loop && loop.interval != this._interval) {
-                loop.interval = this._interval;
-            }
-            this.synth.triggerAttackRelease(noteToPlay.getFrequency(), this._interval, time, 0.5);
+            this.synth.triggerAttackRelease(noteToPlay.getFrequency(), NOTE_DURATION, time, 0.5);
         }
     }
 
     public start() {
-        console.log(`Player.start(), duration: ${this._interval}`);
         if (!this._loop) {
             Player.startTone();
         }
@@ -75,7 +71,7 @@ export class Player {
             // NB: this needs the arrow function otherwise the `this` in playNote will be the loop
             (time) => {
                 this.playNote(time);
-            }, this._interval);
+            }, NOTE_DURATION);
         this._loop.start();
     }
 
