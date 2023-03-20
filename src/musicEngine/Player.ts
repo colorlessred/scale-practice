@@ -5,9 +5,13 @@ import {Loop} from "tone";
 
 /**
  * we play quarter notes, with a variable transport BPM speed
+
  */
 const NOTE_DURATION = '4n';
 
+/**
+ * Plays the notes it gets from an IProvider<Note>, hiding the underlying the implementation
+ */
 export class Player {
     private _noteProvider: IProvider<Note> | undefined;
     /**
@@ -46,6 +50,10 @@ export class Player {
         this._noteProvider = noteProvider;
     }
 
+    /**
+     * manage the playback speed in beats per minute
+     * @param value
+     */
     set bpm(value: number | undefined) {
         this._bpm = value;
         if (value === undefined) {

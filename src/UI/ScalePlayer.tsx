@@ -30,7 +30,10 @@ export function ScalePlayer() {
     /** to add later UI to modify it **/
     const [notesPerSet] = useState<number>(4);
 
+    /** provides the NoteSets depending on the chosen config, types of note sets, root notes, ... **/
     const [noteSetProvider, setNoteSetProvider] = useState<IProvider<NoteSet>>(new NoteSetProviderFixed([NoteSetTypes.MAJOR]));
+
+    /** automatically load the queue to have the next NoteSet available for display **/
     const [noteSetQueue, setNoteSetQueue] = useState<AutoQueue<NoteSet>>(new AutoQueue<NoteSet>(2, noteSetProvider));
 
     useEffect(() => {
