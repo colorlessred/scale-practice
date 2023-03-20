@@ -57,7 +57,9 @@ export function ScalePlayer() {
     }, [noteRange, notesPerSet, noteSetQueue]);
 
     const [currentNote, setCurrentNote] = useState<Note>();
-    const [player] = useState<Player>(new Player(setCurrentNote));
+    // init Player using lambda, so it's instantiated only once. Otherwise, the multiple
+    // instances will eventually break the underlying Tone lib synth
+    const [player] = useState<Player>(() => new Player(setCurrentNote));
 
     useEffect(() => {
         player.noteProvider = noteProvider;

@@ -39,7 +39,6 @@ export class Player {
 
     private static async startTone() {
         await Tone.start();
-        console.log('Tone.start');
         Tone.Transport.start();
     }
 
