@@ -230,7 +230,7 @@ export class NoteSet {
      * @param noteAndDirection
      */
     public getClosestNote(noteAndDirection: NoteAndDirection): Note {
-        const notesArray = noteAndDirection.direction.equals(Direction.UP) ? this.nextNotes : this.prevNotes;
+        const notesArray = (noteAndDirection.direction === Direction.UP) ? this.nextNotes : this.prevNotes;
 
         // move note to 0-11 chromatic range to figure out next note and then
         // bring it back to the original octave

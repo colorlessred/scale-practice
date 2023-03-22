@@ -3,23 +3,9 @@ import {NoteRange} from "./NoteRange";
 import {NoteSet} from "./NoteSet";
 import {IProvider} from "./utilities/IProvider";
 
-export class Direction {
-    private readonly isUp: boolean;
-
-    private constructor(isUp: boolean) {
-        this.isUp = isUp;
-    }
-
-    public equals(direction: Direction): boolean {
-        return direction.isUp == this.isUp;
-    }
-
-    public toString(): string {
-        return this.isUp ? 'UP' : 'DOWN';
-    }
-
-    public static readonly UP = new Direction(true);
-    public static readonly DOWN = new Direction(false);
+export enum Direction {
+    UP,
+    DOWN,
 }
 
 /**
