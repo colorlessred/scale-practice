@@ -1,5 +1,5 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {ChordMappingGlobal} from '../musicEngine/ChordMappingParser';
 import {Note} from '../musicEngine/Note';
 import {NoteRange} from '../musicEngine/NoteRange';
@@ -21,7 +21,6 @@ import {Player} from "../musicEngine/Player";
 import {CurrentNoteUI} from "./CurrentNoteUI";
 import {Col, Row} from "react-bootstrap";
 
-
 export function ScalePlayer() {
     /** notes per minute */
     const [bpm, setBpm] = useState<number>(60);
@@ -35,29 +34,23 @@ export function ScalePlayer() {
     const [noteSetProvider, setNoteSetProvider] = useState<IProvider<NoteSet>>(new NoteSetProviderFixed([NoteSetTypes.MAJOR]));
 
     /** automatically load the queue to have the next NoteSet available for display **/
-    const [noteSetQueue, setNoteSetQueue] = useState<AutoQueue<NoteSet>>(new AutoQueue<NoteSet>(2, noteSetProvider));
-
-    useEffect(() => {
-        console.log(`changed noteSetProvider`);
-        setNoteSetQueue(new AutoQueue<NoteSet>(2, noteSetProvider));
-    }, [noteSetProvider]);
+    const noteSetQueue = useMemo(() => new AutoQueue<NoteSet>(2, noteSetProvider), [noteSetProvider]);
 
     const [currentNoteSet, setCurrentNoteSet] = useState<NoteSet>();
     const [nextNoteSet, setNextNoteSet] = useState<NoteSet>();
-    const [noteProvider, setNoteProvider] = useState<IProvider<Note>>();
 
-    useEffect(() => {
+    const noteProvider = useMemo(() => {
         const noteProviderProvider: IProvider<IProvider<Note>> = new NoteProviderProvider(noteSetQueue, noteRange,
             new NoteAndDirection(noteRange.getMin(), Direction.UP));
         const changeProvider = new SteadyChangeProvider(noteProviderProvider, notesPerSet);
-        const proxy = new ProviderProxy(changeProvider, () => {
+        return new ProviderProxy(changeProvider, () => {
             setCurrentNoteSet(noteSetQueue.current);
             setNextNoteSet(noteSetQueue.peek(0));
         });
-        setNoteProvider(proxy);
     }, [noteRange, notesPerSet, noteSetQueue]);
 
     const [currentNote, setCurrentNote] = useState<Note>();
+
     // init Player using lambda, so it's instantiated only once. Otherwise, the multiple
     // instances will eventually break the underlying Tone lib synth
     const [player] = useState<Player>(() => new Player(setCurrentNote));
