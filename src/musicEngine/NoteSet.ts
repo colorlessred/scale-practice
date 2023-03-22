@@ -299,7 +299,14 @@ export class NoteSet {
 export class NoteSetTypes {
     static readonly MAJOR: NoteSet = NoteSet.parse("C D E F G A B", 'Major');
     static readonly MELODIC_MINOR: NoteSet = NoteSet.parse("C D Eb F G A B", 'Melodic Minor');
-    static readonly ALL: Map<string, NoteSet> = [this.MAJOR, this.MELODIC_MINOR]
+    static readonly PENTATONIC_MAJOR: NoteSet = NoteSet.parse("C D E G A", 'Pentatonic Major');
+    static readonly PENTATONIC_MINOR6: NoteSet = NoteSet.parse("C Eb F G A", 'Pentatonic Min6');
+
+    static readonly ALL: Map<string, NoteSet> = [
+        NoteSetTypes.MAJOR,
+        NoteSetTypes.MELODIC_MINOR,
+        NoteSetTypes.PENTATONIC_MAJOR,
+        NoteSetTypes.PENTATONIC_MINOR6]
         .reduce((map, noteSet) => {
             map.set(noteSet.getName(), noteSet);
             return map;

@@ -3,7 +3,14 @@ import {ChordMapping, ChordMappingGlobal} from "../musicEngine/ChordMappingParse
 import {Col, Row} from "react-bootstrap";
 
 const DEFAULT_MAPPING_TEXT = `7+: mode 1 of Major
-m7+: mode 1 of Melodic Minor`;
+m7: mode 2 of Major
+7: mode 5 of Major
+m7+: mode 1 of Melodic Minor
+alt: mode 7 of Melodic Minor
+7#11: mode 4 of Melodic Minor
+m7b5: mode 6 of Melodic Minor
+(pM6): mode 1 of Pentatonic Major
+(pm6): mode 1 of Pentatonic Min6`;
 
 type ChordMappingGlobalUIProps = {
     chordMappingGlobal: ChordMappingGlobal
