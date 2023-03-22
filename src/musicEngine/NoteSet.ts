@@ -4,7 +4,7 @@ import {SmartArray} from "./utilities/SmartArray";
 import {Direction, NoteAndDirection} from "./NoteProvider";
 
 /**
- * represents a set of notes where their octave has not importance, like a scale or a chord
+ * represents a set of notes where their octave has no importance, like a scale or a chord
  */
 export class NoteSet {
     /**
@@ -170,7 +170,6 @@ export class NoteSet {
     public changeRoot(newRoot: Note): NoteSet {
         const interval = this.getRoot().computeIntervalToReach(newRoot);
         return this.transpose(interval);
-        // console.log(`changeRoot(${newRoot}): ${this}.transpose(${interval}) = ${out}`);
     }
 
     /**
@@ -178,13 +177,12 @@ export class NoteSet {
      */
     public minimizeAlterations(): NoteSet {
         const root = this.getRoot();
-        if (root.getAlteration() === 0) {
+        if (root.alteration === 0) {
             return this;
         }
 
-        const root_with_sharp = Note.fromChromaticValue(root.getChromaticValue(), true);
-        const root_with_flat = Note.fromChromaticValue(root.getChromaticValue(), false);
-        // console.log(`with sharp: ${root_with_sharp}, with flat: ${root_with_flat}`);
+        const root_with_sharp = Note.fromChromaticValue(root.chromaticValue, true);
+        const root_with_flat = Note.fromChromaticValue(root.chromaticValue, false);
 
         const ns_with_sharp = this.changeRoot(root_with_sharp);
 
@@ -195,7 +193,7 @@ export class NoteSet {
             const ns_with_flat = this.changeRoot(root_with_flat);
             // compute the number of alterations
             const reducer = (prev: number, note: Note) => {
-                return prev + Math.abs(note.getAlteration());
+                return prev + Math.abs(note.alteration);
             };
             const num_alts_sharp = ns_with_sharp.getNotes().reduce(reducer, 0);
             const num_alts_flat = ns_with_flat.getNotes().reduce(reducer, 0);
@@ -228,9 +226,8 @@ export class NoteSet {
 
     /**
      *
-     * @param note starting note
-     * @param next if true return next note, otherwise return previous note
      * @returns closest (next/previous) note
+     * @param noteAndDirection
      */
     public getClosestNote(noteAndDirection: NoteAndDirection): Note {
         const notesArray = noteAndDirection.direction.equals(Direction.UP) ? this.nextNotes : this.prevNotes;
@@ -243,7 +240,7 @@ export class NoteSet {
         // see how far that is from the input note
         const octaveDelta = noteAndDirection.note.subtract(noteInChromaticBase);
         // get the next note, which might go to octaves 1 or -1
-        const nextZeroOctave: Note = notesArray.get(noteInChromaticBase.getChromaticValue());
+        const nextZeroOctave: Note = notesArray.get(noteInChromaticBase.chromaticValue);
         // add back the initial delta
         return nextZeroOctave.add(octaveDelta);
     }

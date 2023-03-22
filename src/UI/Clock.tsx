@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef } from 'react';
+import {useCallback, useEffect, useMemo, useRef} from 'react';
 
 //TODO understand this
 function useInterval(tickCallback: () => void, delay: number, isPlaying: boolean) {
@@ -8,11 +8,11 @@ function useInterval(tickCallback: () => void, delay: number, isPlaying: boolean
 
     useEffect(() => {
         savedDelay.current = delay;
-    }, [delay])
+    }, [delay]);
 
     useEffect(() => {
         savedTickCallback.current = tickCallback;
-    }, [tickCallback])
+    }, [tickCallback]);
 
     const startTimeout = useCallback(() => {
         const delay = savedDelay.current;
@@ -25,17 +25,17 @@ function useInterval(tickCallback: () => void, delay: number, isPlaying: boolean
     }, []);
 
     useEffect(() => {
-        if (isPlaying) {
-            if (!timeout.current) {
-                startTimeout();
+            if (isPlaying) {
+                if (!timeout.current) {
+                    startTimeout();
+                }
+            } else {
+                if (timeout.current) {
+                    clearTimeout(timeout.current);
+                    timeout.current = null;
+                }
             }
-        } else {
-            if (timeout.current) {
-                clearTimeout(timeout.current);
-                timeout.current = null;
-            }
-        }
-    }, [isPlaying, startTimeout],
+        }, [isPlaying, startTimeout],
     );
 }
 
@@ -50,7 +50,7 @@ type Props = {
     callback: () => void;
 }
 
-export function Clock({ isPlaying, getNpm, callback }: Props) {
+export function Clock({isPlaying, getNpm, callback}: Props) {
 
     const delay = useMemo(() => {
         console.log(`compute delay for npm ${getNpm()}`);
@@ -60,4 +60,4 @@ export function Clock({ isPlaying, getNpm, callback }: Props) {
     useInterval(callback, delay, isPlaying);
 
     return null;
-};
+}

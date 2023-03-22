@@ -1,18 +1,18 @@
-import { useEffect, useState } from "react";
-import { CheckButton } from "./CheckButton";
+import React, {useEffect, useState} from "react";
+import {CheckButton} from "./CheckButton";
 
 type Props<T> = {
-    readonly name: string
-    readonly allValues: Array<T>
-    readonly selectedValues: Set<T>
-    readonly setSelectedValues: React.Dispatch<Set<T>>
-    readonly getName: (v: T) => string
+    name: string
+    allValues: Array<T>
+    selectedValues: Set<T>
+    setSelectedValues: React.Dispatch<Set<T>>
+    getName: (v: T) => string
 }
 
 /**
  * select multiple values
  */
-export function SelectorUI<T>({ name, allValues, selectedValues, setSelectedValues, getName }: Props<T>) {
+export function SelectorUI<T>({name, allValues, selectedValues, setSelectedValues, getName}: Props<T>) {
     const [error, setError] = useState<string>('');
 
     useEffect(() => {
@@ -36,18 +36,18 @@ export function SelectorUI<T>({ name, allValues, selectedValues, setSelectedValu
                             newSelectedValues.add(value);
                         }
                         setSelectedValues(newSelectedValues);
-                    }
+                    };
 
                     return (
                         <CheckButton
                             key={`${value}`} item={value}
                             selected={selectedValues.has(value)}
                             setSelected={handler}
-                            getName={getName} />
-                    )
+                            getName={getName}/>
+                    );
                 })
             }
         </div>
         <div>{error}</div>
-    </>)
+    </>);
 }

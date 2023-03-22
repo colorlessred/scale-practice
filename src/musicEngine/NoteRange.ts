@@ -6,7 +6,7 @@ export class NoteRange {
 
     constructor(min: Note, max: Note) {
         this.min = min;
-        if (max.getChromaticValue() < min.getChromaticValue()) {
+        if (max.chromaticValue < min.chromaticValue) {
             throw new Error(`max note ${max.toString()} cannot be below min note ${min.toString()}`);
         }
         this.max = max;
@@ -21,8 +21,8 @@ export class NoteRange {
     }
 
     public contains(note: Note): boolean {
-        const val = note.getChromaticValue();
-        return val >= this.min.getChromaticValue() && val <= this.max.getChromaticValue();
+        const val = note.chromaticValue;
+        return val >= this.min.chromaticValue && val <= this.max.chromaticValue;
     }
 
     public toString(): string {

@@ -5,30 +5,30 @@ const SEMITONE = Math.pow(2, 1 / 12);
 
 export class Note {
     // the value of the note. Can be beyond the 0-11 range, it doesn't matter
-    private readonly value: number;
+    private readonly _value: number;
     // note alterations. Flats if negative, Sharps if positive
-    private readonly alteration: number;
+    private readonly _alteration: number;
 
     /**
      * note in the 0-6 range
      */
-    private readonly baseNote: number;
+    private readonly _baseNote: number;
 
     /**
      * octave
      */
-    private readonly octave: number;
+    private readonly _octave: number;
 
     /**
      * absolute chromatic value. Can be any integer
      */
-    private readonly chromaticValue: number;
+    private readonly _chromaticValue: number;
 
-    private readonly chromaticValueZeroOctave: number;
+    private readonly _chromaticValueZeroOctave: number;
 
-    private readonly stringRepr: string;
+    private readonly _stringRepr: string;
 
-    private readonly frequency: number;
+    private readonly _frequency: number;
 
     private static readonly reFormat = /^([A-G])([b#]*)(\((\d+)\))?/;
     private static readonly charAValue = "A".charCodeAt(0);
@@ -38,42 +38,42 @@ export class Note {
     private static readonly C_MAJOR_VALUES = [0, 2, 4, 5, 7, 9, 11];
 
     constructor(value: number, alteration: number) {
-        this.value = value;
-        this.alteration = alteration;
+        this._value = value;
+        this._alteration = alteration;
 
         // compute secondary values that will never change
-        this.baseNote = Utils.smartMod(this.value, 7);
-        this.octave = Math.floor(this.value / 7);
-        this.chromaticValue =
-            Note.C_MAJOR_VALUES[this.baseNote]
-            + 12 * this.octave
-            + this.alteration;
+        this._baseNote = Utils.smartMod(this._value, 7);
+        this._octave = Math.floor(this._value / 7);
+        this._chromaticValue =
+            Note.C_MAJOR_VALUES[this._baseNote]
+            + 12 * this._octave
+            + this._alteration;
 
-        this.chromaticValueZeroOctave = Utils.smartMod(this.chromaticValue, 12);
+        this._chromaticValueZeroOctave = Utils.smartMod(this._chromaticValue, 12);
 
-        const letter = String.fromCharCode((this.baseNote + 2) % 7 + Note.charAValue);
-        const alts = (this.alteration > 0) ? "#".repeat(this.alteration) : "b".repeat(-this.alteration);
-        const octaveString = (this.octave !== 0) ? `(${this.octave})` : '';
-        this.stringRepr = letter + alts + octaveString;
+        const letter = String.fromCharCode((this._baseNote + 2) % 7 + Note.charAValue);
+        const alts = (this._alteration > 0) ? "#".repeat(this._alteration) : "b".repeat(-this._alteration);
+        const octaveString = (this._octave !== 0) ? `(${this._octave})` : '';
+        this._stringRepr = letter + alts + octaveString;
 
         // note A has value 9. So 9 + 3 - 12 = 0
-        this.frequency = A_440 * Math.pow(SEMITONE, this.getChromaticValue() + 3 - 12);
+        this._frequency = A_440 * Math.pow(SEMITONE, this.chromaticValue + 3 - 12);
     }
 
     /**
      *
      * @returns The chromatic value. Can be any positive or negative integer
      */
-    public getChromaticValue(): number {
-        return this.chromaticValue;
+    get chromaticValue(): number {
+        return this._chromaticValue;
     }
 
     /**
      *
      * @returns the octave of the note
      */
-    public getOctave(): number {
-        return this.octave;
+    get octave(): number {
+        return this._octave;
     }
 
     /**
@@ -81,15 +81,15 @@ export class Note {
      * @returns Chromatic value in the zero octave. 0-11 integer
      */
     public getChromaticValueZeroOctave(): number {
-        return this.chromaticValueZeroOctave;
+        return this._chromaticValueZeroOctave;
     }
 
-    public getValue() {
-        return this.value;
+    get value() {
+        return this._value;
     }
 
-    public getAlteration() {
-        return this.alteration;
+    get alteration() {
+        return this._alteration;
     }
 
     /**
@@ -98,7 +98,7 @@ export class Note {
      * @returns
      */
     public add(note: Note): Note {
-        return new Note(this.value + note.value, this.alteration + note.alteration);
+        return new Note(this._value + note._value, this._alteration + note._alteration);
     }
 
     /**
@@ -117,7 +117,7 @@ export class Note {
      * @param note
      */
     public equals(note: Note): boolean {
-        return this.value === note.value && this.alteration === note.alteration;
+        return this._value === note._value && this._alteration === note._alteration;
     }
 
     /**
@@ -126,7 +126,7 @@ export class Note {
      * @returns
      */
     public subtract(note: Note): Note {
-        return new Note(this.value - note.value, this.alteration - note.alteration);
+        return new Note(this._value - note._value, this._alteration - note._alteration);
     }
 
     /**
@@ -135,7 +135,7 @@ export class Note {
      * @returns the altered note whose chromatic value equals the input
      */
     public alterToChromaticValue(value: number): Note {
-        const correction = value - this.getChromaticValue();
+        const correction = value - this.chromaticValue;
         return this.add(new Note(0, correction));
     }
 
@@ -144,7 +144,7 @@ export class Note {
      * @returns the note that has the opposite chromatic value
      */
     public mirrorInterval(): Note {
-        return new Note(-this.getValue(), -this.getAlteration()).alterToChromaticValue(-this.getChromaticValue());
+        return new Note(-this.value, -this.alteration).alterToChromaticValue(-this.chromaticValue);
     }
 
     /**
@@ -154,7 +154,7 @@ export class Note {
      * @returns
      */
     public addInterval(note: Note): Note {
-        const targetChromaticValue = this.getChromaticValue() + note.getChromaticValue();
+        const targetChromaticValue = this.chromaticValue + note.chromaticValue;
         return this.add(note).alterToChromaticValue(targetChromaticValue);
     }
 
@@ -164,7 +164,7 @@ export class Note {
      * @returns interval that added to this will give the target note
      */
     public computeIntervalToReach(targetNote: Note): Note {
-        const chromaticDiff = targetNote.getChromaticValue() - this.getChromaticValue();
+        const chromaticDiff = targetNote.chromaticValue - this.chromaticValue;
         return targetNote.subtract(this).alterToChromaticValue(chromaticDiff);
     }
 
@@ -173,20 +173,20 @@ export class Note {
      * NB: this means that it could be in other octaves, e.g. Cb(1) has value of 11
      */
     public getNoteInChromaticBase(): Note {
-        const deltaOctave = (this.chromaticValueZeroOctave - this.chromaticValue) / 12;
+        const deltaOctave = (this._chromaticValueZeroOctave - this._chromaticValue) / 12;
         return this.addOctaves(deltaOctave);
     }
 
     public toString(): string {
-        return this.stringRepr;
+        return this._stringRepr;
     }
 
     public getFrequency(): number {
-        return this.frequency;
+        return this._frequency;
     }
 
     public isHigherThan(note: Note): boolean {
-        return this.getChromaticValue() > note.getChromaticValue();
+        return this.chromaticValue > note.chromaticValue;
     }
 
     // ################ STATIC ################
@@ -251,9 +251,9 @@ const C_MAJOR_NOTES = [0, 1, 2, 3, 4, 5, 6].map(v => new Note(v, 0));
 const INDEXES_WITH_SHARPS = [0, 1, 3, 4, 5];
 const SHARP_NOTES = INDEXES_WITH_SHARPS.map(v => new Note(v, 1));
 const FLAT_NOTES = INDEXES_WITH_SHARPS.map(v => new Note(v + 1, -1));
-const ALL_NOTES_SHARP = [...C_MAJOR_NOTES, ...SHARP_NOTES].sort((a, b) => a.getChromaticValue() - b.getChromaticValue());
-const ALL_NOTES_FLAT = [...C_MAJOR_NOTES, ...FLAT_NOTES].sort((a, b) => a.getChromaticValue() - b.getChromaticValue());
+const ALL_NOTES_SHARP = [...C_MAJOR_NOTES, ...SHARP_NOTES].sort((a, b) => a.chromaticValue - b.chromaticValue);
+const ALL_NOTES_FLAT = [...C_MAJOR_NOTES, ...FLAT_NOTES].sort((a, b) => a.chromaticValue - b.chromaticValue);
 export const ALL_NOTES_FLAT_AND_SHARP = [...C_MAJOR_NOTES, ...SHARP_NOTES, ...FLAT_NOTES]
-    .sort((a, b) => a.getChromaticValue() - b.getChromaticValue());
+    .sort((a, b) => a.chromaticValue - b.chromaticValue);
 
 

@@ -4,15 +4,15 @@ import {Note} from "../musicEngine/Note";
 describe(Note.name, function () {
     it('add', function () {
         const result = new Note(1, 1).add(new Note(3, -1));
-        expect(result.getValue()).to.eq(4);
-        expect(result.getAlteration()).to.eq(0);
+        expect(result.value).to.eq(4);
+        expect(result.alteration).to.eq(0);
     });
 
 
     it('subtract', () => {
         const result = new Note(4, 1).subtract(new Note(1, 2));
-        expect(result.getValue()).eq(3);
-        expect(result.getAlteration()).eq(-1);
+        expect(result.value).eq(3);
+        expect(result.alteration).eq(-1);
     });
 
     it('negative note', () => {
@@ -39,28 +39,28 @@ describe(Note.name, function () {
 
         it('single flat', function () {
             const note = Note.parse('Ab');
-            expect(note.getValue(), 'value').eq(5);
-            expect(note.getAlteration(), 'alteration').eq(-1);
+            expect(note.value, 'value').eq(5);
+            expect(note.alteration, 'alteration').eq(-1);
         });
 
         it('double flat', function () {
             const note = Note.parse('Cbb');
-            expect(note.getValue(), 'value').eq(0);
-            expect(note.getAlteration(), 'alteration').eq(-2);
+            expect(note.value, 'value').eq(0);
+            expect(note.alteration, 'alteration').eq(-2);
         });
 
         it('double sharp', function () {
             const note = Note.parse('B##');
-            expect(note.getValue(), 'value').eq(6);
-            expect(note.getAlteration(), 'alteration').eq(2);
+            expect(note.value, 'value').eq(6);
+            expect(note.alteration, 'alteration').eq(2);
         });
 
         describe('octave', () => {
             it('C(1)', () => {
-                expect(Note.parse('C(1)').getValue(), 'value').eq(7);
+                expect(Note.parse('C(1)').value, 'value').eq(7);
             });
             it('Db(3)', () => {
-                expect(Note.parse('Db(3)').getValue(), 'value').eq(1 + 7 * 3);
+                expect(Note.parse('Db(3)').value, 'value').eq(1 + 7 * 3);
             });
         });
 
@@ -101,28 +101,28 @@ describe(Note.name, function () {
 
     describe('chromatic value', () => {
         it('C', () => {
-            expect(new Note(0, 0).getChromaticValue()).eq(0);
+            expect(new Note(0, 0).chromaticValue).eq(0);
         });
         it('C#', () => {
-            expect(new Note(0, 1).getChromaticValue()).eq(1);
+            expect(new Note(0, 1).chromaticValue).eq(1);
         });
         it('C##', () => {
-            expect(new Note(0, 2).getChromaticValue()).eq(2);
+            expect(new Note(0, 2).chromaticValue).eq(2);
         });
         it('D', () => {
-            expect(new Note(1, 0).getChromaticValue()).eq(2);
+            expect(new Note(1, 0).chromaticValue).eq(2);
         });
         it('Cb', () => {
-            expect(new Note(0, -1).getChromaticValue()).eq(-1);
+            expect(new Note(0, -1).chromaticValue).eq(-1);
         });
         it('B#', () => {
-            expect(new Note(6, 1).getChromaticValue()).eq(12);
+            expect(new Note(6, 1).chromaticValue).eq(12);
         });
         it('Bb(1)', () => {
-            expect(new Note(6 + 7, -1).getChromaticValue()).eq(11 + 12 - 1);
+            expect(new Note(6 + 7, -1).chromaticValue).eq(11 + 12 - 1);
         });
         it('B#(1)', () => {
-            expect(new Note(6 + 7, 1).getChromaticValue()).eq(11 + 12 + 1);
+            expect(new Note(6 + 7, 1).chromaticValue).eq(11 + 12 + 1);
         });
     });
 
@@ -163,16 +163,16 @@ describe(Note.name, function () {
 
     describe('getOctave', () => {
         it('G(0)', () => {
-            expect(new Note(4, 0).getOctave()).eq(0);
+            expect(new Note(4, 0).octave).eq(0);
         });
         it('G(1)', () => {
-            expect(new Note(4 + 7, 0).getOctave()).eq(1);
+            expect(new Note(4 + 7, 0).octave).eq(1);
         });
         it('Cb(0)', () => {
-            expect(new Note(0, -1).getOctave()).eq(0);
+            expect(new Note(0, -1).octave).eq(0);
         });
         it('B#(1)', () => {
-            expect(new Note(6 + 7, 1).getOctave()).eq(1);
+            expect(new Note(6 + 7, 1).octave).eq(1);
         });
     });
 
@@ -199,8 +199,8 @@ describe(Note.name, function () {
 
     describe('fromChromaticValue', () => {
         function test(note: Note) {
-            const withSharps = (note.getAlteration() >= 0);
-            const chromaticValue = note.getChromaticValue();
+            const withSharps = (note.alteration >= 0);
+            const chromaticValue = note.chromaticValue;
             const name = note.toString();
             it(name, () => {
                 expect(Note.fromChromaticValue(chromaticValue, withSharps).toString()).eq(name);
@@ -221,7 +221,7 @@ describe(Note.name, function () {
     describe('mirrorInterval', () => {
         function testMirror(note: Note) {
             it(`mirror ${note}`, () => {
-                expect(note.getChromaticValue() + note.mirrorInterval().getChromaticValue()).eq(0);
+                expect(note.chromaticValue + note.mirrorInterval().chromaticValue).eq(0);
             });
         }
 

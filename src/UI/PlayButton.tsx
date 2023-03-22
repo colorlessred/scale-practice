@@ -1,9 +1,8 @@
 import Button from 'react-bootstrap/Button';
-import * as Tone from "tone";
 
 type Props = {
-    readonly isPlaying: boolean,
-    readonly setPlaying: React.Dispatch<boolean>,
+    isPlaying: boolean,
+    setPlaying: React.Dispatch<boolean>,
 }
 
 export function PlayButton({isPlaying, setPlaying}: Props) {
