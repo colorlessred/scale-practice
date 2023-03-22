@@ -10,7 +10,8 @@ export function NoteSetUI({title, noteSet}: Props) {
 
     const display = (noteSet) ? `${noteSet.getFullName()}: ${noteSet.toString()}` : '';
 
-    return (<>
+    return (
+        <>
             <label htmlFor={`ns-${title}`}>{title}</label>
             <div className="note-set-ui" id={`ns-${title}`}>
                 <span className="noteSet">{display}</span>

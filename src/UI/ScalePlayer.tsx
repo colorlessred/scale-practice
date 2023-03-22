@@ -19,6 +19,7 @@ import {ProviderProxy} from "../musicEngine/utilities/ProviderProxy";
 import {AutoQueue} from "../musicEngine/utilities/AutoQueue";
 import {Player} from "../musicEngine/Player";
 import {CurrentNoteUI} from "./CurrentNoteUI";
+import {Col, Row} from "react-bootstrap";
 
 
 export function ScalePlayer() {
@@ -78,35 +79,33 @@ export function ScalePlayer() {
     }, [player, isPlaying]);
 
     return (
-        <div id="scalePlayer" className="container-fluid">
-            <div className="row">
-                <div className="col-md-1"><PlayButton isPlaying={isPlaying} setPlaying={setPlaying}/></div>
-                <div className="col-md-11"><SpeedControls npm={bpm} setNpm={setBpm}/></div>
-            </div>
-            <div className="row">
-                <div className="col-md-2"><CurrentNoteUI note={currentNote} title={"Current Note"}/></div>
-                <div className="col-md-5"><NoteSetUI title="Current" noteSet={currentNoteSet}/></div>
-                <div className="col-md-5"><NoteSetUI title="Next" noteSet={nextNoteSet}/></div>
-            </div>
-            <div className="row">
-                <div className="col-md-12">
+        <Row id="scalePlayer" className="container-fluid">
+            <Row>
+                <Col md={1}><PlayButton isPlaying={isPlaying} setPlaying={setPlaying}/></Col>
+                <Col md={11}><SpeedControls npm={bpm} setNpm={setBpm}/></Col>
+            </Row>
+            <Row>
+                <Col md={2}><CurrentNoteUI note={currentNote} title={"Current Note"}/></Col>
+                <Col md={5}><NoteSetUI title="Current" noteSet={currentNoteSet}/></Col>
+                <Col md={5}><NoteSetUI title="Next" noteSet={nextNoteSet}/></Col>
+            </Row>
+            <Row>
+                <Col md={12}>
                     <NoteSetProviderUI
                         setNoteSetProvider={setNoteSetProvider}
                         chordMappingGlobal={chordMappingGlobal}
                     />
-                </div>
-            </div>
-            <div className="row">
+                </Col>
+            </Row>
 
-            </div>
-            <div className="row">
+            <Row>
                 <RangeUI range={noteRange} setRange={setNoteRange}/>
-            </div>
+            </Row>
 
             <ChordMappingGlobalUI
                 chordMappingGlobal={chordMappingGlobal}
                 setChordMappingGlobal={setChordMappingGlobal}
             />
-        </div>
+        </Row>
     );
 }

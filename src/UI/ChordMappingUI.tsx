@@ -1,5 +1,6 @@
 import {useCallback, useEffect, useRef, useState} from "react";
 import {ChordMapping, ChordMappingGlobal} from "../musicEngine/ChordMappingParser";
+import {Col, Row} from "react-bootstrap";
 
 const DEFAULT_MAPPING_TEXT = `7+: mode 1 of Major
 m7+: mode 1 of Melodic Minor`;
@@ -42,20 +43,22 @@ export function ChordMappingGlobalUI({chordMappingGlobal, setChordMappingGlobal}
         setText(textValue);
     }, [setError, setChordMappingGlobal]);
 
-    return (<div className="row">
-        <div className="col">
+    return (
+        <Row>
+            <Col>
             <textarea
                 className="form-control"
                 onChange={onChange}
                 value={text}
                 rows={chordMappingGlobal.mappings.length + 1}
             />
-            <div className="col">{error}</div>
-        </div>
-        <div className="col">{chordMappingGlobal.mappings.map((chordMapping) => {
-            return <ChordMappingUI key={`${chordMapping}`} chordMapping={chordMapping}/>;
-        })}</div>
-    </div>);
+                <Col>{error}</Col>
+            </Col>
+            <Col>{chordMappingGlobal.mappings.map((chordMapping) => {
+                return <ChordMappingUI key={`${chordMapping}`} chordMapping={chordMapping}/>;
+            })}</Col>
+        </Row>
+    );
 }
 
 type ChordMappingUIProps = {
@@ -63,10 +66,10 @@ type ChordMappingUIProps = {
 }
 
 function ChordMappingUI({chordMapping}: ChordMappingUIProps) {
-    return (<div className="row">
-        <div className="col">{chordMapping.name}</div>
-        <div className="col">mode {chordMapping.mode}</div>
-        <div className="col">of {chordMapping.baseNoteSet.getName()}</div>
-        <div className="col"> {chordMapping.noteSetMode.toString()}</div>
-    </div>);
+    return (<Row>
+        <Col>{chordMapping.name}</Col>
+        <Col>mode {chordMapping.mode}</Col>
+        <Col>of {chordMapping.baseNoteSet.getName()}</Col>
+        <Col> {chordMapping.noteSetMode.toString()}</Col>
+    </Row>);
 }
