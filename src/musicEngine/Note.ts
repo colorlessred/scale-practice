@@ -1,6 +1,6 @@
 import {Utils} from "./Utils";
 
-const A_440 = 440;
+const A_REFERENCE = 220;
 const SEMITONE = Math.pow(2, 1 / 12);
 
 export class Note {
@@ -57,7 +57,7 @@ export class Note {
         this._stringRepr = letter + alts + octaveString;
 
         // note A has value 9. So 9 + 3 - 12 = 0
-        this._frequency = A_440 * Math.pow(SEMITONE, this.chromaticValue + 3 - 12);
+        this._frequency = A_REFERENCE * Math.pow(SEMITONE, this.chromaticValue + 3 - 12);
     }
 
     /**
