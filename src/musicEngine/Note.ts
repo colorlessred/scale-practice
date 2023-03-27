@@ -37,6 +37,9 @@ export class Note {
      */
     private static readonly C_MAJOR_VALUES = [0, 2, 4, 5, 7, 9, 11];
 
+    private readonly SHARP = "♯";
+    private readonly FLAT = "♭";
+
     constructor(value: number, alteration: number) {
         this._value = value;
         this._alteration = alteration;
@@ -52,7 +55,7 @@ export class Note {
         this._chromaticValueZeroOctave = Utils.smartMod(this._chromaticValue, 12);
 
         const letter = String.fromCharCode((this._baseNote + 2) % 7 + Note.charAValue);
-        const alts = (this._alteration > 0) ? "#".repeat(this._alteration) : "b".repeat(-this._alteration);
+        const alts = (this._alteration > 0) ? this.SHARP.repeat(this._alteration) : this.FLAT.repeat(-this._alteration);
         const octaveString = (this._octave !== 0) ? `(${this._octave})` : '';
         this._stringRepr = letter + alts + octaveString;
 
