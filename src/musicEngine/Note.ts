@@ -36,9 +36,8 @@ export class Note {
      * values of the notes in the C Major scale
      */
     private static readonly C_MAJOR_VALUES = [0, 2, 4, 5, 7, 9, 11];
-
-    private readonly SHARP = "♯";
-    private readonly FLAT = "♭";
+    private readonly SHARP = "#";
+    private readonly FLAT = "b";
 
     constructor(value: number, alteration: number) {
         this._value = value;

@@ -17,13 +17,12 @@ describe(NoteProvider.name, () => {
 
     describe('Scale with change', () => {
         it('check scale', () => {
-            const range = new NoteRange(new Note(0, 0), new Note(14, 0));
-            const np = new NoteProvider(new NoteAndDirection(Note.parse('C'), Direction.UP), NoteSet.parse('C E G'), range);
-
             const doTest = (noteProvider: NoteProvider, noteString: string) => {
                 expect(noteProvider.getNext().toString()).eq(noteString);
             };
+            const range = new NoteRange(new Note(0, 0), new Note(14, 0));
 
+            const np = new NoteProvider(new NoteAndDirection(Note.parse('C'), Direction.UP), NoteSet.parse('C E G'), range);
             doTest(np, 'C');
             doTest(np, 'E');
             doTest(np, 'G');

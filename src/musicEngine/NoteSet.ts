@@ -1,7 +1,7 @@
 import {Note} from "./Note";
-import {Utils} from "./Utils";
 import {SmartArray} from "./utilities/SmartArray";
 import {Direction, NoteAndDirection} from "./NoteProvider";
+import {Utils} from "./Utils";
 
 /**
  * represents a set of notes where their octave has no importance, like a scale or a chord
@@ -30,13 +30,14 @@ export class NoteSet {
     /**
      * for any chromatic note in the zero octave, point to the next/prev note
      */
-    private readonly nextNotes: SmartArray<Note> = new SmartArray<Note>(12);
-    private readonly prevNotes: SmartArray<Note> = new SmartArray<Note>(12);
+    private readonly nextNotes = new SmartArray<Note>(12);
+    private readonly prevNotes = new SmartArray<Note>(12);
 
     constructor(notes: Array<Note>, name: string) {
-        const baseNotes: Array<Note> = notes.map<Note>((note) => {
+        const baseNotes = notes.map<Note>((note) => {
             return note.getNoteInChromaticBase();
         });
+        // .sort((a, b) => a.chromaticValue - b.chromaticValue);
         this.notes = SmartArray.fromArray(baseNotes);
         this.name = name;
         this.steps = new SmartArray<number>(notes.length);
@@ -60,23 +61,33 @@ export class NoteSet {
 
     /**
      *
-     * @returns the steps between the notes
      */
     private computeSteps() {
         const newSteps: number[] = [];
         const root = this.notes.get(0);
         const chromaticIndex = this.valuesToNotes.getSmartIndex(root.getChromaticValueZeroOctave());
         let prev = chromaticIndex.getIndex();
+        let sumSteps = 0;
+
+        const addStep = (step: number) => {
+            sumSteps += step;
+            newSteps.push(step);
+        };
 
         for (let i = 0; i < 12; i++) {
             chromaticIndex.moveIndex(1);
             if (chromaticIndex.getValue() !== undefined) {
                 // there is a note
-                newSteps.push(Utils.smartMod(chromaticIndex.getIndex() - prev, 12));
+                addStep(Utils.smartMod(chromaticIndex.getIndex() - prev - 1, 12) + 1);
+                // NB: needs to subtract and add 1 to cover the case of the scale with one single note.
+                // so step 0 should get a value of 12, and all the other values should stay the same
                 prev = chromaticIndex.getIndex();
             }
         }
 
+        if (sumSteps != 12) {
+            throw new Error(`Sum of steps should be 12. Instead it is ${sumSteps}.`);
+        }
         this.steps.loadFromArray(newSteps);
     }
 
@@ -297,16 +308,22 @@ export class NoteSet {
 }
 
 export class NoteSetTypes {
+    // define the basic scales from which the others are derived
     static readonly MAJOR: NoteSet = NoteSet.parse("C D E F G A B", 'Major');
     static readonly MELODIC_MINOR: NoteSet = NoteSet.parse("C D Eb F G A B", 'Melodic Minor');
     static readonly PENTATONIC_MAJOR: NoteSet = NoteSet.parse("C D E G A", 'Pentatonic Major');
     static readonly PENTATONIC_MINOR6: NoteSet = NoteSet.parse("C Eb F G A", 'Pentatonic Min6');
+    /**
+     * special scale, which is just one note, useful for some exercises
+     */
+    static readonly SINGLE_NOTE: NoteSet = NoteSet.parse("C", 'Single Note');
 
     static readonly ALL: Map<string, NoteSet> = [
         NoteSetTypes.MAJOR,
         NoteSetTypes.MELODIC_MINOR,
         NoteSetTypes.PENTATONIC_MAJOR,
-        NoteSetTypes.PENTATONIC_MINOR6]
+        NoteSetTypes.PENTATONIC_MINOR6,
+        NoteSetTypes.SINGLE_NOTE]
         .reduce((map, noteSet) => {
             map.set(noteSet.getName(), noteSet);
             return map;

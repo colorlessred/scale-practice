@@ -32,7 +32,6 @@ describe(NoteSet.name, () => {
     });
 
     describe('steps', () => {
-        // const stepToString = (step: number) => { return (step) ? step.toString() : '?'; }
         const stepsTest = (name: string, noteSetString: string, result: string) => {
             it(name, () => {
                 expect(NoteSet.parse(noteSetString).getSteps().join('-')).to.eq(result);
@@ -83,6 +82,20 @@ describe(NoteSet.name, () => {
 
     it('full name', () => {
         expect(NoteSet.parse('C E G', 'MajChord').getFullName()).eq('CMajChord');
+    });
+
+    describe('Single Note', () => {
+        const ns = NoteSet.parse("C", "Single Note");
+        it('steps', () => {
+            // the next note is the same one, step 0
+            expect(ns.getSteps().join('-')).eq('12');
+        });
+        it('next notes', () => {
+            expect(ns.getNextNotes().join('-')).eq('C(1)-C(1)-C(1)-C(1)-C(1)-C(1)-C(1)-C(1)-C(1)-C(1)-C(1)-C(1)');
+        });
+        it('prev notes', () => {
+            expect(ns.getPrevNotes().join('-')).eq('C(-1)-C-C-C-C-C-C-C-C-C-C-C');
+        });
     });
 
     describe('transpose', () => {
