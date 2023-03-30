@@ -21,6 +21,8 @@ import {Player} from "../musicEngine/Player";
 import {CurrentNoteUI} from "./CurrentNoteUI";
 import {Col, Row} from "react-bootstrap";
 
+Note.setAlterationSymbols('♭', '♯');
+
 export function ScalePlayer() {
     /** notes per minute */
     const [bpm, setBpm] = useState<number>(60);
@@ -72,7 +74,7 @@ export function ScalePlayer() {
     }, [player, isPlaying]);
 
     return (
-        <Row id="scalePlayer" className="container-fluid">
+        <Row id="scalePlayer" className="container-fluid" >
             <Row>
                 <Col md={1}><PlayButton isPlaying={isPlaying} setPlaying={setPlaying}/></Col>
                 <Col md={11}><SpeedControls npm={bpm} setNpm={setBpm}/></Col>

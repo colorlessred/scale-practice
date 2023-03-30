@@ -36,8 +36,8 @@ export class Note {
      * values of the notes in the C Major scale
      */
     private static readonly C_MAJOR_VALUES = [0, 2, 4, 5, 7, 9, 11];
-    private readonly SHARP = "#";
-    private readonly FLAT = "b";
+    private static SHARP = "#";
+    private static FLAT = "b";
 
     constructor(value: number, alteration: number) {
         this._value = value;
@@ -54,12 +54,24 @@ export class Note {
         this._chromaticValueZeroOctave = Utils.smartMod(this._chromaticValue, 12);
 
         const letter = String.fromCharCode((this._baseNote + 2) % 7 + Note.charAValue);
-        const alts = (this._alteration > 0) ? this.SHARP.repeat(this._alteration) : this.FLAT.repeat(-this._alteration);
+        const alts = (this._alteration > 0) ? Note.SHARP.repeat(this._alteration) : Note.FLAT.repeat(-this._alteration);
         const octaveString = (this._octave !== 0) ? `(${this._octave})` : '';
         this._stringRepr = letter + alts + octaveString;
 
         // note A has value 9. So 9 + 3 - 12 = 0
         this._frequency = A_REFERENCE * Math.pow(SEMITONE, this.chromaticValue + 3 - 12);
+    }
+
+    /**
+     * set custom symbols for the alterations.
+     * Useful to make the tests work with the default ones, but using
+     * better ones for the actual application
+     * @param flat
+     * @param sharp
+     */
+    static setAlterationSymbols(flat: string, sharp: string) {
+        Note.FLAT = flat;
+        Note.SHARP = sharp;
     }
 
     /**
