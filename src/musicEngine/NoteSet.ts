@@ -37,7 +37,6 @@ export class NoteSet {
         const baseNotes = notes.map<Note>((note) => {
             return note.getNoteInChromaticBase();
         });
-        // .sort((a, b) => a.chromaticValue - b.chromaticValue);
         this.notes = SmartArray.fromArray(baseNotes);
         this.name = name;
         this.steps = new SmartArray<number>(notes.length);
@@ -214,7 +213,7 @@ export class NoteSet {
             } else if (num_alts_flat < num_alts_sharp) {
                 out = ns_with_flat;
             } else {
-                // have same number of flats and sharps => chose the some with the same letter of the input root
+                // have same number of flats and sharps => chose the same with the same letter of the input root
                 if (root.value == root_with_sharp.value) {
                     out = ns_with_sharp;
                 } else {
