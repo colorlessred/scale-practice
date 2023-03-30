@@ -223,7 +223,6 @@ export class NoteSet {
             }
 
             return out;
-            // return (num_alts_sharp < num_alts_flat) ? ns_with_sharp : ns_with_flat;
         }
     }
 
