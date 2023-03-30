@@ -184,7 +184,7 @@ export class NoteSet {
     }
 
     /**
-     * return a note set with the same chromatic values but the min number of alterations
+     * return a NoteSet with the same chromatic values but the min number of alterations
      */
     public minimizeAlterations(): NoteSet {
         const root = this.getRoot();
@@ -208,7 +208,22 @@ export class NoteSet {
             };
             const num_alts_sharp = ns_with_sharp.getNotes().reduce(reducer, 0);
             const num_alts_flat = ns_with_flat.getNotes().reduce(reducer, 0);
-            return (num_alts_sharp < num_alts_flat) ? ns_with_sharp : ns_with_flat;
+            let out: NoteSet;
+            if (num_alts_sharp < num_alts_flat) {
+                out = ns_with_sharp;
+            } else if (num_alts_flat < num_alts_sharp) {
+                out = ns_with_flat;
+            } else {
+                // have same number of flats and sharps => chose the some with the same letter of the input root
+                if (root.value == root_with_sharp.value) {
+                    out = ns_with_sharp;
+                } else {
+                    out = ns_with_flat;
+                }
+            }
+
+            return out;
+            // return (num_alts_sharp < num_alts_flat) ? ns_with_sharp : ns_with_flat;
         }
     }
 
