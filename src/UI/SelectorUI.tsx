@@ -36,7 +36,11 @@ export function SelectorUI<T>({name, allValues, selectedValues, setSelectedValue
                         } else {
                             newSelectedValues.add(value);
                         }
-                        setSelectedValues(newSelectedValues);
+                        if (newSelectedValues.size > 0) {
+                            // there must be at least one value to avoid breaking the
+                            // "select next" logic
+                            setSelectedValues(newSelectedValues);
+                        }
                     };
 
                     return (
@@ -49,7 +53,16 @@ export function SelectorUI<T>({name, allValues, selectedValues, setSelectedValue
                 })
                 // <CheckButton />
             }
-            <Button variant="outline-primary" size="sm">x</Button>
+            <Button variant="light" size="sm" onClick={() => {
+                const newSelectedValues = new Set(selectedValues);
+                newSelectedValues.clear();
+                const firstValue = selectedValues.values().next().value;
+                newSelectedValues.add(firstValue);
+                setSelectedValues(newSelectedValues);
+            }}>first</Button>
+            <Button variant="light" size="sm" onClick={() => {
+                setSelectedValues(new Set(allValues));
+            }}>all</Button>
         </div>
         <div>{error}</div>
     </>);

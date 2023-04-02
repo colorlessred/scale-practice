@@ -74,7 +74,7 @@ export function ScalePlayer() {
     }, [player, isPlaying]);
 
     return (
-        <Row id="scalePlayer" className="container-fluid" >
+        <Row id="scalePlayer" className="container-fluid">
             <Row>
                 <Col md={1}><PlayButton isPlaying={isPlaying} setPlaying={setPlaying}/></Col>
                 <Col md={11}><SpeedControls npm={bpm} setNpm={setBpm}/></Col>

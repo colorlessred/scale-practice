@@ -10,10 +10,15 @@ type Props<T> = {
 export function CheckButton<T>({selected, setSelected, name}: Props<T>) {
 
     return (
-        <ToggleButton value="" variant="primary" type="checkbox" size="sm" checked={selected}
-                      onClick={() => {
-                          setSelected(!selected);
-                          return true;
-                      }}>{name}</ToggleButton>
+        <ToggleButton
+            className={"toggle"}
+            value={name}
+            variant="outline-primary"
+            type="checkbox"
+            size="sm" checked={selected}
+            onClick={() => {
+                setSelected(!selected);
+                return true;
+            }}>{name}</ToggleButton>
     );
 }

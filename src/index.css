@@ -48,3 +48,8 @@ button.speedControlManual {
 .form-group {
     padding: 0 10px;
 }
+
+.toggle {
+    /*width: 2em;*/
+    margin-right: 2px;
+}

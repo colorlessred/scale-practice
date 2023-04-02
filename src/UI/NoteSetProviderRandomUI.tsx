@@ -53,7 +53,8 @@ export function NoteSetProviderRandomUI({setNoteSetProvider, chordMappingGlobal}
                             setSelectedValues={setRoots} getName={note => note.toString()}/>
                 <SelectorUI name="Scale Types"
                             allValues={chordMappingGlobal.allNoteSets}
-                            selectedValues={scales} setSelectedValues={setScales}
+                            selectedValues={scales}
+                            setSelectedValues={setScales}
                             getName={noteSet => noteSet.getName()}/>
             </div>
         </>
