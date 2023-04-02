@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {CheckButton} from "./CheckButton";
+import Button from "react-bootstrap/Button";
 
 type Props<T> = {
     name: string
@@ -40,13 +41,15 @@ export function SelectorUI<T>({name, allValues, selectedValues, setSelectedValue
 
                     return (
                         <CheckButton
-                            key={`${value}`} item={value}
+                            key={`${value}`}
                             selected={selectedValues.has(value)}
                             setSelected={handler}
-                            getName={getName}/>
+                            name={getName(value)}/>
                     );
                 })
+                // <CheckButton />
             }
+            <Button variant="outline-primary" size="sm">x</Button>
         </div>
         <div>{error}</div>
     </>);
