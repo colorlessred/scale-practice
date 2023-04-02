@@ -326,6 +326,9 @@ export class NoteSetTypes {
     static readonly MELODIC_MINOR: NoteSet = NoteSet.parse("C D Eb F G A B", 'Melodic Minor');
     static readonly PENTATONIC_MAJOR: NoteSet = NoteSet.parse("C D E G A", 'Pentatonic Major');
     static readonly PENTATONIC_MINOR6: NoteSet = NoteSet.parse("C Eb F G A", 'Pentatonic Min6');
+    static readonly MAJOR_TRIAD: NoteSet = NoteSet.parse("C E G", 'Major Triad');
+    static readonly MINOR_TRIAD: NoteSet = NoteSet.parse("C Eb G", 'Minor Triad');
+
     /**
      * special scale, which is just one note, useful for some exercises
      */
@@ -336,7 +339,9 @@ export class NoteSetTypes {
         NoteSetTypes.MELODIC_MINOR,
         NoteSetTypes.PENTATONIC_MAJOR,
         NoteSetTypes.PENTATONIC_MINOR6,
-        NoteSetTypes.SINGLE_NOTE]
+        NoteSetTypes.SINGLE_NOTE,
+        NoteSetTypes.MAJOR_TRIAD,
+        NoteSetTypes.MINOR_TRIAD]
         .reduce((map, noteSet) => {
             map.set(noteSet.getName(), noteSet);
             return map;

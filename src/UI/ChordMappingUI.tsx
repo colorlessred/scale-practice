@@ -11,7 +11,9 @@ m7+: mode 1 of Melodic Minor
 m7♭5: mode 6 of Melodic Minor
 (pM6): mode 1 of Pentatonic Major
 (pm6): mode 1 of Pentatonic Min6
-(1): mode 1 of Single Note`;
+(1): mode 1 of Single Note
+M: mode 1 of Major Triad
+m: mode 1 of Minor Triad`;
 
 type ChordMappingGlobalUIProps = {
     chordMappingGlobal: ChordMappingGlobal
