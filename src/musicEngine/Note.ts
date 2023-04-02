@@ -52,7 +52,6 @@ export class Note {
             + this._alteration;
 
         this._chromaticValueZeroOctave = Utils.smartMod(this._chromaticValue, 12);
-
         const letter = String.fromCharCode((this._baseNote + 2) % 7 + Note.charAValue);
         const alts = (this._alteration > 0) ? Note.SHARP.repeat(this._alteration) : Note.FLAT.repeat(-this._alteration);
         const octaveString = (this._octave !== 0) ? `(${this._octave})` : '';
@@ -260,7 +259,6 @@ export class Note {
     public static readonly OCTAVE = new Note(7, 0);
 }
 
-// TODO move this logic to proper testable class
 const C_MAJOR_NOTES = [0, 1, 2, 3, 4, 5, 6].map(v => new Note(v, 0));
 const INDEXES_WITH_SHARPS = [0, 1, 3, 4, 5];
 const SHARP_NOTES = INDEXES_WITH_SHARPS.map(v => new Note(v, 1));

@@ -2,20 +2,23 @@
 
 .container-fluid
 {
-    background-color: #eee;
+    background-color: #000;
+    color: #eee;
     font-family: 'Noto Music', sans-serif;
 }
 
 body {
     margin: 0;
-    /*font-family: 'Noto Music', sans-serif;*/
 }
 
 div.note-set-ui, div.current-note, #notes {
-    border: 1px solid #ccc;
     font-size: 30px;
-    height: 300px;
+    width: 20em;
     margin: 10px;
+}
+
+div.current-note {
+    width: 3em;
 }
 
 div.note-set-ui .title {
