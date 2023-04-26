@@ -35,7 +35,7 @@ export function RangeUI({range, setRange}: Props) {
             </Col>
             <Col md={6}>
                 <label htmlFor="rangeExtension" className="form-label">Max Note: {`${range.getMax()}`}</label>
-                <input type="range" className="form-range" min="12" max="36" value={extension} id="rangeExtension"
+                <input type="range" className="form-range" min="12" max="60" value={extension} id="rangeExtension"
                        onChange={extensionHandler}/>
             </Col>
         </Row>
