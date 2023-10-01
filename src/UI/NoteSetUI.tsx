@@ -1,4 +1,5 @@
 import {NoteSet} from "../musicEngine/NoteSet";
+import {Card} from "react-bootstrap";
 
 type Props = {
     title: string;
@@ -6,16 +7,19 @@ type Props = {
 }
 
 export function NoteSetUI({title, noteSet}: Props) {
-    // this will display the notes on the staff, probably using opensheetmusicdisplay
-
-    const display = (noteSet) ? `${noteSet.getFullName()}: ${noteSet.toString()}` : '';
+    // this will eventually display the notes on the staff, probably using opensheetmusicdisplay
 
     return (
-        <>
-            <label htmlFor={`ns-${title}`}>{title}</label>
-            <div className="note-set-ui" id={`ns-${title}`}>
-                <span className="noteSet">{display}</span>
-            </div>
-        </>
+        <Card>
+            <Card.Body>
+                <Card.Title>{title}</Card.Title>
+                {(noteSet !== undefined) &&
+                    <>
+                        <Card.Text className="noteSet">{noteSet.getFullName()}</Card.Text>
+                        <Card.Footer>{noteSet.toString()}</Card.Footer>
+                    </>
+                }
+            </Card.Body>
+        </Card>
     );
 }

@@ -1,5 +1,5 @@
 import {SpeedControlManual} from "./SpeedControlManual";
-import {Col, Row} from "react-bootstrap";
+import {Col, Form, Row} from "react-bootstrap";
 
 type Props = {
     npm: number,
@@ -7,19 +7,19 @@ type Props = {
 }
 
 export function SpeedControls({npm, setNpm}: Props) {
-
     return (
-        <Row id="SpeedControls">
-            <Col md={5}>
-                <input className="form-check-input" type="checkbox" id="auto-speed-up"/>
-                <label className="form-check-label" htmlFor="coding">Auto Speed-Up</label>
+        <Row>
+            <Col id="SpeedControls">
+                <Form.Group>
+                    <Form.Label>Auto speed-up</Form.Label>
+                    <Form.Check></Form.Check>
+                </Form.Group>
             </Col>
-            <Col md={3}>
-                <Col md={6}>{npm} bpm</Col>
-            </Col>
-            <Col md={3}>
-                <SpeedControlManual step={5} speed={npm} setSpeed={setNpm}/>
-                <SpeedControlManual step={-5} speed={npm} setSpeed={setNpm}/>
+            <Col>
+                <Form.Label>Modify Speed</Form.Label>
+                <SpeedControlManual step={-2} speed={npm} setSpeed={setNpm}/>
+                <SpeedControlManual step={2} speed={npm} setSpeed={setNpm}/>
+                <Form.Label>{npm} bpm</Form.Label>
             </Col>
         </Row>
     );

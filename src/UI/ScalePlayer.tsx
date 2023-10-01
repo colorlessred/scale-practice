@@ -83,8 +83,8 @@ export function ScalePlayer() {
             </Row>
             <Row>
                 <Col md={2}><CurrentNoteUI note={currentNote} title={"Current Note"}/></Col>
-                <Col md={5}><NoteSetUI title="Current" noteSet={currentNoteSet}/></Col>
-                <Col md={5}><NoteSetUI title="Next" noteSet={nextNoteSet}/></Col>
+                <Col md={5}><NoteSetUI title="Next Note Set" noteSet={nextNoteSet}/></Col>
+                <Col md={5}><NoteSetUI title="Current Note Set" noteSet={currentNoteSet}/></Col>
             </Row>;
             <Row>
                 <Col md={12}>
