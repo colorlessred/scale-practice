@@ -8,6 +8,6 @@ type Props = {
 export function CurrentNoteUI({note, title}: Props) {
     return (<>
         <label htmlFor={`ns-${title}`}>{title}</label>
-        <div className="current-note">{note ? `${note}` : 'no current note'}</div>
+        <div className="current-note">{note ? `${note}` : 'none'}</div>
     </>);
 }

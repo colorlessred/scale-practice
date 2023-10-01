@@ -6,7 +6,6 @@ type Props = {
     setNpm: (newValue: number) => void,
 }
 
-// control player speed
 export function SpeedControls({npm, setNpm}: Props) {
 
     return (

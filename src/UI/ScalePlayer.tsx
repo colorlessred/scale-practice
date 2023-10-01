@@ -20,6 +20,7 @@ import {AutoQueue} from "../musicEngine/utilities/AutoQueue";
 import {Player} from "../musicEngine/Player";
 import {CurrentNoteUI} from "./CurrentNoteUI";
 import {Col, Row} from "react-bootstrap";
+import {NotePerSet} from "./NotePerSet";
 
 Note.setAlterationSymbols('♭', '♯');
 
@@ -30,7 +31,7 @@ export function ScalePlayer() {
     const [noteRange, setNoteRange] = useState<NoteRange>(NoteRange.parse('C(0)-C(2)'));
     const [chordMappingGlobal, setChordMappingGlobal] = useState<ChordMappingGlobal>(ChordMappingGlobal.DEFAULT_MAPPING);
     /** to add later UI to modify it **/
-    const [notesPerSet] = useState<number>(4);
+    const [notesPerSet, setNotesPerSet] = useState<number>(4);
 
     /** provides the NoteSets depending on the chosen config, types of note sets, root notes, ... **/
     const [noteSetProvider, setNoteSetProvider] = useState<IProvider<NoteSet>>(new NoteSetProviderFixed([NoteSetTypes.MAJOR]));
@@ -77,13 +78,14 @@ export function ScalePlayer() {
         <Row id="scalePlayer" className="container-fluid">
             <Row>
                 <Col md={1}><PlayButton isPlaying={isPlaying} setPlaying={setPlaying}/></Col>
-                <Col md={11}><SpeedControls npm={bpm} setNpm={setBpm}/></Col>
+                <Col md={2}><NotePerSet notesPerSet={notesPerSet} setNotesPerSet={setNotesPerSet}/></Col>
+                <Col md={9}><SpeedControls npm={bpm} setNpm={setBpm}/></Col>
             </Row>
             <Row>
                 <Col md={2}><CurrentNoteUI note={currentNote} title={"Current Note"}/></Col>
                 <Col md={5}><NoteSetUI title="Current" noteSet={currentNoteSet}/></Col>
                 <Col md={5}><NoteSetUI title="Next" noteSet={nextNoteSet}/></Col>
-            </Row>
+            </Row>;
             <Row>
                 <Col md={12}>
                     <NoteSetProviderUI
@@ -91,16 +93,17 @@ export function ScalePlayer() {
                         chordMappingGlobal={chordMappingGlobal}
                     />
                 </Col>
-            </Row>
+            </Row>;
 
             <Row>
                 <RangeUI range={noteRange} setRange={setNoteRange}/>
-            </Row>
+            </Row>;
 
             <ChordMappingGlobalUI
                 chordMappingGlobal={chordMappingGlobal}
                 setChordMappingGlobal={setChordMappingGlobal}
-            />
+            />;
         </Row>
-    );
+    )
+        ;
 }
