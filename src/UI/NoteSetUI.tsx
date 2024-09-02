@@ -1,5 +1,6 @@
 import {NoteSet} from "../musicEngine/NoteSet";
 import {Card} from "react-bootstrap";
+import {NoteUI} from "./NoteUI";
 
 type Props = {
     title: string;
@@ -15,7 +16,8 @@ export function NoteSetUI({title, noteSet}: Props) {
                 <Card.Title>{title}</Card.Title>
                 {(noteSet !== undefined) &&
                     <>
-                        <Card.Text className="noteSet">{noteSet.getFullName()}</Card.Text>
+                        <NoteUI note={noteSet.getRoot()} extra={noteSet.getName()}/>
+                        {/*<Card.Text className="noteSet">{noteSet.getFullName()}</Card.Text>*/}
                         <Card.Footer>{noteSet.toString()}</Card.Footer>
                     </>
                 }

@@ -1,5 +1,6 @@
 import {Note} from "../musicEngine/Note";
 import {Card} from "react-bootstrap";
+import {NoteUI} from "./NoteUI";
 
 type Props = {
     note: Note | undefined;
@@ -11,7 +12,8 @@ export function CurrentNoteUI({note, title}: Props) {
         <Card>
             <Card.Body>
                 <Card.Title>{title}</Card.Title>
-                <Card.Text className="currentNote">{note ? `${note}` : 'none'}</Card.Text>
+                <NoteUI note={note}></NoteUI>
+                {/*<Card.Text className="currentNote">{note ? `${note}` : 'none'}</Card.Text>*/}
             </Card.Body>
         </Card>
     </>);

@@ -82,6 +82,13 @@ export class Note {
     }
 
     /**
+     * @returns the note without any octave
+     */
+    get baseNote(): Note {
+        return new Note(this._baseNote, this._alteration);
+    }
+
+    /**
      *
      * @returns the octave of the note
      */

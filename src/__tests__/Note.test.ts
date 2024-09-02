@@ -264,4 +264,10 @@ describe(Note.name, function () {
         doTest('Cb', 'D#', 'D##');
     });
 
+    describe('baseNote', () => {
+        it('C#(3)', () => {
+            expect((Note.parse("C#(3)").baseNote.toString())).eq("C#");
+        });
+    });
+
 });
